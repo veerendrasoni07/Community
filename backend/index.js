@@ -7,6 +7,10 @@ const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const UserModel = require('./models/Users');
 const adminRoutes = require('./routes/admin');
+const hackathonRoutes = require('./routes/hackathon_route');
+const clubRoutes = requires('./routes/club_route');
+const profileRoutes = require('./routes/profile_route');
+const bannerRoutes = require('./routes/banner_route');
 
 const app = express();
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -15,6 +19,11 @@ app.use(express.json());
 
 // Admin routes
 app.use('/api/admin', adminRoutes);
+app.use(hackathonRoutes);
+app.use(clubRoutes);
+app.use(profileRoutes);
+app.use(profileRoutes);
+app.use(bannerRoutes);
 
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('Connected to MongoDB Atlas'))
