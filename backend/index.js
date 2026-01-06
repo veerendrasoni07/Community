@@ -1,16 +1,19 @@
-require('dotenv').config();
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const nodemailer = require('nodemailer');
-const UserModel = require('./models/Users');
-const adminRoutes = require('./routes/admin');
-const hackathonRoutes = require('./routes/hackathon_route');
-const clubRoutes = requires('./routes/club_route');
-const profileRoutes = require('./routes/profile_route');
-const bannerRoutes = require('./routes/banner_route');
+import dotenv from 'dotenv';
+dotenv.config();
+
+import express from 'express';
+import cors from 'cors';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+import nodemailer from 'nodemailer';
+import UserModel from './models/Users.js';
+import db from './db.js';
+import adminRoutes from './routes/admin.js';
+import hackathonRoutes from './routes/hackathon_route.js';
+import clubRoutes from './routes/club_route.js';
+import authRoutes from './routes/auth.js';
+import profileRoutes from './routes/profile_route.js';
+import bannerRoutes from './routes/banner_route.js';
 
 const app = express();
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -24,10 +27,8 @@ app.use(clubRoutes);
 app.use(profileRoutes);
 app.use(profileRoutes);
 app.use(bannerRoutes);
+app.use(authRoutes);
 
-mongoose.connect(process.env.MONGODB_URI)
-    .then(() => console.log('Connected to MongoDB Atlas'))
-    .catch(err => console.error('MongoDB connection error:', err));
 
 // Storying the OTP in memory for now
 const otpStore = {};
@@ -298,9 +299,3 @@ app.listen(3001, () => {
 
 
 // ** Close the MongoDB connection when the app is terminated **
-process.on('SIGINT', () => {
-    mongoose.connection.close(() => {
-        console.log('MongoDB connection closed through app termination');
-        process.exit(0);
-    });
-});

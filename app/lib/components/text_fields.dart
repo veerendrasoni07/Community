@@ -21,7 +21,7 @@ class TextFields extends StatelessWidget {
       style: TextStyle(
           color: Colors.black87,
 
-          fontSize: 19,
+          fontSize: 16,
       ),
     );
   }

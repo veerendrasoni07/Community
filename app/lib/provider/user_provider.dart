@@ -3,20 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class UserProvider extends StateNotifier<User?> {
   UserProvider()
-    : super(
-        User(
-          id: '',
-          fullname: '',
-          email: '',
-          state: '',
-          city: '',
-          locality: '',
-          hobbies: '',
-          laptopname: '',
-          password: '',
-          token: '',
-        ),
-      );
+    : super(null);
 
   User? get user => state;
 
@@ -38,12 +25,15 @@ class UserProvider extends StateNotifier<User?> {
           id: this.state!.id,
           fullname: fullname,
           email: this.state!.email,
-          state: newstate,
-          city: city,
-          locality: locality,
-          hobbies: hobbies,
-          laptopname: laptopname,
-          password: this.state!.password,
+          profilePic: this.state!.profilePic,
+          gender: this.state!.gender,
+          bio: this.state!.bio,
+          phone: this.state!.phone,
+          username: this.state!.username,
+          isOnline: this.state!.isOnline,
+          createdAt: this.state!.createdAt,
+          location: this.state!.location,
+          connections: this.state!.connections,
           token: this.state!.token
       );
     }

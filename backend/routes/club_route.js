@@ -1,5 +1,5 @@
-const express = require('express');
-const Club = require('../models/club');
+import express from 'express';
+import Club from '../models/club.js';
 
 const clubRouter = express.Router();
 
@@ -20,7 +20,7 @@ clubRouter.post('/api/club',async(req,res)=>{
 
 clubRouter.get('/api/club',async(req,res)=>{
     try {
-        const response = await Club.find();
+        const response = await find();
         res.status(200).json(response);
     } catch (error) {
         console.log(error);
@@ -29,4 +29,4 @@ clubRouter.get('/api/club',async(req,res)=>{
 });
 
 
-module.exports = clubRouter;
+export default clubRouter;

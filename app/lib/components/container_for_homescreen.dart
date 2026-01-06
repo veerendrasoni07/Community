@@ -255,7 +255,7 @@ class _ContainerForHomescreenState extends State<ContainerForHomescreen>
 
         SizedBox(height: 50),
 
-        HomeContent(),
+        //HomeContent(),
       ],
     );
   }

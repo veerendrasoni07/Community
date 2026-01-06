@@ -1,5 +1,5 @@
-const express = require('express');
-const User = require('../models/user');
+import express from 'express';
+import User from '../models/Users.js';
 const profileRoute = express.Router();
 
 profileRoute.put('/api/profile/:id',async(req,res)=>{
@@ -16,4 +16,4 @@ profileRoute.put('/api/profile/:id',async(req,res)=>{
 });
 
 
-module.exports = profileRoute;
+export default profileRoute;

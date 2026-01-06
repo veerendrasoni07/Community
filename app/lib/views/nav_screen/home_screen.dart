@@ -1,9 +1,11 @@
 import 'package:codingera2/components/alert_dialog_warning.dart';
 import 'package:codingera2/components/container_for_homescreen.dart';
 import 'package:codingera2/controllers/auth_controller.dart';
+import 'package:codingera2/views/nav_screen/hackathon_screen.dart';
 import 'package:codingera2/views/widgets/banner_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,8 +15,23 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin{
   final AuthController _authController = AuthController();
+
+  late final TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    // Length is the number of tabs you want
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   void logOut(){
     showDialog(context: context, builder: (context){
@@ -27,117 +44,331 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        leading: Builder(builder: (context)=>IconButton(onPressed: (){
-          Scaffold.of(context).openDrawer();
-        }, icon: Icon(FontAwesomeIcons.bars)),),
-        title: Text(
-          "CODING ERA",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-            fontSize: 36,
-          ),
+      appBar:  AppBar(
+      toolbarHeight: 64,
+      title: const Text(
+        "CODING ERA",
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
         ),
-        iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: Colors.transparent,
       ),
+      iconTheme: const IconThemeData(color: Colors.white),
+      backgroundColor: Theme.of(context).colorScheme.primary,
 
-      drawer: Drawer(
-        width: 250,
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Center(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image.asset(
-                    "assets/images/coding era logo.jpg",
-                    height: 200,
-                    width: 200,
-                    fit: BoxFit.fill,
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(56),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.12),
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: TabBar(
+              controller: _tabController,
+              dividerColor: Colors.transparent,
+              indicatorSize:  TabBarIndicatorSize.tab,
+              indicatorColor: Colors.white,
+              labelColor: Colors.blue,
+              unselectedLabelColor: Colors.white70,
+              indicator: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(30),
+                boxShadow:  [
+                  BoxShadow(
+                    color: Colors.white.withOpacity(0.2),
+                    spreadRadius: 5,
+                    blurRadius: 10,
                   ),
-                ),
+                ]
               ),
-
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  children: [
-                    ListTile(
-                      title: Text("Home"),
-                      leading: Icon(FontAwesomeIcons.house),
-                      textColor: Colors.white,
-                      iconColor: Colors.white,
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-
-                    ListTile(
-                      title: Text("Members"),
-                      leading: Icon(FontAwesomeIcons.peopleGroup),
-                      textColor: Colors.white,
-                      iconColor: Colors.white,
-                      onTap: () async {
-                        final url = Uri.parse(
-                          'https://www.codingera.site/',
-                        );
-                        launchUrl(url, mode: LaunchMode.externalApplication);
-                      },
-                    ),
-
-                    ListTile(
-                      title: Text("About"),
-                      leading: Icon(FontAwesomeIcons.infoCircle),
-                      textColor: Colors.white,
-                      iconColor: Colors.white,
-                      onTap: () async {
-                        final url = Uri.parse(
-                          'https://www.codingera.site/about',
-                        );
-                        launchUrl(url, mode: LaunchMode.externalApplication);
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              Spacer(),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: ListTile(
-                  title: Text("Logout"),
-                  leading: Icon(FontAwesomeIcons.rightFromBracket),
-                  textColor: Colors.white,
-                  iconColor: Colors.white,
-                  onTap:logOut ,
-                ),
-              ),
-              Spacer(),
-            ],
+              tabs: const [
+                Tab(icon: Icon(FontAwesomeIcons.house, size: 16), text: "Home"),
+                Tab(icon: Icon(FontAwesomeIcons.code, size: 16), text: "Hackathon"),
+                Tab(icon: Icon(FontAwesomeIcons.users, size: 16), text: "Club"),
+              ],
+            ),
           ),
         ),
       ),
+    ),
+      //
+      // drawer: Drawer(
+      //   width: 250,
+      //   backgroundColor: Theme.of(context).colorScheme.primary,
+      //   child: SafeArea(
+      //     child: Column(
+      //       crossAxisAlignment: CrossAxisAlignment.start,
+      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //       children: [
+      //         Center(
+      //           child: ClipRRect(
+      //             borderRadius: BorderRadius.circular(20),
+      //             child: Image.asset(
+      //               "assets/images/coding era logo.jpg",
+      //               height: 200,
+      //               width: 200,
+      //               fit: BoxFit.fill,
+      //             ),
+      //           ),
+      //         ),
+      //
+      //         Padding(
+      //           padding: const EdgeInsets.all(10.0),
+      //           child: Column(
+      //             children: [
+      //               ListTile(
+      //                 title: Text("Home"),
+      //                 leading: Icon(FontAwesomeIcons.house),
+      //                 textColor: Colors.white,
+      //                 iconColor: Colors.white,
+      //                 onTap: () {
+      //                   Navigator.of(context).pop();
+      //                 },
+      //               ),
+      //
+      //               ListTile(
+      //                 title: Text("Members"),
+      //                 leading: Icon(FontAwesomeIcons.peopleGroup),
+      //                 textColor: Colors.white,
+      //                 iconColor: Colors.white,
+      //                 onTap: () async {
+      //                   final url = Uri.parse(
+      //                     'https://www.codingera.site/',
+      //                   );
+      //                   launchUrl(url, mode: LaunchMode.externalApplication);
+      //                 },
+      //               ),
+      //
+      //               ListTile(
+      //                 title: Text("About"),
+      //                 leading: Icon(FontAwesomeIcons.infoCircle),
+      //                 textColor: Colors.white,
+      //                 iconColor: Colors.white,
+      //                 onTap: () async {
+      //                   final url = Uri.parse(
+      //                     'https://www.codingera.site/about',
+      //                   );
+      //                   launchUrl(url, mode: LaunchMode.externalApplication);
+      //                 },
+      //               ),
+      //             ],
+      //           ),
+      //         ),
+      //         Spacer(),
+      //         Padding(
+      //           padding: const EdgeInsets.all(10.0),
+      //           child: ListTile(
+      //             title: Text("Logout"),
+      //             leading: Icon(FontAwesomeIcons.rightFromBracket),
+      //             textColor: Colors.white,
+      //             iconColor: Colors.white,
+      //             onTap:logOut ,
+      //           ),
+      //         ),
+      //         Spacer(),
+      //       ],
+      //     ),
+      //   ),
+      // ),
+      extendBodyBehindAppBar: true,
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 250,
-                child: BannerWidget(),
-              ), // ✅ constrain height
-              SizedBox(height: 50),
-              ContainerForHomescreen(),
-              SizedBox(height: 50),
-            ],
-          ),
+        child: Column(
+          children: [
+
+            // TabBarView takes the remaining space in the Column
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: <Widget>[
+                  _homeScreen(),
+                  const HackathonScreen(),
+                  const Center(child: Text("Profile Content")),
+                ],
+              ),
+            )
+          ],
         ),
       ),
     );
   }
+
+
+  Widget _homeScreen(){
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          _todayQuiz(),
+          _yourStats(),
+          _ongoingEvents(),
+          leaderBoardPreview()
+        ],
+      ),
+    );
+  }
+
+
+  Widget _todayQuiz(){
+    return Container(
+
+      width: double.infinity,
+      margin: EdgeInsets.all(12),
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        gradient: LinearGradient(
+          colors: [Colors.white.withValues(alpha: 0.2), Colors.white.withValues(alpha: 0.5)],
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("🔥 Today’s Challenge",
+              style: GoogleFonts.montserrat(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white)),
+          SizedBox(height: 8),
+          Text("DSA Daily Quiz",
+              style: GoogleFonts.montserrat(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white)),
+          SizedBox(height: 12),
+          ElevatedButton(
+            onPressed: () {},
+            child: Text("Start Now"),
+          )
+        ],
+      ),
+    );
+  }
+  
+  
+  Widget _yourStats(){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 12.0),
+          child: Text("Your Stats",style: GoogleFonts.montserrat(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 2,
+            color: Colors.white.withValues(alpha: 0.8,),
+          ),),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _stats("🔥 Streak", "5 days",[Colors.pink.shade100, Colors.deepPurple.shade100]),
+            _stats("⭐ Points", "120",[Colors.yellow.shade100, Colors.amber.shade100]),
+            _stats("🏆 Rank", "#12",[Colors.green.shade100, Colors.teal.shade100]),
+
+          ],
+        ),
+      ],
+    );
+  }
+  
+  Widget _stats(String text,String iconWithText,List<Color> gradientColors){
+    return Container(
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        gradient: LinearGradient(
+          colors: gradientColors,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.blue.shade100,
+            blurRadius: 4,
+          )
+        ]
+      ),
+      child: Column(
+        children: [
+          Text(text),
+          Text(iconWithText),
+        ],
+      ),
+    );
+  }
+
+  Widget _ongoingEvents(){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left:12.0),
+          child: Text("Ongoing Events",style: GoogleFonts.montserrat(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white.withValues(alpha: 0.8,),
+            letterSpacing: 2
+          ),),
+        ),
+        BannerWidget(),
+      ],
+    );
+  }
+
+  Widget leaderBoardPreview(){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 12.0),
+          child: Text("Leader Board",style: GoogleFonts.montserrat(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white.withValues(alpha: 0.8)
+          ),),
+        ),
+        ListView.builder(
+          itemCount: 5,
+            shrinkWrap:  true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.all(8),
+            itemBuilder: (context,index){
+         return _leaderBoardPersonTile();
+        }),
+
+
+      ],
+    );
+  }
+
+  Widget _leaderBoardPersonTile(){
+    return Container(
+
+      padding: EdgeInsets.all(12),
+      margin: EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        gradient: LinearGradient(
+          colors: [Colors.white.withValues(alpha: 0.2), Colors.white.withValues(alpha: 0.5)],
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          CircleAvatar(
+            radius: 35,
+          ),
+          Text("Name Name",style: GoogleFonts.montserrat(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.white
+          ),),
+          TextButton(
+              onPressed: (){},
+              child: Text("View",style: GoogleFonts.montserrat(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16
+              ),)
+          )
+        ],
+      )
+    );
+  }
+
+
 }

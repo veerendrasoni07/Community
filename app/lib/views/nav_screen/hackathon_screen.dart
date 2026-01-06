@@ -1,4 +1,5 @@
 import 'package:codingera2/views/widgets/hackathon_widget.dart';
+import 'package:codingera2/views/widgets/modern_hackathon_tile.dart';
 import 'package:flutter/material.dart';
 
 class HackathonScreen extends StatefulWidget {
@@ -12,19 +13,15 @@ class _HackathonScreenState extends State<HackathonScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        title: Text("Upcoming Hackathons",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 30),),
-      ),
+      extendBodyBehindAppBar: true,
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-          children: [
-            HackathonWidget(),
-          ],
-        )),
+        child: ListView.builder(
+          itemCount: 10,
+            itemBuilder: (context,index){
+              return  ModernHackathonTile(index: index,);
+            }
+        ),
       ),
     );
   }

@@ -1,5 +1,5 @@
-const express = require('express');
-const Hackathon = require('../models/hackathon');
+import express from 'express';
+import Hackathon from '../models/hackathon.js';
 const hackathonRoute = express.Router();
 
 hackathonRoute.post('/api/hackathon',async (req,res)=>{
@@ -27,4 +27,4 @@ hackathonRoute.get('/api/hackathon',async(req,res)=>{
     }
 });
 
-module.exports = hackathonRoute;
+export default hackathonRoute;

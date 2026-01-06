@@ -1,7 +1,8 @@
-const mongoose = require('mongoose');
-const express = require('express');
+import Banner from '../models/banner.js';
+import express from 'express';
+
 const bannerRouter = express.Router();
-const Banner = require('../models/banner');
+
 
 bannerRouter.post('/api/banner',async (req,res)=>{
     try {
@@ -25,4 +26,4 @@ bannerRouter.get('/api/banner',async(req,res)=>{
     }
 })
 
-module.exports = bannerRouter;
+export default bannerRouter;

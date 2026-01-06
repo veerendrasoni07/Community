@@ -79,6 +79,13 @@ class _BannerWidgetState extends State<BannerWidget> {
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.white),
                               borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.blueAccent.shade100,
+                                  blurRadius: 5,
+                                  spreadRadius: 2
+                                )
+                              ]
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
@@ -99,6 +106,7 @@ class _BannerWidgetState extends State<BannerWidget> {
                       offset: 25,
                       verticalOffset: 5,
                       jumpScale: 1.4,
+                      activeDotColor: Colors.blueAccent
                     ),
                   ),
                 ],

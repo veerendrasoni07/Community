@@ -34,11 +34,6 @@ class _UpdateProfileState extends ConsumerState<UpdateProfile> {
     super.initState();
     final user = ref.read(userProvider);
     _nameController.text = user?.fullname ?? '';
-    _stateController.text = user?.state ?? '';
-    _cityController.text = user?.city ?? '';
-    _localityController.text = user?.locality ?? '';
-    _hobbiesController.text = user?.hobbies ?? '';
-    _laptopController.text = user?.laptopname ?? '';
   }
 
   @override

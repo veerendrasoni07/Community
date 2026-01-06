@@ -1,6 +1,6 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const { StringDecoder } = require('string_decoder');
+
+import mongoose from 'mongoose'
+
 
 
 const hackathonSchema = new mongoose.Schema({
@@ -50,4 +50,4 @@ const hackathonSchema = new mongoose.Schema({
 
 const Hackathon = mongoose.model("Hackathon",hackathonSchema);
 
-module.exports = Hackathon;
+export default Hackathon;

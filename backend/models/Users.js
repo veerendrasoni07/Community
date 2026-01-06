@@ -1,15 +1,53 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-const UserSchema = new mongoose.Schema({
-  name: String,
-  username: { type: String, unique: true, required: true },
-  email: { type: String, unique: true, required: true },
-  password: String,
-  collegeName: { type: String, required: true },
-  location: { type: String, required: true },
-  roleAdmin: { type: Boolean, default: false },
-  isVerified: { type: Boolean, default: true }
-});
 
-const UserModel = mongoose.model("users", UserSchema);
-module.exports = UserModel;
+const userSchema = new mongoose.Schema({
+  fullname: {
+    type: String, 
+    required: true,
+    trim: true
+  },
+  email: {
+    type: String, 
+    required: true, 
+    unique: true,
+    validate:{
+        validator:(value)=>{
+            const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+            return value.match(regex);
+        },
+        message:"Please enter a valid email address"
+    }
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  profilePic:{
+    type:String,
+  },
+  gender:{
+    type:String,
+  },
+  location:{
+    type:String,
+  },
+  username:{
+    type:String,
+  },
+  phone:{
+    type:Number
+  },
+  isOnline:{type:Boolean},
+  bio:{
+    type:String,
+  },
+  lastSeen:{type:Date},
+  groups:[String],
+  connections : [{type:mongoose.Schema.Types.ObjectId,ref:'User'}]
+
+},{timestamps:true});
+
+const UserModel = mongoose.model("User", userSchema);
+
+export default UserModel;

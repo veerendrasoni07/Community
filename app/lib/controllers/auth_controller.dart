@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:codingera2/global_variable.dart';
 import 'package:codingera2/models/user.dart';
+import 'package:codingera2/provider/auth_manager_provider.dart';
+import 'package:codingera2/provider/token_provider.dart';
 import 'package:codingera2/provider/user_provider.dart';
 import 'package:codingera2/services/manage_http_request.dart';
 import 'package:flutter/material.dart';
@@ -11,114 +13,194 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../views/screens/main_screen.dart' show MainScreen;
 
-class AuthController {
+
 
   //sign up
-  Future<void> signUpUser({
-    required context,
-    required String fullname,
-    required String email,
-    required String password,
-    required WidgetRef ref
-})async{
+  class AuthController{
 
-    User user = User(
-        id: '',
-        fullname: fullname,
-        email: email,
-        state: '',
-        city: '',
-        locality: '',
-        hobbies: '',
-        laptopname: '',
-        password: password,
-        token: ''
-    );
-
-    http.Response response = await http.post(
-        Uri.parse('$uri/api/signup'),
-      body: user.toJson(),
-      headers: <String,String> {
-          'Content-Type':'application/json; charset=UTF-8'
-      }
-    );
-
-    manageHttpResponse(response: response, context: context, onsuccess: (){
-      showSnackbar(context, "Account is created with the same credential!");
-    });
-
-  }
-
-
-  // sign in
-  Future<void> signInUsers({
-    required context,
-    required String email,
-    required String password,
-    required WidgetRef ref
-  }) async {
-    try {
-
+  Future<void> signUp({required String fullname,required String username,required String email, required String password,required String gender,required BuildContext context,required WidgetRef ref})async{
+    try{
       http.Response response = await http.post(
-          Uri.parse('$uri/api/signin'),
+          Uri.parse('$uri/api/sign-up'),
         body: jsonEncode({
+          'fullname':fullname,
           'email':email,
           'password':password,
+          'gender':gender,
+          'username':username
         }),
         headers: <String,String>{
             'Content-Type':'application/json; charset=UTF-8'
         }
       );
 
-      manageHttpResponse(response: response, context: context, onsuccess: ()async{
+      if(response.statusCode == 200){
         SharedPreferences preferences = await SharedPreferences.getInstance();
-        ref.read(userProvider.notifier).setUser(response.body);
-        await preferences.setString('auth-token', jsonDecode(response.body)['token']);
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>MainScreen()), (route)=>false);
-      });
+        final data = jsonDecode(response.body);
+        final refreshToken = data['refreshToken'];
+        final token = data['accessToken']; // access token
+        final userJson = jsonEncode(data['user']);
+        preferences.setString('user', userJson);
+        preferences.setString('token', token);
+        preferences.setString('refreshToken', refreshToken);
+        ref.read(userProvider.notifier).setUser(userJson);
+        ref.read(tokenProvider.notifier).setToken(token);
+        if(context.mounted){
+          showSnackBar(context, 'Account created successfully');
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const MainScreen()),
+                (route) => false, // remove all previous routes
+          );
+        }
+      }
+      else{
+        print(response.body);
+        throw Exception('Failed to create account');
+      }
 
-    } catch (e) {
-      showSnackbar(context, e.toString());
+    }catch(e){
+      print(e);
     }
   }
 
-  // getUserData
-  void getUserData(BuildContext context,WidgetRef ref) async{
+  Future<void> login({required String email, required String password,required BuildContext context,required WidgetRef ref})async{
     try{
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-      String? token = preferences.getString('auth-token');
-      if(token==null){
-        preferences.setString('auth-token', '');
-      }
-
-      http.Response tokenResponse = await http.post(
-          Uri.parse('$uri/api/tokenIsValid'),
-        headers: <String,String>{
-            'Content-Type':'application/json; charset=UTF-8',
-            'auth-token':token!
-        }
+      http.Response response = await http.post(
+          Uri.parse('$uri/api/sign-in'),
+          body: jsonEncode({
+            'email':email,
+            'password':password,
+          }),
+          headers: <String,String>{
+            'Content-Type':'application/json; charset=UTF-8'
+          }
       );
 
-      final response = jsonDecode(tokenResponse.body);
-      if(response==true){
-        http.Response userResponse = await http.get(
-            Uri.parse('$uri/'),
-          headers: <String,String>{
-              'Content-Type':'application/json; charset=UTF-8',
-            'auth-token':token
-          }
-        );
+      if(response.statusCode == 200){
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        final data = jsonDecode(response.body);
+        final token = data['accessToken'];
+        final refreshToken = data['refreshToken'];
+        final user = data['user'];
+        final userJson = jsonEncode(user);
+        preferences.setString('user', userJson);
+        preferences.setString('token', token);
+        preferences.setString('refreshToken', refreshToken);
+        ref.read(userProvider.notifier).setUser(userJson);
+        ref.read(tokenProvider.notifier).setToken(token);
+        if(context.mounted){
+          showSnackBar(context, 'Logged in successfully');
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const MainScreen()),
+                (route) => false, // remove all previous routes
+          );
+        }
+      }
+      else{
+        throw Exception('Failed to create account');
+      }
 
-        ref.read(userProvider.notifier).setUser(userResponse.body);
+    }catch(e){
+      print(e);
+    }
+  }
+
+  Future<bool> refreshToken({required Ref ref}) async {
+    final prefs = await SharedPreferences.getInstance();
+    final refreshToken = prefs.getString('refreshToken');
+
+    if (refreshToken == null) return false;
+
+    final response = await http.post(
+      Uri.parse('$uri/api/refresh-token'),
+      body: jsonEncode({
+        'refreshToken': refreshToken,
+      }),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      await prefs.remove('token');
+      await prefs.remove('refreshToken');
+      await prefs.setString('token', data['accessToken']);
+      await prefs.setString('refreshToken', data['refreshToken']);
+      return true;
+    }
+    else{
+      ref.read(authManagerProvider.notifier).logout();
+    }
+
+    return false;
+  }
+
+
+
+  Future<bool> usernameCheck(String username)async {
+    try {
+      http.Response response = await http.get(
+          Uri.parse('$uri/api/username-check/$username'),
+        headers: <String,String>{
+            'Content-Type':'application/json; charset=UTF-8'
+        }
+      );
+      if(response.statusCode == 200){
+        final data = jsonDecode(response.body)['msg'];
+        return data;
+      }else{
+        throw Exception('Failed to check username');
       }
     }
     catch(e){
-      showSnackbar(context, e.toString());
+      throw Exception(e);
+    }
+  }
+  
+  Future<void> updateUserProfile({required String fullname,required String bio,required String phone,required String location,required String gender ,required WidgetRef ref,required BuildContext context})async{
+    try{
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      final token = preferences.getString('token');
+      http.Response response = await http.put(
+          Uri.parse('$uri/api/update-profile'),
+        body: jsonEncode({
+          "details": {
+            'fullname':fullname,
+            'bio':bio,
+            'phone':phone,
+            'location':location,
+            'gender':gender
+          }
+        }),
+        headers: <String,String>{
+            'Content-Type':'application/json; charset=UTF-8',
+            'x-auth-token':token!
+        }
+      );
+      if(response.statusCode == 200){
+        final data = jsonDecode(response.body);
+        final user = data['user'];
+        await preferences.remove('user');
+        final userJson = jsonEncode(user);
+        await preferences.setString('user', userJson);
+        ref.read(userProvider.notifier).setUser(userJson);
+        if(context.mounted){
+          showSnackBar(context, 'Profile updated successfully');
+        }
+      }else{
+        throw Exception('Failed to update profile');
+      }
+    }catch(e){
+      print(e.toString());
+      throw Exception(e.toString());
     }
   }
 
-  // sign out
 
 
+  }
 
-}
+

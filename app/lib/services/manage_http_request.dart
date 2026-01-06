@@ -1,32 +1,71 @@
-import 'dart:convert';
 
+
+import 'package:codingera2/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:http/http.dart' as http;
-void manageHttpResponse({
-  required http.Response response, // the http response from the request
-  required BuildContext context, // the context is to show the snackbar
-  required VoidCallback onsuccess, // the callback to be executed on successful response
-}){
+import 'package:shared_preferences/shared_preferences.dart';
 
-  // switch statement to handle different http status codes
+void showSnackBar(BuildContext context, String text) {
+  ScaffoldMessenger.of(
+    context,
+  ).showSnackBar(SnackBar(content: Text(text), duration: const Duration(seconds: 5)));
+}
+
+void manageHttpResponse(
+  http.Response response,
+  BuildContext context,
+  VoidCallback onSuccess,
+) {
   switch (response.statusCode) {
     case 200:
-      onsuccess();
+      onSuccess();
       break;
     case 400:
-      showSnackbar(context,json.decode(response.body)['msg']);
+      showSnackBar(context, 'Bad Request: ${response.body}');
+      break;
+    case 401:
+      showSnackBar(context, 'Unauthorized: ${response.body}');
+      break;
+    case 403:
+      showSnackBar(context, 'Forbidden: ${response.body}');
+      break;
+    case 404:
+      showSnackBar(context, 'Not Found: ${response.body}');
       break;
     case 500:
-      showSnackbar(context,json.decode(response.body)['error']);
+      showSnackBar(context, 'Internal Server Error: ${response.body}');
       break;
-    case 201:
-      onsuccess();
-      break;
+    default:
+      showSnackBar(context, 'Error ${response.statusCode}: ${response.body}');
   }
 }
 
-void showSnackbar(context,String title){
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(title)));
+Future<http.Response> sendRequest({
+  required Future<http.Response> Function ( String token) request,
+  required Ref ref
+})async{
+  try{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? accessToken = prefs.getString('token');
+
+    http.Response requestResponse = await request(accessToken!);
+    if(requestResponse.statusCode == 401){
+      bool refreshed = await AuthController().refreshToken(ref: ref);
+      if (!refreshed) {
+        throw Exception('Session expired');
+      }
+      accessToken = prefs.getString('token');
+      requestResponse = await request(accessToken!);
+    }
+    return requestResponse;
+  }catch(e){
+    print(e);
+    throw Exception(e);
+  }
+
+
+
 }
 

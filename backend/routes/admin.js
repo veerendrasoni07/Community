@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
+import UserModel from '../models/Users.js';
 const router = express.Router();
-const UserModel = require('../models/Users');
 
 // Get all users with pagination and search
 router.get('/users', async (req, res) => {
@@ -51,4 +51,4 @@ router.get('/users', async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;
