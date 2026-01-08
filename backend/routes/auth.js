@@ -28,8 +28,8 @@ authRouter.post('/api/sign-up',async(req,res)=>{
             }
         );
         newUser = await newUser.save();
-        const refreshToken = generateRefreshToken(newUser._id);
-        const accessToken = generateAccessToken(newUser._id);
+        const refreshToken = generateRefreshToken(newUser._id,"user");
+        const accessToken = generateAccessToken(newUser._id,"user");
         const hash = hashToken(refreshToken);
         await RefreshToken.create({
             userId:newUser._id,
@@ -60,8 +60,8 @@ authRouter.post('/api/sign-in',async(req,res)=>{
         if(!verified){
             return res.status(401).json({msg:"Password is invalid"});
         }
-        const refreshToken = generateRefreshToken(user._id);
-        const accessToken = generateAccessToken(user._id);
+        const refreshToken = generateRefreshToken(user._id,user.role);
+        const accessToken = generateAccessToken(user._id,user.role);
         const hash = hashToken(refreshToken);
         await RefreshToken.create({
             userId:user._id,
@@ -102,7 +102,7 @@ authRouter.post('/api/refresh-token',async(req,res)=>{
         if(!verify){
             return res.status(401).json({msg:"Token verification failed"});
         }
-        const newRefreshToken = generateRefreshToken(verify.id);
+        const newRefreshToken = generateRefreshToken(verify.id,verify.role);
         const newHashRefreshToken = hashToken(newRefreshToken);
         // token rotation
         stored.replacedByToken = newHashRefreshToken;
@@ -113,7 +113,7 @@ authRouter.post('/api/refresh-token',async(req,res)=>{
             userId:verify.id,
             expiresAt:Date.now() + 7*24*60*60*1000
         });
-        const newAccessToken = generateAccessToken(verify.id);
+        const newAccessToken = generateAccessToken(verify.id,user.role);
 
         console.log("---------------------------access token is issued---------------------------------------");
         res.status(200).json({accessToken:newAccessToken,refreshToken:newRefreshToken});

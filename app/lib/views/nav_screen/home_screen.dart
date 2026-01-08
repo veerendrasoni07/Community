@@ -4,18 +4,23 @@ import 'package:codingera2/controllers/auth_controller.dart';
 import 'package:codingera2/views/nav_screen/hackathon_screen.dart';
 import 'package:codingera2/views/widgets/banner_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 
-class HomeScreen extends StatefulWidget {
+import '../../provider/user_provider.dart';
+
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin{
+class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProviderStateMixin{
   final AuthController _authController = AuthController();
 
   late final TabController _tabController;
@@ -43,6 +48,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.read(userProvider);
+    final role = user?.role == null ? "user": user!.role;
     return Scaffold(
       appBar:  AppBar(
       toolbarHeight: 64,
@@ -192,8 +199,40 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           ],
         ),
       ),
+      floatingActionButton: role == "user" ?
+          SpeedDial(
+            animatedIcon: AnimatedIcons.menu_close,
+            animatedIconTheme: const IconThemeData(size: 22.0),
+            backgroundColor: Colors.blue,
+            visible: true,
+            curve: Curves.bounceIn,
+            children: [
+              SpeedDialChild(
+                child: const Icon(Icons.code),
+                backgroundColor: Colors.blue,
+                onTap: (){},
+                label: 'Hackathon',
+              ),
+              SpeedDialChild(
+                child: const Icon(Icons.people),
+                backgroundColor: Colors.blue,
+                onTap: (){},
+                label: 'Club',
+              ),
+              SpeedDialChild(
+                child: const Icon(Icons.person),
+                backgroundColor: Colors.blue,
+                onTap: (){},
+                label: 'Quiz',
+              )
+            ]
+          )
+          : null,
     );
   }
+
+
+
 
 
   Widget _homeScreen(){

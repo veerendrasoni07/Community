@@ -23,6 +23,7 @@ class UserProvider extends StateNotifier<User?> {
     if(state != null){
       state = User(
           id: this.state!.id,
+          role: this.state!.role,
           fullname: fullname,
           email: this.state!.email,
           profilePic: this.state!.profilePic,

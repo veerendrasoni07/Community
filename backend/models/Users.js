@@ -43,6 +43,11 @@ const userSchema = new mongoose.Schema({
     type:String,
   },
   lastSeen:{type:Date},
+  role:{
+    type:String,
+    enum:['user','admin','team-lead'],
+    default:'user'
+  },
   groups:[String],
   connections : [{type:mongoose.Schema.Types.ObjectId,ref:'User'}]
 
