@@ -13,7 +13,7 @@ export const generateRefreshToken =   (userId,role)=>{
             id:userId,
             role:role
         },
-        process.env.REFRESH_TOKEN_SECRET_KET,
+        process.env.REFRESH_TOKEN_SECRET_KEY,
         {expiresIn:'7d'}
     );
 }
@@ -22,7 +22,7 @@ export const generateAccessToken = (userId,role)=>{
     console.log("access token has been generated");
     return jwt.sign(
         {id:userId,role:role},
-        process.env.ACCESS_TOKEN_SECRET_KET,
+        process.env.ACCESS_TOKEN_SECRET_KEY,
         {expiresIn:'1h'}
     );
 }

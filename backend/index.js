@@ -14,6 +14,7 @@ import clubRoutes from './routes/club_route.js';
 import authRoutes from './routes/auth.js';
 import profileRoutes from './routes/profile_route.js';
 import bannerRoutes from './routes/banner_route.js';
+import router from './controller/clodinary.js';
 
 const app = express();
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -28,6 +29,7 @@ app.use(profileRoutes);
 app.use(profileRoutes);
 app.use(bannerRoutes);
 app.use(authRoutes);
+app.use(router);
 
 
 // Storying the OTP in memory for now

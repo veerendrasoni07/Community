@@ -19,22 +19,24 @@ const clubSchema = new mongoose.Schema({
     },
     clubLeader:{
         type:String,
+        ref:'User',
         required:true
     },
     clubManager:{
         type:String,
+        ref:'User',
         required:true
     },
-    detailDes:{
+    detailDesc:{
         type:String,
         required:true
     },
     clubRule:{
-        type:String,
+        type:[String],
         required:true
     },
     clubActivities:{
-        type:String,
+        type:[String],
         required:true
     },
     joinLink:{

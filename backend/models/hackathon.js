@@ -18,11 +18,15 @@ const hackathonSchema = new mongoose.Schema({
         required:true
     },
     eventdate:{
+        type:Date,
+        required:true
+    },
+    eventTime:{
         type:String,
         required:true
     },
     deadline:{
-        type:String,
+        type:Date,
         required:true
     },
     prize:{
@@ -37,6 +41,18 @@ const hackathonSchema = new mongoose.Schema({
         type:Number,
         required:true
     },
+    totalTeam:{
+        type:Number,
+        required:true
+    },
+    duration:{
+        type:String,
+        required:true
+    },
+    status:{
+        type:String,
+        enum:["upcoming",'ongoing','closed']
+    },
     level:{
         type:String,
         required:true
@@ -44,6 +60,10 @@ const hackathonSchema = new mongoose.Schema({
     link:{
         type:String,
         required:true
+    },
+    registered:{
+        type:Number,
+        default:1
     }
 
 });

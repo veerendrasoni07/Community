@@ -51,4 +51,21 @@ router.get('/users', async (req, res) => {
     }
 });
 
+// get all community members
+router.get('/api/community-member',async(req,res)=>{
+    try {
+        const members = await UserModel.find(
+            {
+                role:"community-member"
+            }
+        );
+        res.status(200).json(members);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Internal Server Error"});
+    }
+})
+
+
+
 export default router;
