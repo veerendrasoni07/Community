@@ -59,6 +59,7 @@ router.get('/api/community-member',async(req,res)=>{
                 role:"community-member"
             }
         );
+        console.log(members);
         res.status(200).json(members);
     } catch (error) {
         console.log(error);

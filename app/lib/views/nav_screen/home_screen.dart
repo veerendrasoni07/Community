@@ -1,6 +1,10 @@
 import 'package:codingera2/components/alert_dialog_warning.dart';
 import 'package:codingera2/components/container_for_homescreen.dart';
 import 'package:codingera2/controllers/auth_controller.dart';
+import 'package:codingera2/views/admin/screens/admin_home_screen.dart';
+import 'package:codingera2/views/admin/widgets/admin_club.dart';
+import 'package:codingera2/views/admin/widgets/admin_hackathon.dart';
+import 'package:codingera2/views/nav_screen/club_screen.dart';
 import 'package:codingera2/views/nav_screen/hackathon_screen.dart';
 import 'package:codingera2/views/widgets/banner_widget.dart';
 import 'package:flutter/material.dart';
@@ -190,44 +194,50 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
               child: TabBarView(
                 controller: _tabController,
                 children: <Widget>[
-                  _homeScreen(),
+                  role == "user" ? _homeScreen() : AdminHomeScreen(),
                   const HackathonScreen(),
-                  const Center(child: Text("Profile Content")),
+                  const ClubScreen()
                 ],
               ),
             )
           ],
         ),
       ),
-      floatingActionButton: role == "user" ?
-          SpeedDial(
-            animatedIcon: AnimatedIcons.menu_close,
-            animatedIconTheme: const IconThemeData(size: 22.0),
-            backgroundColor: Colors.blue,
-            visible: true,
-            curve: Curves.bounceIn,
-            children: [
-              SpeedDialChild(
-                child: const Icon(Icons.code),
-                backgroundColor: Colors.blue,
-                onTap: (){},
-                label: 'Hackathon',
-              ),
-              SpeedDialChild(
-                child: const Icon(Icons.people),
-                backgroundColor: Colors.blue,
-                onTap: (){},
-                label: 'Club',
-              ),
-              SpeedDialChild(
-                child: const Icon(Icons.person),
-                backgroundColor: Colors.blue,
-                onTap: (){},
-                label: 'Quiz',
-              )
-            ]
+      floatingActionButton: role == "admin" ?
+          Padding(
+            padding:  EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.12),
+            child: SpeedDial(
+              animatedIcon: AnimatedIcons.menu_close,
+              direction: SpeedDialDirection.up,
+              overlayColor: Colors.black,
+              animatedIconTheme: const IconThemeData(size: 22.0),
+              backgroundColor: Colors.blue,
+              visible: true,
+              curve: Curves.bounceIn,
+              children: [
+                SpeedDialChild(
+                  child: const Icon(Icons.code),
+                  backgroundColor: Colors.blue,
+                  onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (_)=>AdminHackathon())),
+                  label: 'Hackathon',
+                ),
+                SpeedDialChild(
+                  child: const Icon(Icons.people),
+                  backgroundColor: Colors.blue,
+                  onTap: ()=>Navigator.push(context,MaterialPageRoute(builder: (_)=>AdminClub())),
+                  label: 'Club',
+                ),
+                SpeedDialChild(
+                  child: const Icon(Icons.person),
+                  backgroundColor: Colors.blue,
+                  onTap: (){},
+                  label: 'Quiz',
+                )
+              ]
+            ),
           )
           : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
@@ -406,6 +416,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
           )
         ],
       )
+    );
+  }
+
+  _adminHomeWidget(){
+    return Column(
+      children: [
+        Text("Admin Home"),
+      ],
     );
   }
 

@@ -1,4 +1,5 @@
 
+import 'package:codingera2/views/screens/authentication/sign_up_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -13,7 +14,7 @@ import 'register_screen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
 
-  LoginScreen({super.key});
+  const LoginScreen({super.key});
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -55,8 +56,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             SizedBox(height: MediaQuery.of(context).size.height*0.1,),
             Text(
               "Login Your Account!",
-              style: GoogleFonts.getFont(
-                  "Lato",
+              style: GoogleFonts.lato(
                   color: Colors.black87,
                   fontWeight: FontWeight.bold,
                   fontSize: 23,
@@ -64,8 +64,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
             ),
             Text("To explore the world exclusive",
-              style: GoogleFonts.getFont(
-                  "Lato",
+              style: GoogleFonts.lato(
                   color: Colors.black87,
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
@@ -223,7 +222,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             GestureDetector(
               onTap: (){
                 Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context)=>RegisterScreen())
+                    MaterialPageRoute(builder: (context)=>SignUpFlow())
                 );
               },
               child: Text("Sign-up",

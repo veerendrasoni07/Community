@@ -1,12 +1,14 @@
 import 'dart:async';
-import 'package:chatapp/controller/auth_controller.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:codingera2/components/container_button.dart';
+import 'package:codingera2/controllers/auth_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:auto_size_text/auto_size_text.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:chatapp/componentss/elevated_button.dart';
 
 class SignUpFlow extends ConsumerStatefulWidget {
   const SignUpFlow({super.key});
@@ -26,11 +28,10 @@ class _SignUpFlowState extends ConsumerState<SignUpFlow> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
-  final AuthController _authController = AuthController();
   Timer? debounce;
   String? gender;
   bool isPassShown = false;
-  bool isUserNameExist = false;
+  //bool isUserNameExist = false;
   final List<GlobalKey<FormState>> _formKeys = [
     GlobalKey<FormState>(), // Name
     GlobalKey<FormState>(), // Username
@@ -40,23 +41,23 @@ class _SignUpFlowState extends ConsumerState<SignUpFlow> {
   ];
 
 
-  void checkUserName(String username)async{
-    final bool userName = await _authController.usernameCheck(username);
-    setState(() {
-      isUserNameExist = userName;
-    });
-  }
+  // void checkUserName(String username)async{
+  //   final bool userName = await _authController.usernameCheck(username);
+  //   setState(() {
+  //     isUserNameExist = userName;
+  //   });
+  // }
 
-  void userNameOnChanged(String value){
-    if(debounce?.isActive ?? false ){
-      print("cancel kr dia is ki maa ki ");
-      debounce?.cancel();
-    }
-    debounce = Timer(Duration(milliseconds: 800), (){
-      print("check kr dia");
-      checkUserName(value.trim());
-    });
-  }
+  // void userNameOnChanged(String value){
+  //   if(debounce?.isActive ?? false ){
+  //     print("cancel kr dia is ki maa ki ");
+  //     debounce?.cancel();
+  //   }
+  //   debounce = Timer(Duration(milliseconds: 800), (){
+  //     print("check kr dia");
+  //     checkUserName(value.trim());
+  //   });
+  // }
 
   @override
   void dispose() {
@@ -100,9 +101,9 @@ class _SignUpFlowState extends ConsumerState<SignUpFlow> {
         backgroundColor: Colors.transparent,
         leading: _currentPage > 0
             ? IconButton(
-                icon: const Icon(Icons.arrow_back_ios_new_rounded,
+                icon: const Icon(FontAwesomeIcons.brandsFontAwesome,
                 size: 15,
-                    color: Colors.grey),
+                    color: Colors.black),
                 onPressed: previousPage,
               )
             : null,
@@ -156,17 +157,18 @@ class _SignUpFlowState extends ConsumerState<SignUpFlow> {
                         ),
                       ),
                       SizedBox(height: size.height * 0.05),
-                      CustomElevatedButton(
-                        buttonText: "Next",
-                        onPressed: nextPage,
+                      GestureDetector(
+                        onTap: nextPage,
+                          child: ContainerButton(height: MediaQuery.of(context).size.height * 0.05, width: MediaQuery.of(context).size.width * 0.9, text: "Next")
                       ),
+
                     ],
                   ),
                 ),
               ),
             ),
 
-            // 2️⃣ Username Page
+
             SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.symmetric(
@@ -193,7 +195,7 @@ class _SignUpFlowState extends ConsumerState<SignUpFlow> {
                             ? "Please enter your username"
                             : null,
                         cursorColor: Colors.green,
-                        onChanged: (value)=>userNameOnChanged(value),
+                       // onChanged: (value)=>userNameOnChanged(value),
                         style: GoogleFonts.poppins(
                             fontWeight: FontWeight.w600,
                             fontSize: 16.sp
@@ -209,7 +211,7 @@ class _SignUpFlowState extends ConsumerState<SignUpFlow> {
                           ),
                         ),
                       ),
-                      if (isUserNameExist == false && _userNameController.text.isNotEmpty)
+                      if (  _userNameController.text.isNotEmpty)
                         const Text(
                           "Username already exists",
                           style: TextStyle(color: Colors.red),
@@ -220,14 +222,13 @@ class _SignUpFlowState extends ConsumerState<SignUpFlow> {
                           style: TextStyle(color: Colors.green),
                         ),
                       SizedBox(height: size.height * 0.05),
-                      CustomElevatedButton(
-                        buttonText: "Next",
-                        onPressed: (){
-                          if(isUserNameExist && _formKeys[1].currentState!.validate()){
+                      GestureDetector(
+                        onTap: (){
+                          if( _formKeys[1].currentState!.validate()){
                             nextPage();
                           }
                         },
-                      ),
+                          child: ContainerButton(height: MediaQuery.of(context).size.height * 0.05, width: MediaQuery.of(context).size.width * 0.9, text: "Next"))
                     ],
                   ),
                 ),
@@ -276,10 +277,9 @@ class _SignUpFlowState extends ConsumerState<SignUpFlow> {
                         ),
                       ),
                       SizedBox(height: size.height * 0.05),
-                      CustomElevatedButton(
-                        buttonText: "Next",
-                        onPressed: nextPage,
-                      ),
+                      GestureDetector(
+                        onTap: nextPage,
+                          child: ContainerButton(height: MediaQuery.of(context).size.height * 0.05 , width: MediaQuery.of(context).size.width * 0.9, text: "Next"))
                     ],
                   ),
                 ),
@@ -343,9 +343,9 @@ class _SignUpFlowState extends ConsumerState<SignUpFlow> {
                         onChanged: (value) => setState(() => gender = value),
                       ),
                       SizedBox(height: size.height * 0.05),
-                      CustomElevatedButton(
-                        buttonText: "Next",
-                        onPressed: () {
+
+                      GestureDetector(
+                        onTap: (){
                           if (gender != null) {
                             nextPage();
                           } else {
@@ -354,14 +354,18 @@ class _SignUpFlowState extends ConsumerState<SignUpFlow> {
                                     content: Text("Please select your gender")));
                           }
                         },
-                      ),
+                        child: ContainerButton(
+                          height: MediaQuery.of(context).size.height * 0.05,
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          text: "Next"
+                        ),
+                      )
                     ],
                   ),
                 ),
               ),
             ),
 
-            // 5️⃣ Password Page
             SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.symmetric(
@@ -431,14 +435,19 @@ class _SignUpFlowState extends ConsumerState<SignUpFlow> {
                         ),
                       ),
                       SizedBox(height: size.height * 0.05),
-                      CustomElevatedButton(
-                        buttonText: "Accept and Continue",
-                        onPressed: () {
+
+                      GestureDetector(
+                        onTap: (){
                           if (_formKeys[4].currentState!.validate()) {
-                            AuthController().signUp(fullname: _nameController.text,username: _userNameController.text, email: _emailController.text, password: _passwordController.text, gender: gender!, context: context, ref: ref);
+                            AuthController().signUp(fullname: _nameController.text.trim(),username: _userNameController.text.trim(), email: _emailController.text.trim(), password: _passwordController.text.trim(), gender: gender!, context: context, ref: ref);
                           }
                         },
-                      ),
+                        child: ContainerButton(
+                          height: MediaQuery.of(context).size.height * 0.05,
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          text: "Next"
+                        ),
+                      )
                     ],
                   ),
                 ),

@@ -22,7 +22,7 @@ app.use(cors());
 app.use(express.json());
 
 // Admin routes
-app.use('/api/admin', adminRoutes);
+app.use(adminRoutes);
 app.use(hackathonRoutes);
 app.use(clubRoutes);
 app.use(profileRoutes);

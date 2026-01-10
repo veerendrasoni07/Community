@@ -1,26 +1,30 @@
-import 'package:codingera2/views/widgets/club_widget.dart';
+import 'package:codingera2/models/user.dart';
+import 'package:codingera2/provider/clubProvider.dart';
+import 'package:codingera2/views/widgets/modern_club_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ClubScreen extends StatefulWidget {
+class ClubScreen extends ConsumerStatefulWidget {
   const ClubScreen({super.key});
 
   @override
-  State<ClubScreen> createState() => _ClubScreenState();
+  ConsumerState<ClubScreen> createState() => _ClubScreenState();
 }
 
-class _ClubScreenState extends State<ClubScreen> {
+class _ClubScreenState extends ConsumerState<ClubScreen> {
   @override
   Widget build(BuildContext context) {
+    final clubs = ref.watch(clubProvider);
     return  Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Text("Our Clubs",style: TextStyle(fontSize: 40,fontWeight: FontWeight.bold,color: Colors.white),),
-              ClubWidget()
-            ],
-          ),
+        child: ListView.builder(
+            itemCount: clubs.length,
+            itemBuilder: (context,index){
+              final club = clubs[index];
+              print(club.clubname);
+              return  ModernClubTile(index: index,club: club,);
+            }
         ),
       ),
     );

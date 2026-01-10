@@ -1,3 +1,5 @@
+import 'package:codingera2/controllers/auth_controller.dart';
+import 'package:codingera2/provider/auth_manager_provider.dart';
 import 'package:codingera2/provider/user_provider.dart';
 import 'package:codingera2/views/nav_screen/profile/info_container.dart';
 import 'package:codingera2/views/nav_screen/profile/update_profile.dart';
@@ -14,14 +16,9 @@ class ProfileScreen extends ConsumerStatefulWidget {
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    final user = ref.watch(userProvider);
-  }
-  @override
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
+    print(user);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -29,6 +26,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           "Profile",
           style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(FontAwesomeIcons.signOut,color: Colors.white,),
+            onPressed: () {
+               ref.read(authManagerProvider.notifier).logout(context);
+            },
+          )
+        ],
       ),
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: SafeArea(

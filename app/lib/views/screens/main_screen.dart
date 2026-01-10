@@ -1,36 +1,34 @@
 import 'dart:ui';
 
+import 'package:codingera2/provider/auth_manager_provider.dart';
 import 'package:codingera2/views/nav_screen/club_screen.dart';
 import 'package:codingera2/views/nav_screen/hackathon_screen.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../../provider/user_provider.dart';
 import '../nav_screen/home_screen.dart';
 import '../nav_screen/profile/profile_screen.dart';
 
-class MainScreen extends StatefulWidget {
+class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key});
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
+  ConsumerState<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends ConsumerState<MainScreen> {
   late final PageController _controller;
   int _selectedIndex = 0;
 
-  late final List<Widget> _pages;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _controller = PageController(initialPage: _selectedIndex);
-    _pages = [
-      const HomeScreen(),
-      const ClubScreen(),
-      const HackathonScreen(),
-      const ProfileScreen(),
-    ];
+
   }
 
   void onPageChanged(int index){
@@ -41,16 +39,15 @@ class _MainScreenState extends State<MainScreen> {
   }
   void _onItemTapped(int index) {
     if (_selectedIndex == index) return;
-    _controller.animateToPage(
-      index,
-      duration: const Duration(milliseconds: 250),
-      curve: Curves.easeInOut,
-    );
-    setState(() => _selectedIndex = index);
+    _controller.jumpToPage(index);
+
   }
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(userProvider);
+    final state = ref.watch(authManagerProvider);
+    print(state);
     return Scaffold(
       backgroundColor: Colors.transparent,
       extendBody: true,
@@ -59,7 +56,12 @@ class _MainScreenState extends State<MainScreen> {
         onPageChanged: onPageChanged,
         physics: const ClampingScrollPhysics(),
         scrollDirection: Axis.horizontal,
-        children: _pages,
+        children: [
+          const HomeScreen(),
+          const ClubScreen(),
+          const HackathonScreen(),
+          const ProfileScreen(),
+        ],
       ),
       bottomNavigationBar: SafeArea(
           top: false,

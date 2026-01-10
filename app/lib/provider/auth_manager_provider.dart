@@ -1,17 +1,20 @@
-
-import 'package:codingera2/provider/user_provider.dart';
+import 'package:codingera2/views/screens/authentication/login_screen.dart';
+import 'package:codingera2/views/screens/main_screen.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'user_provider.dart';
 
-enum AuthStatus{
-  unknown,
+enum AuthStatus {
+  loading,
   unauthenticated,
-  authenticated;
+  authenticated,
 }
 
-class AuthManagerProvider extends StateNotifier<AuthStatus>{
-  Ref ref;
-  AuthManagerProvider(this.ref):super(AuthStatus.unknown){
+class AuthManager extends StateNotifier<AuthStatus> {
+  final Ref ref;
+
+  AuthManager(this.ref) : super(AuthStatus.loading) {
     init();
   }
 
@@ -28,13 +31,16 @@ class AuthManagerProvider extends StateNotifier<AuthStatus>{
     state = AuthStatus.authenticated;
   }
 
-  Future<void> logout() async {
+  Future<void> logout(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
-    //await IsarService(ref.read(isarProvider)).deleteAllData();
     ref.read(userProvider.notifier).signOut();
+
     state = AuthStatus.unauthenticated;
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>LoginScreen()), (route)=>false);
   }
 }
 
-final authManagerProvider = StateNotifierProvider<AuthManagerProvider,AuthStatus>((ref)=> AuthManagerProvider(ref));
+final authManagerProvider =
+StateNotifierProvider<AuthManager, AuthStatus>(
+        (ref) => AuthManager(ref));

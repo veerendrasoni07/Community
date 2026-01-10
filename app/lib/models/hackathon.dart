@@ -7,8 +7,13 @@ class Hackathon {
   final String image;
   final String description;
   final String eventdate;
+  final String eventTime;
   final String deadline;
   final int prize;
+  final String duration;
+  final String status;
+  final int registered;
+  final int totalTeam;
   final String venue;
   final int teamsize;
   final String level;
@@ -18,7 +23,12 @@ class Hackathon {
     required this.image,
     required this.description,
     required this.eventdate,
+    required this.eventTime,
+    required this.duration,
     required this.deadline,
+    required this.status,
+    required this.registered,
+    required this.totalTeam,
     required this.prize,
     required this.venue,
     required this.teamsize,
@@ -32,8 +42,13 @@ class Hackathon {
       'image': image,
       'description': description,
       'eventdate': eventdate,
+      'status': status,
+      'duration': duration,
       'deadline': deadline,
+      'registered': registered,
       'prize': prize,
+      'eventTime': eventTime,
+      'totalTeam': totalTeam,
       'venue': venue,
       'teamsize': teamsize,
       'level': level,
@@ -42,16 +57,21 @@ class Hackathon {
 
   factory Hackathon.fromJson(Map<String, dynamic> map) {
     return Hackathon(
-      id: map['_id'] as String,
-      name: map['name'] as String,
-      image: map['image'] as String,
-      description: map['description'] as String,
-      eventdate: map['eventdate'] as String,
-      deadline: map['deadline'] as String,
-      prize: map['prize'] as int,
-      venue: map['venue'] as String,
-      teamsize: map['teamsize'] as int,
-      level: map['level'] as String,
+      id: map['_id']?.toString() ?? '',
+      name: map['name']?.toString() ?? '',
+      image: map['image']?.toString() ?? '',
+      level: map['level']?.toString() ?? '',
+      duration: map['duration']?.toString() ?? '',
+      description: map['description']?.toString() ?? '',
+      registered: map['registered'] != null ? map['registered'] as int : 1,
+      eventdate: map['eventdate']?.toString() ?? '',
+      deadline: map['deadline']?.toString() ?? '',
+      eventTime: map['eventTime']?.toString() ?? '',
+      prize: map['prize'] != null ? map['prize'] as int : 0,
+      status: map['status']?.toString() ?? '',
+      totalTeam: map['totalTeam'] != null ? map['totalTeam'] as int : 0,
+      venue: map['venue']?.toString() ?? '',
+      teamsize: map['teamsize'] != null ? map['teamsize'] as int : 0,
     );
   }
 

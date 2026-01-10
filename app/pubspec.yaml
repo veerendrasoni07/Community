@@ -50,6 +50,9 @@ dependencies:
   flutter_animated_dialog: ^2.0.1
   firebase_core: ^3.13.1
   flutter_speed_dial: ^7.0.0
+  auto_size_text: ^3.0.0
+  flutter_screenutil: ^5.9.3
+  image_picker: ^1.2.1
 
 dev_dependencies:
   flutter_test:

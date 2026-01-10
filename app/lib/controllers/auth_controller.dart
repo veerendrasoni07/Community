@@ -107,7 +107,7 @@ import '../views/screens/main_screen.dart' show MainScreen;
     }
   }
 
-  Future<bool> refreshToken({required Ref ref}) async {
+  Future<bool> refreshToken({required Ref ref,required BuildContext context}) async {
     final prefs = await SharedPreferences.getInstance();
     final refreshToken = prefs.getString('refreshToken');
 
@@ -132,7 +132,7 @@ import '../views/screens/main_screen.dart' show MainScreen;
       return true;
     }
     else{
-      ref.read(authManagerProvider.notifier).logout();
+      ref.read(authManagerProvider.notifier).logout(context);
     }
 
     return false;

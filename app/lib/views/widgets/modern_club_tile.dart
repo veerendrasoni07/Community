@@ -1,4 +1,5 @@
 import 'package:codingera2/models/club.dart';
+import 'package:codingera2/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

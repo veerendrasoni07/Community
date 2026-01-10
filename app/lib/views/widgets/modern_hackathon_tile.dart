@@ -1,9 +1,11 @@
+import 'package:codingera2/models/hackathon.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ModernHackathonTile extends StatelessWidget {
   final int index;
-  ModernHackathonTile({super.key,required this.index});
+  Hackathon hackathon;
+  ModernHackathonTile({super.key,required this.index,required this.hackathon});
 
   final List<List<Color>> gradientPalette = [
     [Colors.deepPurple,Colors.pink, ],
@@ -15,6 +17,7 @@ class ModernHackathonTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(hackathon.status.isEmpty ? "status is empty" : hackathon.status);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
@@ -44,8 +47,8 @@ class ModernHackathonTile extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _statusChip(),
-                      _prizeChip("5000"),
+                      _statusChip(hackathon.status),
+                      _prizeChip(hackathon.prize.toString()),
                     ],
                   ),
 
@@ -53,7 +56,7 @@ class ModernHackathonTile extends StatelessWidget {
 
                   // Title
                   Text(
-                    "AI Innovation Challenge",
+                    hackathon.name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.lato(
@@ -67,7 +70,7 @@ class ModernHackathonTile extends StatelessWidget {
 
                   // Description
                   Text(
-                    "Build innovative AI solutions to solve real-world problems",
+                    hackathon.description,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.lato(
@@ -83,10 +86,10 @@ class ModernHackathonTile extends StatelessWidget {
               spacing: 2,
               runSpacing:5,
               children: [
-                _cleanDetailChip(Icons.location_on,"Jan 15 2026"),
-                _cleanDetailChip(Icons.location_on,"12:00 PM"),
+                _cleanDetailChip(Icons.location_on,hackathon.eventdate.toString().split("T")[0]),
+                _cleanDetailChip(Icons.location_on,hackathon.eventTime),
                 _cleanDetailChip(Icons.location_on,"48 hours"),
-                _cleanDetailChip(Icons.location_on,"Tech Hub Building A",),
+                _cleanDetailChip(Icons.location_on,hackathon.venue,),
               ],
             ),
             Padding(
@@ -99,12 +102,12 @@ class ModernHackathonTile extends StatelessWidget {
                       Row(
                         children: [
                           Icon(Icons.people),
-                          Text("150/200")
+                          Text(hackathon.totalTeam.toString())
                         ],
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text("62% Filled"),
+                        child: Text("${(hackathon.totalTeam%hackathon.registered)*100}% Filled"),
                       )
                     ],
                   ),
@@ -116,7 +119,7 @@ class ModernHackathonTile extends StatelessWidget {
                     ),
                     child: LinearProgressIndicator(
                     backgroundColor: Colors.grey.shade300,
-                    value: 0.5,
+                    value: hackathon.totalTeam%hackathon.registered == 0 ? 0 : hackathon.registered%hackathon.totalTeam.toDouble(),
                     valueColor: AlwaysStoppedAnimation<Color>(gradientPalette[index%gradientPalette.length][0]),
                   )),
                 ],
@@ -142,11 +145,11 @@ class ModernHackathonTile extends StatelessWidget {
   }
 
 
-  Widget _statusChip() {
+  Widget _statusChip(String status) {
     return Chip(
       backgroundColor: Colors.white,
       label: Text(
-        "Upcoming",
+        status,
         style: TextStyle(
           color:  Colors.pink,
           fontWeight: FontWeight.bold,
@@ -158,7 +161,7 @@ class ModernHackathonTile extends StatelessWidget {
     return Chip(
       backgroundColor: Colors.white,
       label: Text(
-        "5000 Rs",
+        prize,
         style: TextStyle(
           color:  Colors.green,
           fontWeight: FontWeight.bold,
