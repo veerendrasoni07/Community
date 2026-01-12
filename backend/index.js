@@ -14,12 +14,14 @@ import clubRoutes from './routes/club_route.js';
 import authRoutes from './routes/auth.js';
 import profileRoutes from './routes/profile_route.js';
 import bannerRoutes from './routes/banner_route.js';
-import router from './controller/clodinary.js';
+import {router} from './controller/clodinary.js';
+import pdfRoutes from './routes/pdf_routes.js';
 
 const app = express();
 const JWT_SECRET = process.env.JWT_SECRET;
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Admin routes
 app.use(adminRoutes);
@@ -30,6 +32,7 @@ app.use(profileRoutes);
 app.use(bannerRoutes);
 app.use(authRoutes);
 app.use(router);
+app.use(pdfRoutes);
 
 
 // Storying the OTP in memory for now

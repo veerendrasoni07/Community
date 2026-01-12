@@ -1,32 +1,8 @@
 import mongoose from 'mongoose';
 
-const pdfSchema = new mongoose.Schema({
-
-    semester:{
-        type:String,
-        required:true,
-    },
-    subject:{
-        type:String,
-        required:true
-    },
-    chapter:{
-        type:String,
-        required:true
-    },
-    pdf:{
-        type:String,
-        required:true
-    },
-    createdAt:{
-        type:Date,
-        default:Date.now()
-    }
-});
-
 
 const subjectSchema = new mongoose.Schema({
-    subjectName:{
+    subject:{
         type:String,
         required:true
     },
@@ -39,8 +15,11 @@ const subjectSchema = new mongoose.Schema({
         enum:['Detailed Notes','Short Notes','Important Questions'],
         required:true
     },
-    chapters:[pdfSchema]
-});
+    chapters:[{
+        type:String,
+        ref:"Pdf"
+    }]
+},{timestamps:true});
 
 const Subject = mongoose.model('Subject',subjectSchema);
 export default Subject;
