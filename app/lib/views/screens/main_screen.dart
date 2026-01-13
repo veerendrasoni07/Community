@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:codingera2/provider/auth_manager_provider.dart';
 import 'package:codingera2/views/nav_screen/club_screen.dart';
 import 'package:codingera2/views/nav_screen/hackathon_screen.dart';
+import 'package:codingera2/views/nav_screen/notes_screen.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -46,8 +47,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
-    final state = ref.watch(authManagerProvider);
-    print(state);
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       extendBody: true,
@@ -58,8 +58,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         scrollDirection: Axis.horizontal,
         children: [
           const HomeScreen(),
-          const ClubScreen(),
-          const HackathonScreen(),
+          const NotesScreen(),
           const ProfileScreen(),
         ],
       ),
@@ -104,8 +103,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _navItem(Icon(FontAwesomeIcons.houseCrack, size: 20,color: Colors.white,), Icon(FontAwesomeIcons.house, size: 20,color: Colors.white,), 0),
-                  _navItem(Icon(FontAwesomeIcons.peoplePulling, size: 20,color: Colors.white,), Icon(FontAwesomeIcons.peopleGroup,size: 20,color: Colors.white,), 1),
-                  _navItem(Icon(FontAwesomeIcons.question, size: 20,color: Colors.white,), Icon(FontAwesomeIcons.brain,color: Colors.white,size: 20), 2),
+                  _navItem(Icon(FontAwesomeIcons.noteSticky, size: 20,color: Colors.white,), Icon(FontAwesomeIcons.peopleGroup,size: 20,color: Colors.white,), 1),
                   _navItem(Icon(FontAwesomeIcons.personFalling, size: 20,color: Colors.white,), Icon(FontAwesomeIcons.person,color: Colors.white,size: 20), 3),
                 ],
               ),
@@ -123,7 +121,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     return GestureDetector(
       onTap: () => _onItemTapped(index),
       child: AnimatedContainer(
-          width: 50,
+          width: isActive ? 100 : 50,
           alignment: Alignment.center,
           margin: EdgeInsets.symmetric(horizontal: isActive ? 10 : 0),
           height: 50,

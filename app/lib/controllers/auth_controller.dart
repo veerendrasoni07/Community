@@ -84,9 +84,9 @@ import '../views/screens/main_screen.dart' show MainScreen;
         final refreshToken = data['refreshToken'];
         final user = data['user'];
         final userJson = jsonEncode(user);
-        preferences.setString('user', userJson);
-        preferences.setString('token', token);
-        preferences.setString('refreshToken', refreshToken);
+        await preferences.setString('user', userJson);
+        await preferences.setString('token', token);
+        await preferences.setString('refreshToken', refreshToken);
         ref.read(userProvider.notifier).setUser(userJson);
         ref.read(tokenProvider.notifier).setToken(token);
         if(context.mounted){

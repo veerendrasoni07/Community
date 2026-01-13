@@ -12,6 +12,16 @@ class ClubScreen extends ConsumerStatefulWidget {
 }
 
 class _ClubScreenState extends ConsumerState<ClubScreen> {
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    ref.read(clubProvider.notifier).loadClub();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final clubs = ref.watch(clubProvider);

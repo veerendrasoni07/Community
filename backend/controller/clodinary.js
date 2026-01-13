@@ -3,6 +3,7 @@ import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import dotenv from 'dotenv';
 import express from 'express';
 import {auth} from '../middleware/auth.js';
+import multer from 'multer';
 
 dotenv.config();
 
@@ -14,7 +15,7 @@ cloudinary.v2.config({
 
 
 const storage = new CloudinaryStorage({
-    cloudinary:cloudinary,
+    cloudinary:cloudinary.v2,
     params:{
         folder:"coding-era-notes",
         resource_type:"raw",
@@ -23,6 +24,14 @@ const storage = new CloudinaryStorage({
         },
     },
 });
+// const storage = multer.diskStorage({
+//     destination: "/upload",
+//       filename: function (req, file, cb) {
+//     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+//     cb(null, file.fieldname + '-' + uniqueSuffix)
+//   }
+
+// })
 
 const router = express.Router();   
 router.post('/api/cloudinary/sign',auth,async(req,res)=>{

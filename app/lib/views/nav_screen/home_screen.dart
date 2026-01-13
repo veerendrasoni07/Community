@@ -4,8 +4,10 @@ import 'package:codingera2/controllers/auth_controller.dart';
 import 'package:codingera2/views/admin/screens/admin_home_screen.dart';
 import 'package:codingera2/views/admin/widgets/admin_club.dart';
 import 'package:codingera2/views/admin/widgets/admin_hackathon.dart';
+import 'package:codingera2/views/admin/widgets/admin_upload_notes.dart';
 import 'package:codingera2/views/nav_screen/club_screen.dart';
 import 'package:codingera2/views/nav_screen/hackathon_screen.dart';
+import 'package:codingera2/views/screens/quiz/quiz_first_page.dart';
 import 'package:codingera2/views/widgets/banner_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -194,7 +196,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
               child: TabBarView(
                 controller: _tabController,
                 children: <Widget>[
-                  role == "user" ? _homeScreen() : AdminHomeScreen(),
+                  role == "user" ? AdminHomeScreen() : _homeScreen(),
                   const HackathonScreen(),
                   const ClubScreen()
                 ],
@@ -219,19 +221,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
                   child: const Icon(Icons.code),
                   backgroundColor: Colors.blue,
                   onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (_)=>AdminHackathon())),
-                  label: 'Hackathon',
+                  label: 'Upload Hackathon',
                 ),
                 SpeedDialChild(
                   child: const Icon(Icons.people),
                   backgroundColor: Colors.blue,
                   onTap: ()=>Navigator.push(context,MaterialPageRoute(builder: (_)=>AdminClub())),
-                  label: 'Club',
+                  label: 'Upload Club',
                 ),
                 SpeedDialChild(
                   child: const Icon(Icons.person),
                   backgroundColor: Colors.blue,
-                  onTap: (){},
-                  label: 'Quiz',
+                  onTap: ()=> Navigator.push(context,MaterialPageRoute(builder: (_)=>AdminNotes())),
+                  label: 'Upload Notes',
                 )
               ]
             ),
@@ -281,7 +283,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
               style: GoogleFonts.montserrat(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white)),
           SizedBox(height: 12),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (_)=>QuizFirstPage())),
             child: Text("Start Now"),
           )
         ],

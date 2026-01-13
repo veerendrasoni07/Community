@@ -20,7 +20,6 @@ class TextFields extends StatelessWidget {
       cursorColor: Colors.black87,
       style: TextStyle(
           color: Colors.black87,
-
           fontSize: 16,
       ),
     );

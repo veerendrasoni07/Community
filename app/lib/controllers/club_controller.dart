@@ -17,9 +17,11 @@ class ClubController {
 
       if (response.statusCode == 200) {
         List<dynamic> data = jsonDecode(response.body);
+        print(data);
         List<Club> club = data.map((club) => Club.fromJson(club)).toList();
         return club;
       } else {
+        print(response.body);
         throw Exception("Unable to load clubs");
       }
     } catch (e) {

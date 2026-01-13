@@ -1,5 +1,6 @@
 import 'package:codingera2/models/club.dart';
 import 'package:codingera2/models/user.dart';
+import 'package:codingera2/views/details/club_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -37,6 +38,7 @@ class ModernClubTile extends StatelessWidget {
             // HEADER
             Container(
               height: MediaQuery.of(context).size.height * 0.18,
+              width: double.infinity,
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -107,21 +109,24 @@ class ModernClubTile extends StatelessWidget {
             const SizedBox(height: 10),
 
             // CTA Button
-            Center(
-              child: Container(
-                height: 48,
-                width: MediaQuery.of(context).size.width * 0.7,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(14),
-                  gradient: LinearGradient(colors: gradient),
-                ),
-                child: const Center(
-                  child: Text(
-                    "Join Club",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+            GestureDetector(
+              onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (_)=>ClubDetailScreen(club: club))),
+              child: Center(
+                child: Container(
+                  height: 48,
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(14),
+                    gradient: LinearGradient(colors: gradient),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      "Join Club",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),

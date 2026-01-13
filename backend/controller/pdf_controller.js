@@ -3,7 +3,6 @@ import Pdf from '../models/pdf.js'
 
 export const uploadPdf = async (req,res)=>{
     console.log("fileeeeee");
-    
     try {
 
         if (!req.file) {

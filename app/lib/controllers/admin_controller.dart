@@ -150,7 +150,7 @@ class AdminController {
       final imageUrl = uploadImage["secure_url"];
 
       final response = await http.post(
-        Uri.parse('$uri/api/club'),
+        Uri.parse('$uri/api/upload-club'),
           body: jsonEncode({
             "clubname": clubname,
             "techname": techname,

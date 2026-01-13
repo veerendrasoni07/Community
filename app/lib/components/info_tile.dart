@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class InfoRow extends StatelessWidget {
-  final String title;
+class InfoTile extends StatelessWidget {
+  final IconData icon;
+  final String label;
   final String value;
-  const InfoRow({required this.title, required this.value});
+  const InfoTile({required this.icon, required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         children: [
-          Text('$title: ', style: const TextStyle(fontWeight: FontWeight.bold)),
-          Expanded(child: Text(value)),
+          Icon(icon, color: Colors.white54, size: 20),
+          const SizedBox(width: 12),
+          Text('$label: ', style: GoogleFonts.inter(color: Colors.white60)),
+          Expanded(child: Text(value, style: GoogleFonts.inter(color: Colors.white))),
         ],
       ),
     );

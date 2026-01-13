@@ -5,7 +5,7 @@ const pdfRoutes = express.Router();
 import {storage} from '../controller/clodinary.js';
 import { auth } from '../middleware/auth.js';
 
-const upload = multer({storage:storage});
+const upload = multer({storage});
 
 pdfRoutes.post('/api/upload-pdf',upload.single("pdf"),uploadPdf);
 pdfRoutes.get('/api/get-pdf',auth,getPdf);

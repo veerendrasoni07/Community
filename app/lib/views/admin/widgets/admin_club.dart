@@ -5,6 +5,7 @@ import 'package:codingera2/models/user.dart';
 import 'package:codingera2/provider/Admin_Provider/community_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
@@ -112,21 +113,20 @@ class _AdminClubState extends ConsumerState<AdminClub> {
                 setState(() {
                   selectedLeader = value;
                 });
-              }, "Select Club Leader"),
+              }, "Select Club Leader", "Club Leader"),
               _dropDownMembers(members, (value){
                 setState(() {
                   selectedManager = value;
                 });
-              }, "Select Club Manager"),
-              _field("Club Manager UserId", managerIdCtrl),
-              _field("Join Link (optional)", joinLinkCtrl, required: false),
+              }, "Select Club Manager", "Club Manager"),
 
               const SizedBox(height: 20),
               _dynamicSection("Club Rules", ruleCtrls, addRule),
               const SizedBox(height: 20),
               _dynamicSection("Club Activities", activityCtrls, addActivity),
-
+              _field("Join Link", joinLinkCtrl),
               const SizedBox(height: 30),
+
               ElevatedButton(
                 onPressed: loading ? null : uploadClub,
                 child: loading
@@ -178,18 +178,26 @@ class _AdminClubState extends ConsumerState<AdminClub> {
     );
   }
 
-  Widget _dropDownMembers(List<User> members,Function(User?) onChanged,String text){
+  Widget _dropDownMembers(List<User> members,Function(User?) onChanged,String text,String heading){
     return Padding(
       padding: const EdgeInsets.all(12.0),
-      child: DropdownButtonFormField(
-        hint: Text(text),
-        initialValue: members.first,
-          items: members.map((m)=>DropdownMenuItem(
-            value: m,
-              child: Text(m.fullname)
-          )).toList(),
-          onChanged:onChanged,
-        validator: (v) => v == null ? "Required" : null,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(heading,style: GoogleFonts.poppins(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),),
+          DropdownButtonFormField(
+            hint: Text(text),
+              items: members.map((m)=>DropdownMenuItem(
+                value: m,
+                  child: Text(m.fullname)
+              )).toList(),
+              onChanged:onChanged,
+            validator: (v) => v == null ? "Required" : null,
+          ),
+        ],
       ),
     );
 

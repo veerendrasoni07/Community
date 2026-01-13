@@ -1,4 +1,5 @@
 import 'package:codingera2/models/hackathon.dart';
+import 'package:codingera2/views/details/hackathon_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -125,15 +126,18 @@ class ModernHackathonTile extends StatelessWidget {
                 ],
               ),
             ),
-            Container(
-              height: 50,
-              width: MediaQuery.of(context).size.width*0.75,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                gradient: LinearGradient(colors: gradientPalette[index%gradientPalette.length])
-              ),
-              child: Center(
-                child: Text("Register Now",style: GoogleFonts.lato(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20),),
+            GestureDetector(
+              onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (_)=>HackathonDetailScreen(hackathon: hackathon))),
+              child: Container(
+                height: 50,
+                width: MediaQuery.of(context).size.width*0.75,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  gradient: LinearGradient(colors: gradientPalette[index%gradientPalette.length])
+                ),
+                child: Center(
+                  child: Text("Register Now",style: GoogleFonts.lato(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20),),
+                ),
               ),
             ),
             SizedBox(height: 10,),

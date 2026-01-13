@@ -49,17 +49,17 @@ class Club {
 
   factory Club.fromJson(Map<String, dynamic> map) {
     return Club(
-      id: map['_id'] as String,
-      joinLink: map['joinLink'] as String,
-      image: map['image'] as String,
-      clubname: map['clubname'] as String,
-      techname: map['techname'] as String,
-      desc: map['desc'] as String,
-      clubLeader: map['clubLeader'] as User,
-      clubManager: map['clubManager'] as User,
-      detailDec: map['detailDes'] as String ?? '',
-      clubRule: map['clubRule'] as List<String> ?? [],
-      clubActivities: map['clubActivities'] as List<String> ?? [],
+      id: map['_id']?.toString() ?? '',
+      joinLink: map['joinLink']?.toString() ?? '',
+      image: map['image']?.toString() ?? '',
+      clubname: map['clubname']?.toString() ?? '',
+      techname: map['techname']?.toString() ?? '',
+      desc: map['desc']?.toString() ?? '',
+      clubLeader: User.fromMap(map['clubLeader']),
+      clubManager: User.fromMap(map['clubManager']),
+      detailDec: map['detailDes']?.toString() ?? '',
+      clubRule: (map['clubRule'] as List<dynamic>?)?.cast<String>() ?? [],
+      clubActivities: (map['clubActivities'] as List<dynamic>?)?.cast<String>() ?? [],
     );
   }
 
