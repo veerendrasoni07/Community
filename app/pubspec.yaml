@@ -91,9 +91,10 @@ flutter:
     - assets/images/coding era logo.jpg
     - assets/images/instapng.png
     - assets/images/linkdinpng.webp
-    - assets/images/codinglogo.webp
+    - assets/images/codinglogo.png
+    - assets/images/project.png
     - assets/images/threeperson.png
-    - assets/images/laptop.webp
+    - assets/images/laptop.png
     - assets/images/clubpng.png
     - assets/images/members.png
     - assets/images/trophypng.png

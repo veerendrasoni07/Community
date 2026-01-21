@@ -101,12 +101,17 @@ class _SignUpFlowState extends ConsumerState<SignUpFlow> {
         backgroundColor: Colors.transparent,
         leading: _currentPage > 0
             ? IconButton(
-                icon: const Icon(FontAwesomeIcons.brandsFontAwesome,
+                icon: const Icon(FontAwesomeIcons.leftLong,
                 size: 15,
                     color: Colors.black),
                 onPressed: previousPage,
               )
-            : null,
+            : IconButton(
+          icon:  Icon(FontAwesomeIcons.leftLong,
+              size: 15,
+              color: Colors.black),
+          onPressed:()=> Navigator.pop(context),
+        ),
       ),
 
       body: SafeArea(

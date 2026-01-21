@@ -5,12 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-
-
 import '../../../components/container_button.dart';
-import '../../../components/text_fields.dart';
 import '../../../controllers/auth_controller.dart';
-import 'register_screen.dart';
+
 
 class LoginScreen extends ConsumerStatefulWidget {
 
@@ -221,7 +218,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
             GestureDetector(
               onTap: (){
-                Navigator.pushReplacement(context,
+                Navigator.push(context,
                     MaterialPageRoute(builder: (context)=>SignUpFlow())
                 );
               },

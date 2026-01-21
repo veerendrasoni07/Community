@@ -23,66 +23,69 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          primary: const Color.fromARGB(255, 3, 53, 134),
-          seedColor: const Color.fromARGB(
-            255,
-            3,
-            53,
-            134,
-          ), // or any primary color
-          brightness: Brightness.light,
+    return ScreenUtilInit(
+      designSize: ScreenUtil.defaultSize,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            primary: const Color.fromARGB(255, 3, 53, 134),
+            seedColor: const Color.fromARGB(
+              255,
+              3,
+              53,
+              134,
+            ), // or any primary color
+            brightness: Brightness.light,
+          ),
+          useMaterial3: true, // optional if you're using Material 3
         ),
-        useMaterial3: true, // optional if you're using Material 3
+        home:  ref.watch(authManagerProvider) == AuthStatus.authenticated ? const MainScreen() : ref.watch(authManagerProvider) == AuthStatus.unauthenticated ? const LoginScreen() :  OnboardingScreen() ,
+
+
+
+
+        // FutureBuilder(
+        //   future: _checkTokenAndSetUser(ref),
+        //   builder: (context, snapshot) {
+        //     if (snapshot.connectionState == ConnectionState.waiting) {
+        //       return Center(child: CircularProgressIndicator());
+        //     }
+        //     final user = ref.watch(userProvider);
+        //     return user != null
+        //         ? AnimatedSplashScreen(
+        //           splash: Center(
+        //             child: ClipRRect(
+        //               borderRadius: BorderRadius.circular(20),
+        //               child: Image.asset(
+        //                 "assets/images/coding era logo.jpg",
+        //                 fit: BoxFit.fill,
+        //               ),
+        //             ),
+        //           ),
+        //           nextScreen: MainScreen(),
+        //           splashIconSize: 200,
+        //           duration: 3000,
+        //           backgroundColor: Theme.of(context).colorScheme.primary,
+        //         )
+        //         : AnimatedSplashScreen(
+        //           splash: Center(
+        //             child: ClipRRect(
+        //               borderRadius: BorderRadius.circular(20),
+        //               child: Image.asset(
+        //                 "assets/images/coding era logo.jpg",
+        //                 fit: BoxFit.fill,
+        //               ),
+        //             ),
+        //           ),
+        //           nextScreen: OnboardingScreen(),
+        //           splashIconSize: 200,
+        //           duration: 3000,
+        //           backgroundColor: Theme.of(context).colorScheme.primary,
+        //         );
+        //   },
+        // ),
       ),
-      home:  ref.watch(authManagerProvider) == AuthStatus.authenticated ? const MainScreen() : ref.watch(authManagerProvider) == AuthStatus.unauthenticated ? const LoginScreen() :  OnboardingScreen() ,
-      
-      
-      
-      
-      // FutureBuilder(
-      //   future: _checkTokenAndSetUser(ref),
-      //   builder: (context, snapshot) {
-      //     if (snapshot.connectionState == ConnectionState.waiting) {
-      //       return Center(child: CircularProgressIndicator());
-      //     }
-      //     final user = ref.watch(userProvider);
-      //     return user != null
-      //         ? AnimatedSplashScreen(
-      //           splash: Center(
-      //             child: ClipRRect(
-      //               borderRadius: BorderRadius.circular(20),
-      //               child: Image.asset(
-      //                 "assets/images/coding era logo.jpg",
-      //                 fit: BoxFit.fill,
-      //               ),
-      //             ),
-      //           ),
-      //           nextScreen: MainScreen(),
-      //           splashIconSize: 200,
-      //           duration: 3000,
-      //           backgroundColor: Theme.of(context).colorScheme.primary,
-      //         )
-      //         : AnimatedSplashScreen(
-      //           splash: Center(
-      //             child: ClipRRect(
-      //               borderRadius: BorderRadius.circular(20),
-      //               child: Image.asset(
-      //                 "assets/images/coding era logo.jpg",
-      //                 fit: BoxFit.fill,
-      //               ),
-      //             ),
-      //           ),
-      //           nextScreen: OnboardingScreen(),
-      //           splashIconSize: 200,
-      //           duration: 3000,
-      //           backgroundColor: Theme.of(context).colorScheme.primary,
-      //         );
-      //   },
-      // ),
     );
   }
 }

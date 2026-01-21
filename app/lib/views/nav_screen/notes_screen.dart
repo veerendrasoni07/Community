@@ -47,8 +47,13 @@ class _NotesScreenState extends State<NotesScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
       appBar: AppBar(
-        title: const Text("Notes"),
-        centerTitle: true,
+        title:  Text("Notes",style: GoogleFonts.montserrat(
+          fontSize: 25,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+          letterSpacing: 1.2,
+        ),),
+        backgroundColor: Colors.transparent,
       ),
       body: SafeArea(
         child: Column(
@@ -72,7 +77,18 @@ class _NotesScreenState extends State<NotesScreen> {
               setState(() {
                 noteType = value;
               });
-            }, "Subject", "Select Subject")
+            }, "Subject", "Select Subject"),
+            ElevatedButton(
+                onPressed: (){},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  padding: EdgeInsets.all(12),
+                ),
+                child: Text("Get",style: GoogleFonts.montserrat(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),))
           ],
         ),
       )
@@ -86,10 +102,26 @@ class _NotesScreenState extends State<NotesScreen> {
         children: [
           Text(heading,style: GoogleFonts.poppins(
             fontSize: 16,
+            color: Colors.white,
             fontWeight: FontWeight.bold,
           ),),
           DropdownButtonFormField(
-            hint: Text(text),
+            hint: Text(text,style: GoogleFonts.poppins(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            )),
+            decoration: InputDecoration(
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: Colors.white),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: Colors.white),
+              ),
+              fillColor: Colors.white,
+              filled: true,
+            ),
             items: options.map((m)=>DropdownMenuItem(
                 value: m,
                 child: Text(m)

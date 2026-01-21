@@ -1,3 +1,4 @@
+import 'package:codingera2/components/alert_dialog_warning.dart';
 import 'package:codingera2/controllers/auth_controller.dart';
 import 'package:codingera2/provider/auth_manager_provider.dart';
 import 'package:codingera2/provider/user_provider.dart';
@@ -29,9 +30,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         actions: [
           IconButton(
             icon: const Icon(FontAwesomeIcons.signOut,color: Colors.white,),
-            onPressed: () {
-               ref.read(authManagerProvider.notifier).logout(context);
-            },
+            onPressed: () =>showDialog(context: context, builder: (context){
+              return AlertDialogWarning(title: Text("Logout Warning"), content: Text("Do you really want to logout?"), onSave: (){
+                  ref.read(authManagerProvider.notifier).logout(context);
+
+              });
+            })
           )
         ],
       ),

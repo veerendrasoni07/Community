@@ -46,7 +46,6 @@ class _MainScreenState extends ConsumerState<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(userProvider);
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -104,7 +103,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                 children: [
                   _navItem(Icon(FontAwesomeIcons.houseCrack, size: 20,color: Colors.white,), Icon(FontAwesomeIcons.house, size: 20,color: Colors.white,), 0),
                   _navItem(Icon(FontAwesomeIcons.noteSticky, size: 20,color: Colors.white,), Icon(FontAwesomeIcons.peopleGroup,size: 20,color: Colors.white,), 1),
-                  _navItem(Icon(FontAwesomeIcons.personFalling, size: 20,color: Colors.white,), Icon(FontAwesomeIcons.person,color: Colors.white,size: 20), 3),
+                  _navItem(Icon(FontAwesomeIcons.personFalling, size: 20,color: Colors.white,), Icon(FontAwesomeIcons.person,color: Colors.white,size: 20), 2),
                 ],
               ),
             )

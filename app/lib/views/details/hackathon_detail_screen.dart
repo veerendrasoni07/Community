@@ -1,19 +1,10 @@
-
-// Drop this file into your Flutter project and use Navigator.push
-
-import 'package:codingera2/components/bullet_text.dart';
-import 'package:codingera2/components/stat_card.dart';
-import 'package:codingera2/components/user_card.dart' show UserCard;
-import 'package:codingera2/models/club.dart';
 import 'package:codingera2/models/hackathon.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../components/info_tile.dart';
 
-// ============================
-// HACKATHON DETAIL SCREEN
-// ============================
+
 class HackathonDetailScreen extends StatelessWidget {
   final Hackathon hackathon;
   const HackathonDetailScreen({super.key, required this.hackathon});

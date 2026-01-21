@@ -15,6 +15,7 @@ import authRoutes from './routes/auth.js';
 import profileRoutes from './routes/profile_route.js';
 import bannerRoutes from './routes/banner_route.js';
 import {router} from './controller/clodinary.js';
+import quizRouter from './routes/quiz_routes.js';
 import pdfRoutes from './routes/pdf_routes.js';
 
 const app = express();
@@ -33,6 +34,7 @@ app.use(bannerRoutes);
 app.use(authRoutes);
 app.use(router);
 app.use(pdfRoutes);
+app.use(quizRouter);
 
 
 // Storying the OTP in memory for now

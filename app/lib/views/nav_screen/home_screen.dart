@@ -1,5 +1,6 @@
 import 'package:codingera2/components/alert_dialog_warning.dart';
 import 'package:codingera2/components/container_for_homescreen.dart';
+import 'package:codingera2/components/home_content.dart';
 import 'package:codingera2/controllers/auth_controller.dart';
 import 'package:codingera2/views/admin/screens/admin_home_screen.dart';
 import 'package:codingera2/views/admin/widgets/admin_club.dart';
@@ -59,10 +60,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
     return Scaffold(
       appBar:  AppBar(
       toolbarHeight: 64,
-      title: const Text(
-        "CODING ERA",
-        style: TextStyle(
+      title:  Text(
+        "Coding Era",
+        style: GoogleFonts.montserrat(
           fontWeight: FontWeight.bold,
+          fontSize: 25,
           color: Colors.white,
         ),
       ),
@@ -252,9 +254,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
       child: Column(
         children: [
           _todayQuiz(),
-          _yourStats(),
+          // _yourStats(),
           _ongoingEvents(),
-          leaderBoardPreview()
+          // leaderBoardPreview()
+          HomeContent()
         ],
       ),
     );
@@ -263,7 +266,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
 
   Widget _todayQuiz(){
     return Container(
-
       width: double.infinity,
       margin: EdgeInsets.all(12),
       padding: EdgeInsets.all(16),
