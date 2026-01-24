@@ -67,7 +67,6 @@ class ModernClubTile extends StatelessWidget {
                   // Club name
                   Text(
                     club.clubname,
-                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.lato(
                       fontSize: 22,
@@ -81,7 +80,6 @@ class ModernClubTile extends StatelessWidget {
                   // Short description
                   Text(
                     club.desc,
-                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.lato(
                       fontSize: 14,

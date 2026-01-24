@@ -165,7 +165,7 @@ class ModernHackathonTile extends StatelessWidget {
     return Chip(
       backgroundColor: Colors.white,
       label: Text(
-        prize,
+        "$prize Rs",
         style: TextStyle(
           color:  Colors.green,
           fontWeight: FontWeight.bold,
@@ -177,6 +177,7 @@ class ModernHackathonTile extends StatelessWidget {
   Widget _cleanDetailChip(IconData icon, String text) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      margin: const EdgeInsets.symmetric(horizontal: 5),
       decoration: BoxDecoration(
         color: Colors.grey.shade100,
         borderRadius: BorderRadius.circular(20),
@@ -192,9 +193,16 @@ class ModernHackathonTile extends StatelessWidget {
         children: [
           Icon(icon, size: 14, color: Colors.grey.shade700),
           const SizedBox(width: 6),
-          Text(
-            text,
-            style: const TextStyle(fontSize: 12),
+          Flexible(
+            child: Text(
+              text,
+              style: GoogleFonts.lato(
+                fontSize: 12,
+                color: Colors.grey.shade700,
+                fontWeight: FontWeight.bold,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ],
       ),

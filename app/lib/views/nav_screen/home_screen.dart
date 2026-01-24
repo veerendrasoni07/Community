@@ -109,85 +109,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
         ),
       ),
     ),
-      //
-      // drawer: Drawer(
-      //   width: 250,
-      //   backgroundColor: Theme.of(context).colorScheme.primary,
-      //   child: SafeArea(
-      //     child: Column(
-      //       crossAxisAlignment: CrossAxisAlignment.start,
-      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //       children: [
-      //         Center(
-      //           child: ClipRRect(
-      //             borderRadius: BorderRadius.circular(20),
-      //             child: Image.asset(
-      //               "assets/images/coding era logo.jpg",
-      //               height: 200,
-      //               width: 200,
-      //               fit: BoxFit.fill,
-      //             ),
-      //           ),
-      //         ),
-      //
-      //         Padding(
-      //           padding: const EdgeInsets.all(10.0),
-      //           child: Column(
-      //             children: [
-      //               ListTile(
-      //                 title: Text("Home"),
-      //                 leading: Icon(FontAwesomeIcons.house),
-      //                 textColor: Colors.white,
-      //                 iconColor: Colors.white,
-      //                 onTap: () {
-      //                   Navigator.of(context).pop();
-      //                 },
-      //               ),
-      //
-      //               ListTile(
-      //                 title: Text("Members"),
-      //                 leading: Icon(FontAwesomeIcons.peopleGroup),
-      //                 textColor: Colors.white,
-      //                 iconColor: Colors.white,
-      //                 onTap: () async {
-      //                   final url = Uri.parse(
-      //                     'https://www.codingera.site/',
-      //                   );
-      //                   launchUrl(url, mode: LaunchMode.externalApplication);
-      //                 },
-      //               ),
-      //
-      //               ListTile(
-      //                 title: Text("About"),
-      //                 leading: Icon(FontAwesomeIcons.infoCircle),
-      //                 textColor: Colors.white,
-      //                 iconColor: Colors.white,
-      //                 onTap: () async {
-      //                   final url = Uri.parse(
-      //                     'https://www.codingera.site/about',
-      //                   );
-      //                   launchUrl(url, mode: LaunchMode.externalApplication);
-      //                 },
-      //               ),
-      //             ],
-      //           ),
-      //         ),
-      //         Spacer(),
-      //         Padding(
-      //           padding: const EdgeInsets.all(10.0),
-      //           child: ListTile(
-      //             title: Text("Logout"),
-      //             leading: Icon(FontAwesomeIcons.rightFromBracket),
-      //             textColor: Colors.white,
-      //             iconColor: Colors.white,
-      //             onTap:logOut ,
-      //           ),
-      //         ),
-      //         Spacer(),
-      //       ],
-      //     ),
-      //   ),
-      // ),
+
       extendBodyBehindAppBar: true,
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: SafeArea(
@@ -199,7 +121,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
               child: TabBarView(
                 controller: _tabController,
                 children: <Widget>[
-                  role == "user" ? AdminHomeScreen() : _homeScreen(),
+                  role == "admin" ? AdminHomeScreen() : _homeScreen(),
                   const HackathonScreen(),
                   const ClubScreen()
                 ],

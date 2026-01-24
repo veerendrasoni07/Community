@@ -227,6 +227,58 @@ import '../views/screens/main_screen.dart' show MainScreen;
   }
 
 
+  Future<bool> getOTP(String email)async {
+    try{
+      http.Response response = await  http.post(
+          Uri.parse('$uri/api/get-otp'),
+        body: jsonEncode({
+          "email":email
+        }),
+        headers: <String,String>{
+            'Content-Type':'application/json; charset=UTF-8'
+        },
+      );
+      if(response.statusCode == 200){
+        final data = jsonDecode(response.body);
+        return data['success'];
+      }
+      else{
+        print(response.body);
+        throw Exception('Failed to get OTP');
+      }
+    }catch(e){
+      print(e);
+      throw Exception(e);
+    }
+  }
+
+  Future<bool> verifyOTP(String email,int otp)async {
+    try{
+      http.Response response = await  http.post(
+        Uri.parse('$uri/api/get-otp'),
+        body: jsonEncode({
+          "email":email,
+          "otp":otp
+        }),
+        headers: <String,String>{
+          'Content-Type':'application/json; charset=UTF-8'
+        },
+      );
+      if(response.statusCode == 200){
+        final data = jsonDecode(response.body);
+        return data['success'];
+      }
+      else{
+        print(response.body);
+        throw Exception('Failed to get OTP');
+      }
+    }catch(e){
+      print(e);
+      throw Exception(e);
+    }
+  }
+
+
 
 
   }

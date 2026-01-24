@@ -173,13 +173,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text("Forgot password?",
+                  TextButton(onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>ChangePasswordFlow())), child: Text(
+                    "Forgot password?",
                     style: TextStyle(
                         color: Colors.lightBlue,
                         fontWeight: FontWeight.bold,
                         fontSize: 16
                     ),
-                  ),
+                  ))
                 ],
               ),
             ),
@@ -205,7 +206,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           child: ContainerButton(height: 60, width: 350, text: "Log-in"),
         ),
         SizedBox(height: 10,),
-
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -234,4 +234,267 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       ],
     );
   }
+
+
+
+
+  Widget newPasswordScreen(){
+    TextEditingController passController1 = TextEditingController();
+    TextEditingController passController2 = TextEditingController();
+    bool isEnable = false;
+    return Scaffold(
+      appBar: AppBar(),
+    );
+  }
 }
+
+class ChangePasswordFlow extends StatefulWidget {
+  const ChangePasswordFlow({super.key});
+
+  @override
+  State<ChangePasswordFlow> createState() => _ChangePasswordFlowState();
+}
+
+class _ChangePasswordFlowState extends State<ChangePasswordFlow> {
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+  final List<GlobalKey<FormState>> _formKeys = [
+    GlobalKey<FormState>(), // email
+    GlobalKey<FormState>(), // otp
+    GlobalKey<FormState>(), // password
+  ];
+  TextEditingController passController1 = TextEditingController();
+  TextEditingController passController2 = TextEditingController();
+  TextEditingController controller = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  bool isEnable = false;
+
+  void nextPage(){
+    if(_currentPage < 2){
+      setState(() => _currentPage++);
+      _pageController.nextPage(duration: Duration(milliseconds: 250), curve: Curves.easeInOut);
+    }
+  }
+  void previousPage() {
+    if (_currentPage > 0) {
+      setState(() => _currentPage--);
+      _pageController.previousPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading:IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_rounded,
+              size: 15,
+              color: Colors.black),
+          onPressed: () => {
+            _currentPage > 0 ? previousPage() : Navigator.pop(context)
+          },
+        )
+
+      ),
+      body: SafeArea(
+          child: PageView(
+            controller: _pageController,
+            physics: const NeverScrollableScrollPhysics(), // Controlled manually
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: TextField(
+                      controller: emailController,
+                      cursorColor: Colors.white,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                      decoration: InputDecoration(
+                          hintText: "Enter registered email",
+                          hintStyle: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                          prefixIcon: Icon(Icons.email),
+                          prefixIconColor: Colors.blue,
+                          filled: true,
+                          fillColor: Colors.grey.shade900,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            gapPadding: 10,
+                          )
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: (){
+                      nextPage();
+                    },
+                    child: Text("Next"),
+                  )
+                ],
+              ) ,
+              Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: TextField(
+                        controller: controller,
+                        cursorColor: Colors.white,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                        decoration: InputDecoration(
+                            hintText: "Enter OTP here",
+                            hintStyle: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                            prefixIcon: Icon(Icons.email),
+                            prefixIconColor: Colors.blue,
+                            filled: true,
+                            fillColor: Colors.grey.shade900,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              gapPadding: 10,
+                            )
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: (){
+                        nextPage();
+                      },
+                      child: Text("Submit"),
+                    )
+                  ]
+              ),
+              Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: TextField(
+                        controller: passController1,
+                        cursorColor: Colors.white,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                        decoration: InputDecoration(
+                            hintText: "Enter new password",
+                            hintStyle: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                            prefixIcon: Icon(Icons.lock),
+                            prefixIconColor: Colors.blue,
+                            filled: true,
+                            fillColor: Colors.grey.shade900,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              gapPadding: 10,
+                            )
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: TextField(
+                        controller: passController2,
+                        cursorColor: Colors.white,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                        decoration: InputDecoration(
+                            hintText: "Confirm new password",
+                            hintStyle: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                            prefixIcon: Icon(Icons.lock),
+                            prefixIconColor: Colors.blue,
+                            filled: true,
+                            fillColor: Colors.grey.shade900,
+                            suffix: Icon(Icons.remove_red_eye),
+                            suffixIcon: IconButton(onPressed: (){
+                              setState(() {
+                                isEnable = !isEnable;
+                              });
+                            }, icon: Icon(isEnable==true ? Icons.remove_red_eye_outlined : Icons.remove_red_eye)),
+                            suffixIconColor: Colors.blue,
+                            suffixStyle: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              gapPadding: 10,
+                            )
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        padding: EdgeInsets.all(12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 5,
+                        shadowColor: Colors.black,
+                        textStyle: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16
+                        ),
+                        minimumSize: Size(200, 50),
+                        maximumSize: Size(200, 50),
+                        fixedSize: Size(200, 50),
+                        side: BorderSide(
+                          color: Colors.blue,
+                          width: 2,
+                        ),
+                        surfaceTintColor: Colors.blue,
+                        foregroundColor: Colors.blue,
+                        splashFactory: InkSplash.splashFactory,
+                      ),
+                      onPressed: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
+                      },
+                      child: Text("Confirm",style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16
+                      ),),
+                    )
+                  ]
+              )
+            ]
+          )
+      )
+    );
+  }
+}
+
