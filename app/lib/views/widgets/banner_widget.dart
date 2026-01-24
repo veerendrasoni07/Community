@@ -1,17 +1,19 @@
 import 'dart:async';
 import 'package:codingera2/controllers/banner_controller.dart';
 import 'package:codingera2/models/banner.dart';
+import 'package:codingera2/provider/banner_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class BannerWidget extends StatefulWidget {
+class BannerWidget extends ConsumerStatefulWidget {
   const BannerWidget({super.key});
 
   @override
-  State<BannerWidget> createState() => _BannerWidgetState();
+  ConsumerState<BannerWidget> createState() => _BannerWidgetState();
 }
 
-class _BannerWidgetState extends State<BannerWidget> {
+class _BannerWidgetState extends ConsumerState<BannerWidget> {
   final PageController _pageController = PageController();
   Timer? _autoScrollTimer;
   int _currentPage = 0;
@@ -25,7 +27,8 @@ class _BannerWidgetState extends State<BannerWidget> {
 
   void loadBanners() async {
     try {
-      final loadedBanners = await BannerController().loadBanner();
+      await ref.read(bannerProvider.notifier).setBanner(context: context,ref: ref);
+      final loadedBanners = ref.read(bannerProvider);
       if (mounted) {
         setState(() {
           banners = loadedBanners;

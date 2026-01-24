@@ -1,16 +1,19 @@
+import 'package:codingera2/provider/pdf_provider.dart';
+import 'package:codingera2/views/details/notes_pdf_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class NotesScreen extends StatefulWidget {
+class NotesScreen extends ConsumerStatefulWidget {
   const NotesScreen({super.key});
 
   @override
-  State<NotesScreen> createState() => _NotesScreenState();
+  ConsumerState<NotesScreen> createState() => _NotesScreenState();
 }
 
-class _NotesScreenState extends State<NotesScreen> {
+class _NotesScreenState extends ConsumerState<NotesScreen> {
 
-
+  bool isFetching = false;
   String? selectedSemester;
   String? selectedSubject;
   String? noteType;
@@ -79,12 +82,21 @@ class _NotesScreenState extends State<NotesScreen> {
               });
             }, "Subject", "Select Subject"),
             ElevatedButton(
-                onPressed: (){},
+                onPressed: isFetching ? null : ()async{
+                  setState(() {
+                    isFetching = true;
+                  });
+                  await ref.read(pdfProvider.notifier).getPdf(subject: selectedSubject!, semester: selectedSemester!, noteType: noteType!, context: context);
+                  setState(() {
+                    isFetching = false;
+                  });
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>NotesPdfScreen()));
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                   padding: EdgeInsets.all(12),
                 ),
-                child: Text("Get",style: GoogleFonts.montserrat(
+                child: isFetching ? Center(child: CircularProgressIndicator()) : Text("Get",style: GoogleFonts.montserrat(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,

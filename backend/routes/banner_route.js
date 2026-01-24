@@ -4,7 +4,7 @@ import express from 'express';
 const bannerRouter = express.Router();
 
 
-bannerRouter.post('/api/banner',async (req,res)=>{
+bannerRouter.post('/api/upload-banner',async (req,res)=>{
     try {
         const {image} = req.body;
         const newBanner = new Banner({image});

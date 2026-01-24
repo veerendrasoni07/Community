@@ -3,18 +3,19 @@ import 'package:codingera2/models/pdf.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class PdfProvider extends StateNotifier<Pdf?>{
-  PdfProvider():super(null);
+class PdfProvider extends StateNotifier<List<Pdf>>{
+  PdfProvider():super([]);
 
 
-  Future<void> setPdf({
+  Future<void> getPdf({
     required String subject,
     required String semester,
     required String noteType,
     required BuildContext context,
 })async{
-    await PdfController().getAllPdf(subject: subject, semester: semester, noteType: noteType, context: context);
+    final pdfs = await PdfController().getAllPdf(subject: subject, semester: semester, noteType: noteType, context: context);
+    state = pdfs;
   }
 
 }
-final pdfProvider = StateNotifierProvider<PdfProvider,Pdf?>((ref)=> PdfProvider());
+final pdfProvider = StateNotifierProvider<PdfProvider,List<Pdf>>((ref)=> PdfProvider());

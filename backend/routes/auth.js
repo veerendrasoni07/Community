@@ -106,7 +106,7 @@ authRouter.post('/api/refresh-token',async(req,res)=>{
 
         const verify = jsonwebtoken.verify(refreshToken,process.env.REFRESH_TOKEN_SCRET_KEY);
         if(!verify){
-            return res.status(401).json({msg:"Token verification failed"});
+            return res.status(401).json({msg:"Refresh Token verification failed"});
         }
         const newRefreshToken = generateRefreshToken(verify.id,verify.role);
         const newHashRefreshToken = hashToken(newRefreshToken);
@@ -119,7 +119,7 @@ authRouter.post('/api/refresh-token',async(req,res)=>{
             userId:verify.id,
             expiresAt:Date.now() + 7*24*60*60*1000
         });
-        const newAccessToken = generateAccessToken(verify.id,user.role);
+        const newAccessToken = generateAccessToken(verify.id,verify.role);
 
         console.log("---------------------------access token is issued---------------------------------------");
         res.status(200).json({accessToken:newAccessToken,refreshToken:newRefreshToken});

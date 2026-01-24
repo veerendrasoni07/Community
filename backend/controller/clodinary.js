@@ -18,7 +18,7 @@ const storage = new CloudinaryStorage({
     cloudinary:cloudinary.v2,
     params:{
         folder:"coding-era-notes",
-        resource_type:"raw",
+        resource_type:"auto",
         public_id: (req, file) => {
             return `${Date.now()}-${file.originalname}`;
         },

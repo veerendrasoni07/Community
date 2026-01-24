@@ -5,6 +5,7 @@ import 'package:codingera2/controllers/auth_controller.dart';
 import 'package:codingera2/views/admin/screens/admin_home_screen.dart';
 import 'package:codingera2/views/admin/widgets/admin_club.dart';
 import 'package:codingera2/views/admin/widgets/admin_hackathon.dart';
+import 'package:codingera2/views/admin/widgets/admin_upload_banner.dart';
 import 'package:codingera2/views/admin/widgets/admin_upload_notes.dart';
 import 'package:codingera2/views/nav_screen/club_screen.dart';
 import 'package:codingera2/views/nav_screen/hackathon_screen.dart';
@@ -213,12 +214,24 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
             child: SpeedDial(
               animatedIcon: AnimatedIcons.menu_close,
               direction: SpeedDialDirection.up,
+              icon: Icons.upload_rounded,
+              activeIcon: Icons.upload_rounded,
+              elevation: 8.0,
+              activeChild: Icon(Icons.upload_rounded),
+              closeManually: false,
+              spaceBetweenChildren: 12,
               overlayColor: Colors.black,
               animatedIconTheme: const IconThemeData(size: 22.0),
               backgroundColor: Colors.blue,
               visible: true,
               curve: Curves.bounceIn,
               children: [
+                SpeedDialChild(
+                  child: const Icon(Icons.image),
+                  backgroundColor: Colors.blue,
+                  onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (_)=>AdminUploadBanner())),
+                  label: 'Upload Banner',
+                ),
                 SpeedDialChild(
                   child: const Icon(Icons.code),
                   backgroundColor: Colors.blue,

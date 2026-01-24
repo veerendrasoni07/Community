@@ -1,18 +1,19 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../controllers/admin_controller.dart';
 
 
-class AdminHackathon extends StatefulWidget {
+class AdminHackathon extends ConsumerStatefulWidget {
   const AdminHackathon({super.key});
 
   @override
-  State<AdminHackathon> createState() => _AdminHackathonState();
+  ConsumerState<AdminHackathon> createState() => _AdminHackathonState();
 }
 
-class _AdminHackathonState extends State<AdminHackathon> {
+class _AdminHackathonState extends ConsumerState<AdminHackathon> {
   final _formKey = GlobalKey<FormState>();
 
   final _name = TextEditingController();
@@ -74,6 +75,8 @@ class _AdminHackathonState extends State<AdminHackathon> {
       totalTeam: int.parse(_totalTeam.text),
       eventTime: _eventTime.text.trim(),
       link: _link.text.trim(),
+      context: context,
+      ref: ref,
       image: pickedImage!,
       level: _level.text.trim(),
       prize: int.parse(_prize.text),

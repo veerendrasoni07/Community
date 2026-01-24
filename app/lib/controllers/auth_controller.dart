@@ -107,36 +107,6 @@ import '../views/screens/main_screen.dart' show MainScreen;
     }
   }
 
-  Future<bool> refreshToken({required Ref ref,required BuildContext context}) async {
-    final prefs = await SharedPreferences.getInstance();
-    final refreshToken = prefs.getString('refreshToken');
-
-    if (refreshToken == null) return false;
-
-    final response = await http.post(
-      Uri.parse('$uri/api/refresh-token'),
-      body: jsonEncode({
-        'refreshToken': refreshToken,
-      }),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      await prefs.remove('token');
-      await prefs.remove('refreshToken');
-      await prefs.setString('token', data['accessToken']);
-      await prefs.setString('refreshToken', data['refreshToken']);
-      return true;
-    }
-    else{
-      ref.read(authManagerProvider.notifier).logout(context);
-    }
-
-    return false;
-  }
 
 
 
@@ -198,6 +168,64 @@ import '../views/screens/main_screen.dart' show MainScreen;
       throw Exception(e.toString());
     }
   }
+
+  Future<http.Response> sendRequest({
+    required Future<http.Response> Function(String token) request,
+    required BuildContext context,
+    required WidgetRef ref
+  })async{
+    try{
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      String? token = preferences.getString('token');
+      final requestRes = await request(token!);
+      if(requestRes.statusCode == 401){
+        final isRefreshed = await refreshTokenMethod();
+        if(!isRefreshed){
+          await ref.read(authManagerProvider.notifier).logout(context);
+        }else{
+          token = preferences.getString('token');
+          final requestRes = await request(token!);
+          return requestRes;
+        }
+      }
+      return requestRes;
+    }catch(e){
+      print(e);
+      throw Exception(e);
+    }
+  }
+
+  Future<bool> refreshTokenMethod()async{
+    try{
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      final rToken = preferences.getString('refreshToken');
+      http.Response response = await http.post(
+          Uri.parse('$uri/api/refresh-token'),
+        body: jsonEncode({
+          "refreshToken":rToken
+        }),
+        headers: <String,String>{
+          'Content-Type':'application/json; charset=UTF-8'
+        }
+      );
+      if(response.body == 200){
+        final data = jsonDecode(response.body);
+        await preferences.setString('token', data['accessToken']);
+        await preferences.setString('refreshToken', data['refreshToken']);
+        return true;
+      }
+      else if(response.statusCode == 401){
+        return false;
+      }
+      else {
+        throw Exception('Failed to refresh token');
+      }
+    }catch(e){
+      print(e);
+      throw Exception(e);
+    }
+  }
+
 
 
 

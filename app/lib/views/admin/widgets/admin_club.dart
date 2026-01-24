@@ -61,7 +61,7 @@ class _AdminClubState extends ConsumerState<AdminClub> {
       "joinLink": joinLinkCtrl.text.trim(),
     };
     
-    await AdminController().uploadClub(clubname: clubNameCtrl.text, techname: techNameCtrl.text, desc: descCtrl.text, clubLeader: selectedLeader!.id, clubManager: selectedManager!.id, clubRule: ruleCtrls.map((e) => e.text.trim()).toList(),clubActivities: activityCtrls.map((e) => e.text.trim()).toList(), image: pickedImage!, detailDesc: detailDescCtrl.text, joinLink: joinLinkCtrl.text, context: context);
+    await AdminController().uploadClub(clubname: clubNameCtrl.text,ref: ref ,techname: techNameCtrl.text, desc: descCtrl.text, clubLeader: selectedLeader!.id, clubManager: selectedManager!.id, clubRule: ruleCtrls.map((e) => e.text.trim()).toList(),clubActivities: activityCtrls.map((e) => e.text.trim()).toList(), image: pickedImage!, detailDesc: detailDescCtrl.text, joinLink: joinLinkCtrl.text, context: context);
     Navigator.pop(context);
     setState(() => loading = false);
   }

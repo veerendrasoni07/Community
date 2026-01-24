@@ -48,7 +48,7 @@ class PdfController {
   }
 
 
-  Future<Pdf> getAllPdf({
+  Future<List<Pdf>> getAllPdf({
     required String subject,
     required String semester,
     required String noteType,
@@ -62,10 +62,12 @@ class PdfController {
           },
       );
       if(response.statusCode == 200){
-        final data = jsonDecode(response.body);
-        final Pdf pdf = Pdf.fromMap(data);
-        return pdf;
+        List<dynamic> data = jsonDecode(response.body);
+        print(data);
+        final List<Pdf> pdfs = data.map((p)=>Pdf.fromMap(p)).toList();
+        return pdfs;
       }else{
+        print(response.body);
         throw Exception("Something went wrong");
       }
     }catch(e){
