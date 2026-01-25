@@ -32,6 +32,12 @@ const userSchema = new mongoose.Schema({
   location:{
     type:String,
   },
+  laptop:{
+    type:String,
+  },
+  currentSemester:{
+    type:Number,
+  },
   username:{
     type:String,
   },

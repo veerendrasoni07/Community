@@ -8,6 +8,7 @@ import Otp from '../models/otp.js';
 import jsonwebtoken from 'jsonwebtoken';
 import { randomInt } from 'crypto';
 import { createTransport } from 'nodemailer';
+import { auth } from '../middleware/auth.js';
 const authRouter = express.Router();
 
 authRouter.post('/api/sign-up',async(req,res)=>{
@@ -107,7 +108,7 @@ authRouter.post('/api/refresh-token',async(req,res)=>{
             return res.status(401).json({msg:"Somethings suspecious noticed, Session Expired Login Again!"})
         }
 
-        const verify = jsonwebtoken.verify(refreshToken,process.env.REFRESH_TOKEN_SCRET_KEY);
+        const verify = jsonwebtoken.verify(refreshToken,process.env.REFRESH_TOKEN_SECRET_KEY);
         if(!verify){
             return res.status(401).json({msg:"Refresh Token verification failed"});
         }
@@ -135,27 +136,6 @@ authRouter.post('/api/refresh-token',async(req,res)=>{
 
 
 
-authRouter.put('/api/update-profile',async (req,res)=>{
-    try {
-        const {details} = req.body;
-        const userId = req.user.id;
-        const exist = await User.findById(userId);
-        if(!exist) return res.status(401).json({msg:"User doesn't exist"});
-        const updated = await User.findByIdAndUpdate(
-            userId,
-            {
-                $set:details
-            },
-            {new:true}
-        );
-        console.log("profile updated");
-        res.status(200).json({"user":updated});
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({msg:"Internal Server Error"});
-    }
-});
 
 
 authRouter.post('/api/get-otp',async(req,res)=>{
@@ -285,6 +265,27 @@ authRouter.post('/api/reset-password',async(req,res)=>{
     }
 });
 
+
+authRouter.put('/api/update-profile',auth,async (req,res)=>{
+    try {
+        const {details} = req.body; 
+        const userId = req.user.id;
+        const exist = await User.findById(userId);
+        if(!exist) return res.status(401).json({msg:"User doesn't exist"});
+        const updated = await User.findByIdAndUpdate(
+            userId,
+            {
+                $set:details
+            },
+            {new:true}
+        );
+        console.log("profile updated");
+        res.status(200).json({"user":updated});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg:"Internal Server Error"});
+    }
+});
 
 export default authRouter;
 

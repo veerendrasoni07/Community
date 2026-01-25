@@ -10,7 +10,9 @@ class User {
   final String gender;
   final String token;
   final String bio;
-  final String phone;
+  final String laptop;
+  final int phone;
+  final int currentSemester;
   final String role;
   final String location;
   final String createdAt;
@@ -18,7 +20,7 @@ class User {
   final String username;
   final bool isOnline;
 
-  User({required this.id,required this.fullname,required this.bio ,required this.role,required this.email,required this.phone ,required this.profilePic, required this.gender,required this.username,required this.token,required this.isOnline,required this.location,required this.connections,required this.createdAt});
+  User({required this.id,required this.fullname,required this.bio ,required this.laptop,required this.currentSemester,required this.role,required this.email,required this.phone ,required this.profilePic, required this.gender,required this.username,required this.token,required this.isOnline,required this.location,required this.connections,required this.createdAt});
 
 
 Map<String, dynamic> toMap() {
@@ -29,6 +31,8 @@ Map<String, dynamic> toMap() {
     'profilePic': profilePic,
     'gender': gender,
     'bio':bio,
+    'currentSemester':currentSemester,
+    'laptop':laptop,
     'role':role,
     'token':token,
     'phone':phone,
@@ -46,8 +50,11 @@ id: map['_id'] ?? '',
 fullname: map['fullname'] ?? '',
 email: map['email'] ?? '',
 profilePic: map['profilePic'] ?? '',
+  phone: int.tryParse(map['phone']?.toString() ?? '') ?? 0,
+  currentSemester: int.tryParse(map['currentSemester']?.toString() ?? '') ?? 0,
+laptop: map['laptop']?.toString() ?? '',
+
 gender: map['gender'] ?? '',
-phone: map['phone'] ?? '',
 role: map['role'] ?? '',
 token: map['token'] ?? '',
 bio: map['bio'] ?? '',

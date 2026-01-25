@@ -85,26 +85,33 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              Center(child: ElevatedButton(onPressed: (){
-                showDialog(context: context, builder: (context){
-                  return UpdateProfile();
-                });
-              }, child: Text("Edit Profile"))),
+              Center(child: ElevatedButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (_) => const UpdateProfileSheet(),
+                  );
+                },
+                child: const Text("Edit Profile"),
+              )
+              ),
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12.0),
                 child: Text("Your Information",style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold,color: Colors.white70,)),
               ),
               const SizedBox(height: 20),
-              InfoContainer(icon: FontAwesomeIcons.locationPin, title: "State", subtitle: user.location),
+              InfoContainer(icon: FontAwesomeIcons.locationPin, title: "Username", subtitle: user.username),
               const SizedBox(height: 20),
-              InfoContainer(icon: FontAwesomeIcons.city, title: "City", subtitle: user.location),
+              InfoContainer(icon: FontAwesomeIcons.city, title: "Address", subtitle: user.location),
               const SizedBox(height: 20),
-              InfoContainer(icon: FontAwesomeIcons.locationDot, title: "Locality", subtitle: user.location),
+              InfoContainer(icon: FontAwesomeIcons.locationDot, title: "Phone", subtitle: user.phone.toString()),
               const SizedBox(height: 20),
-              InfoContainer(icon: FontAwesomeIcons.solidHeart, title: "Hobbies", subtitle: user.location),
+              InfoContainer(icon: FontAwesomeIcons.solidHeart, title: "Address", subtitle: user.location),
               const SizedBox(height: 20),
-              InfoContainer(icon: FontAwesomeIcons.laptopCode, title: "Laptop Name", subtitle: user.location),
+              InfoContainer(icon: FontAwesomeIcons.laptopCode, title: "Laptop Name", subtitle: user.laptop),
               const SizedBox(height: 20),
             ],
           ),

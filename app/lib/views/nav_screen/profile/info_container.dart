@@ -29,7 +29,7 @@ class InfoContainer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(title,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white70,),),
-                Text(subtitle,style: TextStyle(fontSize: 16,color: Colors.white70),),
+                Text(subtitle.isEmpty ? "---" : subtitle,style: TextStyle(fontSize: 16,color: Colors.white70),),
               ],
             )
           ],

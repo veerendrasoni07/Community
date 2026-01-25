@@ -116,10 +116,11 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
             fontWeight: FontWeight.bold,
           ),),
           DropdownButtonFormField(
+            isExpanded: true,
             hint: Text(text,style: GoogleFonts.poppins(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-            )),
+            ),overflow: TextOverflow.ellipsis,),
             decoration: InputDecoration(
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -134,7 +135,10 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
             ),
             items: options.map((m)=>DropdownMenuItem(
                 value: m,
-                child: Text(m)
+                child: Text(m,style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),overflow: TextOverflow.ellipsis,)
             )).toList(),
             onChanged: (value){
               onChanged(value!);

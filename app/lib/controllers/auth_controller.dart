@@ -133,29 +133,30 @@ import '../views/screens/main_screen.dart' show MainScreen;
     }
   }
   
-  Future<void> updateUserProfile({required String fullname,required String bio,required String phone,required String location,required String gender ,required WidgetRef ref,required BuildContext context})async{
+  Future<void> updateUserProfile({required String fullname,required int phone,required String laptop,required String location,required int currentSemester,required WidgetRef ref,required BuildContext context})async{
     try{
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-      final token = preferences.getString('token');
-      http.Response response = await http.put(
-          Uri.parse('$uri/api/update-profile'),
-        body: jsonEncode({
-          "details": {
-            'fullname':fullname,
-            'bio':bio,
-            'phone':phone,
-            'location':location,
-            'gender':gender
-          }
-        }),
-        headers: <String,String>{
-            'Content-Type':'application/json; charset=UTF-8',
-            'x-auth-token':token!
-        }
-      );
+      http.Response response =  await sendRequest(request: (token)async{
+        return await http.put(
+            Uri.parse('$uri/api/update-profile'),
+            body: jsonEncode({
+              "details": {
+                'fullname':fullname,
+                "phone":phone,
+                'currentSemester':currentSemester,
+                'location':location,
+                'laptop':laptop
+              }
+            }),
+            headers: <String,String>{
+              'Content-Type':'application/json; charset=UTF-8',
+              'x-auth-token':token
+            }
+        );
+      }, context: context, ref: ref);
       if(response.statusCode == 200){
         final data = jsonDecode(response.body);
         final user = data['user'];
+        SharedPreferences preferences = await SharedPreferences.getInstance();
         await preferences.remove('user');
         final userJson = jsonEncode(user);
         await preferences.setString('user', userJson);
@@ -164,6 +165,7 @@ import '../views/screens/main_screen.dart' show MainScreen;
           showSnackBar(context, 'Profile updated successfully');
         }
       }else{
+        print(response.body);
         throw Exception('Failed to update profile');
       }
     }catch(e){
@@ -175,59 +177,66 @@ import '../views/screens/main_screen.dart' show MainScreen;
   Future<http.Response> sendRequest({
     required Future<http.Response> Function(String token) request,
     required BuildContext context,
-    required WidgetRef ref
-  })async{
-    try{
-      SharedPreferences preferences = await SharedPreferences.getInstance();
+    required WidgetRef ref,
+  }) async {
+    try {
+      final preferences = await SharedPreferences.getInstance();
       String? token = preferences.getString('token');
-      final requestRes = await request(token!);
-      if(requestRes.statusCode == 401){
-        final isRefreshed = await refreshTokenMethod();
-        if(!isRefreshed){
-          await ref.read(authManagerProvider.notifier).logout(context);
-        }else{
-          token = preferences.getString('token');
-          final requestRes = await request(token!);
-          return requestRes;
-        }
+
+      if (token == null) {
+        await ref.read(authManagerProvider.notifier).logout(context);
+        throw Exception('No access token');
       }
-      return requestRes;
-    }catch(e){
-      print(e);
-      throw Exception(e);
+
+      http.Response response = await request(token);
+
+      if (response.statusCode == 401) {
+        final refreshed = await refreshTokenMethod();
+
+        if (!refreshed) {
+          await ref.read(authManagerProvider.notifier).logout(context);
+          throw Exception('Session expired');
+        }
+
+        token = preferences.getString('token');
+        if (token == null) {
+          throw Exception('Token refresh failed');
+        }
+        response = await request(token);
+      }
+      return response;
+    } catch (e) {
+      debugPrint('Request error: $e');
+      rethrow;
     }
   }
 
-  Future<bool> refreshTokenMethod()async{
-    try{
-      SharedPreferences preferences = await SharedPreferences.getInstance();
+  Future<bool> refreshTokenMethod() async {
+    try {
+      final preferences = await SharedPreferences.getInstance();
       final rToken = preferences.getString('refreshToken');
-      http.Response response = await http.post(
-          Uri.parse('$uri/api/refresh-token'),
-        body: jsonEncode({
-          "refreshToken":rToken
-        }),
-        headers: <String,String>{
-          'Content-Type':'application/json; charset=UTF-8'
-        }
+      if (rToken == null) return false;
+      final response = await http.post(
+        Uri.parse('$uri/api/refresh-token'),
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        body: jsonEncode({"refreshToken": rToken}),
       );
-      if(response.body == 200){
+      if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         await preferences.setString('token', data['accessToken']);
         await preferences.setString('refreshToken', data['refreshToken']);
         return true;
       }
-      else if(response.statusCode == 401){
+      if (response.statusCode == 401) {
         return false;
       }
-      else {
-        throw Exception('Failed to refresh token');
-      }
-    }catch(e){
-      print(e);
-      throw Exception(e);
+      throw Exception('Refresh token failed');
+    } catch (e) {
+      debugPrint('Refresh error: $e');
+      return false;
     }
   }
+
 
 
   Future<bool> getOTP(String email,BuildContext context)async {
