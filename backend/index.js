@@ -17,7 +17,7 @@ import bannerRoutes from './routes/banner_route.js';
 import {router} from './controller/clodinary.js';
 import quizRouter from './routes/quiz_routes.js';
 import pdfRoutes from './routes/pdf_routes.js';
-
+const PORT = process.env.PORT || 3001;
 const app = express();
 const JWT_SECRET = process.env.JWT_SECRET;
 app.use(cors());
@@ -305,7 +305,7 @@ app.post('/reset-password', async (req, res) => {
 });
 
 // ** Server **
-app.listen(3001,"0.0.0.0", () => {
+app.listen(PORT,"0.0.0.0", () => {
     console.log('Server is running on port 3001');
 });
 

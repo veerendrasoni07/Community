@@ -246,6 +246,19 @@ authRouter.post('/api/verify-otp',async(req,res)=>{
     }
 });
 
+authRouter.get('/api/username-check/:userName',async(req,res)=>{
+    try {
+        const {userName} = req.params;
+        const userNameExist = await User.findOne({username:userName});
+        if(userNameExist){
+            return res.status(200).json({msg:true});
+        }
+        res.status(200).json({msg:false});
+    } catch (error) {
+        res.status(500).json({error:"Internal Server Error"});
+    }
+});
+
 authRouter.post('/api/reset-password',async(req,res)=>{
     try {
         const {email,password} = req.body;
