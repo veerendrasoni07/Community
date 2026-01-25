@@ -1,14 +1,8 @@
 import 'dart:ui';
-
-import 'package:codingera2/provider/auth_manager_provider.dart';
-import 'package:codingera2/views/nav_screen/club_screen.dart';
-import 'package:codingera2/views/nav_screen/hackathon_screen.dart';
 import 'package:codingera2/views/nav_screen/notes_screen.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../../provider/user_provider.dart';
 import '../nav_screen/home_screen.dart';
 import '../nav_screen/profile/profile_screen.dart';
 
@@ -101,9 +95,9 @@ class _MainScreenState extends ConsumerState<MainScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _navItem(Icon(FontAwesomeIcons.houseCrack, size: 20,color: Colors.white,), Icon(FontAwesomeIcons.house, size: 20,color: Colors.white,), 0),
-                  _navItem(Icon(FontAwesomeIcons.noteSticky, size: 20,color: Colors.white,), Icon(FontAwesomeIcons.peopleGroup,size: 20,color: Colors.white,), 1),
-                  _navItem(Icon(FontAwesomeIcons.personFalling, size: 20,color: Colors.white,), Icon(FontAwesomeIcons.person,color: Colors.white,size: 20), 2),
+                  _navItem(Icon(Icons.home_outlined, size: 20,color: Colors.white,), Icon(FontAwesomeIcons.house, size: 20,color: Colors.white,), 0),
+                  _navItem(Icon(FontAwesomeIcons.noteSticky, size: 20,color: Colors.white,), Icon(FontAwesomeIcons.solidNoteSticky,size: 20,color: Colors.white,), 1),
+                  _navItem(Icon(Icons.person_2_outlined, size: 20,color: Colors.white,), Icon(Icons.person_4_rounded,color: Colors.white,size: 20), 2),
                 ],
               ),
             )

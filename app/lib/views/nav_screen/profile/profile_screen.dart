@@ -40,12 +40,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         ],
       ),
       backgroundColor: Theme.of(context).colorScheme.primary,
-      body: SafeArea(
-        child: user == null
-            ? const Center(
-          child: CircularProgressIndicator(),
-        )
-            : SingleChildScrollView(
+      body: user == null
+          ? const Center(
+        child: CircularProgressIndicator(),
+      )
+          : SingleChildScrollView(
+        child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

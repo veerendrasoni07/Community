@@ -1,4 +1,5 @@
 
+import 'package:codingera2/services/manage_http_request.dart';
 import 'package:codingera2/views/screens/authentication/sign_up_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -195,12 +196,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         GestureDetector(
           onTap: (){
             if(_formkey.currentState!.validate()){
+              showDialog(context: context, builder: (context){
+                return Center(child: CircularProgressIndicator(color: Colors.white,),);
+              });
               _authController.login(
                   context: context,
                   email: email,
                   password: password,
                   ref: ref
               );
+              if(context.mounted){
+                Navigator.pop(context);
+              }
             }
           },
           child: ContainerButton(height: 60, width: 350, text: "Log-in"),
@@ -232,18 +239,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ],
         ),
       ],
-    );
-  }
-
-
-
-
-  Widget newPasswordScreen(){
-    TextEditingController passController1 = TextEditingController();
-    TextEditingController passController2 = TextEditingController();
-    bool isEnable = false;
-    return Scaffold(
-      appBar: AppBar(),
     );
   }
 }
@@ -304,62 +299,28 @@ class _ChangePasswordFlowState extends State<ChangePasswordFlow> {
       body: SafeArea(
           child: PageView(
             controller: _pageController,
-            physics: const NeverScrollableScrollPhysics(), // Controlled manually
+            physics: const NeverScrollableScrollPhysics(),
             children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: TextField(
-                      controller: emailController,
-                      cursorColor: Colors.white,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                      decoration: InputDecoration(
-                          hintText: "Enter registered email",
-                          hintStyle: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                          prefixIcon: Icon(Icons.email),
-                          prefixIconColor: Colors.blue,
-                          filled: true,
-                          fillColor: Colors.grey.shade900,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            gapPadding: 10,
-                          )
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: (){
-                      nextPage();
-                    },
-                    child: Text("Next"),
-                  )
-                ],
-              ) ,
-              Column(
+              Form(
+                key: _formKeys[0],
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(12.0),
-                      child: TextField(
-                        controller: controller,
+                      child: TextFormField(
+                        controller: emailController,
                         cursorColor: Colors.white,
+                        validator: (value)=> value == null || value.isEmpty
+                            ? "Please enter registered email"
+                            : null,
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
                         decoration: InputDecoration(
-                            hintText: "Enter OTP here",
+                            hintText: "Enter registered email",
                             hintStyle: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -377,119 +338,210 @@ class _ChangePasswordFlowState extends State<ChangePasswordFlow> {
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: (){
-                        nextPage();
+                      onPressed: ()async{
+                        if(_formKeys[0].currentState!.validate()){
+                          showDialog(context: context, builder: (context){
+                            return Center(child: CircularProgressIndicator(color: Colors.white,),);
+                          });
+                          await AuthController().getOTP(emailController.text, context);
+                          Navigator.pop(context);
+                          nextPage();
+                        }
                       },
-                      child: Text("Submit"),
+                      child: Text("Next"),
                     )
-                  ]
-              ),
-              Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: TextField(
-                        controller: passController1,
-                        cursorColor: Colors.white,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                        decoration: InputDecoration(
-                            hintText: "Enter new password",
-                            hintStyle: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                            prefixIcon: Icon(Icons.lock),
-                            prefixIconColor: Colors.blue,
-                            filled: true,
-                            fillColor: Colors.grey.shade900,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              gapPadding: 10,
-                            )
+                  ],
+                ),
+              ) ,
+              Form(
+                key: _formKeys[1],
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: TextFormField(
+                          controller: controller,
+                          cursorColor: Colors.white,
+                          validator: (value)=> value == null || value.isEmpty
+                              ? "Please confirm your password"
+                              : null,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                          decoration: InputDecoration(
+                              hintText: "Enter OTP here",
+                              hintStyle: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                              prefixIcon: Icon(Icons.email),
+                              prefixIconColor: Colors.blue,
+                              filled: true,
+                              fillColor: Colors.grey.shade900,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                gapPadding: 10,
+                              )
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: TextField(
-                        controller: passController2,
-                        cursorColor: Colors.white,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                        decoration: InputDecoration(
-                            hintText: "Confirm new password",
-                            hintStyle: TextStyle(
+                      ElevatedButton(
+                        onPressed: ()async{
+                          if(_formKeys[1].currentState!.validate()){
+                            showDialog(context: context, builder: (context){
+                              return Center(child: CircularProgressIndicator(color: Colors.white,),);
+                            });
+                            await AuthController().verifyOTP(emailController.text, int.parse(controller.text));
+                            Navigator.pop(context);
+                            nextPage();
+                          }
+                        },
+                        child: Text("Submit"),
+                      )
+                    ]
+                ),
+              ),
+              SingleChildScrollView(
+                child: Form(
+                  key: _formKeys[2],
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: TextFormField(
+                            controller: passController1,
+                            cursorColor: Colors.white,
+                            validator: (value) =>
+                            value == null || value.isEmpty
+                                ? "Please confirm your password"
+                                : null,
+                            style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
                             ),
-                            prefixIcon: Icon(Icons.lock),
-                            prefixIconColor: Colors.blue,
-                            filled: true,
-                            fillColor: Colors.grey.shade900,
-                            suffix: Icon(Icons.remove_red_eye),
-                            suffixIcon: IconButton(onPressed: (){
-                              setState(() {
-                                isEnable = !isEnable;
-                              });
-                            }, icon: Icon(isEnable==true ? Icons.remove_red_eye_outlined : Icons.remove_red_eye)),
-                            suffixIconColor: Colors.blue,
-                            suffixStyle: TextStyle(
-                                color: Colors.blue,
+                            decoration: InputDecoration(
+                                hintText: "Enter new password",
+                                hintStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                                prefixIcon: Icon(Icons.lock),
+                                prefixIconColor: Colors.blue,
+                                filled: true,
+                                fillColor: Colors.grey.shade900,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  gapPadding: 10,
+                                )
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: TextFormField(
+                            controller: passController2,
+                            validator: (value) =>
+                            value == null || value.isEmpty
+                                ? "Please enter new password"
+                                : null,
+                            cursorColor: Colors.white,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                            decoration: InputDecoration(
+                                hintText: "Confirm new password",
+                                hintStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                                prefixIcon: Icon(Icons.lock),
+                                prefixIconColor: Colors.blue,
+                                filled: true,
+                                fillColor: Colors.grey.shade900,
+                                suffixIcon: IconButton(onPressed: (){
+                                  setState(() {
+                                    isEnable = !isEnable;
+                                  });
+                                }, icon: Icon(isEnable==true ? Icons.remove_red_eye_outlined : Icons.remove_red_eye)),
+                                suffixIconColor: Colors.blue,
+                                suffixStyle: TextStyle(
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  gapPadding: 10,
+                                )
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            padding: EdgeInsets.all(12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 5,
+                            shadowColor: Colors.black,
+                            textStyle: TextStyle(
+                                color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16
                             ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              gapPadding: 10,
-                            )
-                        ),
-                      ),
-                    ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        padding: EdgeInsets.all(12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        elevation: 5,
-                        shadowColor: Colors.black,
-                        textStyle: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16
-                        ),
-                        minimumSize: Size(200, 50),
-                        maximumSize: Size(200, 50),
-                        fixedSize: Size(200, 50),
-                        side: BorderSide(
-                          color: Colors.blue,
-                          width: 2,
-                        ),
-                        surfaceTintColor: Colors.blue,
-                        foregroundColor: Colors.blue,
-                        splashFactory: InkSplash.splashFactory,
-                      ),
-                      onPressed: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
-                      },
-                      child: Text("Confirm",style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16
-                      ),),
-                    )
-                  ]
+                            minimumSize: Size(200, 50),
+                            maximumSize: Size(200, 50),
+                            fixedSize: Size(200, 50),
+                            side: BorderSide(
+                              color: Colors.blue,
+                              width: 2,
+                            ),
+                            surfaceTintColor: Colors.blue,
+                            foregroundColor: Colors.blue,
+                            splashFactory: InkSplash.splashFactory,
+                          ),
+                          onPressed: ()async{
+                            bool isValid = _formKeys[2].currentState!.validate();
+
+                            if (isValid) {
+                              if (passController1.text != passController2.text) {
+                                showSnackBar(context, "Passwords do not match");
+                              } else {
+                                showDialog(context: context, builder: (context){
+                                  return Center(child: CircularProgressIndicator(color: Colors.white,),);
+                                });
+                                await AuthController().resetPassword(
+                                  email: emailController.text,
+                                  password: passController1.text,
+                                  context: context,
+                                );
+                                if (context.mounted) {
+                                  Navigator.pop(context);
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+                                }
+                              }
+                            }
+                            },
+                          child: Text("Confirm",style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16
+                          ),),
+                        )
+                      ]
+                  ),
+                ),
               )
             ]
           )

@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:codingera2/global_variable.dart';
-import 'package:codingera2/models/user.dart';
 import 'package:codingera2/provider/auth_manager_provider.dart';
 import 'package:codingera2/provider/token_provider.dart';
 import 'package:codingera2/provider/user_provider.dart';
@@ -66,6 +65,9 @@ import '../views/screens/main_screen.dart' show MainScreen;
 
   Future<void> login({required String email, required String password,required BuildContext context,required WidgetRef ref})async{
     try{
+      showDialog(context: context, builder: (context){
+        return Center(child: CircularProgressIndicator(color: Colors.blue.shade900,),);
+      });
       http.Response response = await http.post(
           Uri.parse('$uri/api/sign-in'),
           body: jsonEncode({
@@ -90,6 +92,7 @@ import '../views/screens/main_screen.dart' show MainScreen;
         ref.read(userProvider.notifier).setUser(userJson);
         ref.read(tokenProvider.notifier).setToken(token);
         if(context.mounted){
+          Navigator.pop(context);
           showSnackBar(context, 'Logged in successfully');
           Navigator.pushAndRemoveUntil(
             context,
@@ -227,7 +230,7 @@ import '../views/screens/main_screen.dart' show MainScreen;
   }
 
 
-  Future<bool> getOTP(String email)async {
+  Future<bool> getOTP(String email,BuildContext context)async {
     try{
       http.Response response = await  http.post(
           Uri.parse('$uri/api/get-otp'),
@@ -240,6 +243,7 @@ import '../views/screens/main_screen.dart' show MainScreen;
       );
       if(response.statusCode == 200){
         final data = jsonDecode(response.body);
+        showSnackBar(context, "OTP is sent to your email");
         return data['success'];
       }
       else{
@@ -275,6 +279,32 @@ import '../views/screens/main_screen.dart' show MainScreen;
     }catch(e){
       print(e);
       throw Exception(e);
+    }
+  }
+
+  Future<void> resetPassword({required String email ,required String password,required BuildContext context})async{
+    try{
+      http.Response response = await http.post(
+          Uri.parse('$uri/api/reset-password'),
+        body: jsonEncode({
+          "password":password,
+          "email":email
+        }),
+        headers: <String,String>{
+            'Content-Type':'application/json; charset=UTF-8'
+        }
+      );
+      if(response.statusCode == 200){
+        final data = jsonDecode(response.body);
+        showSnackBar(context, data['msg']);
+      }
+      else{
+        print(response.body);
+        throw Exception('Failed to reset password');
+      }
+    }catch(e){
+      print(e.toString());
+      throw Exception(e.toString());
     }
   }
 

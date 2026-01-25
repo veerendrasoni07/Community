@@ -1,5 +1,4 @@
 import 'package:codingera2/components/alert_dialog_warning.dart';
-import 'package:codingera2/components/home_content.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 

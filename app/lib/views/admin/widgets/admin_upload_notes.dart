@@ -5,7 +5,7 @@ import 'package:codingera2/services/manage_http_request.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:image_picker/image_picker.dart';
+
 
 class AdminNotes extends StatefulWidget {
   const AdminNotes({super.key});

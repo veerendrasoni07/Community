@@ -1,11 +1,8 @@
 
 
-import 'package:codingera2/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 void showSnackBar(BuildContext context, String text) {
   ScaffoldMessenger.of(

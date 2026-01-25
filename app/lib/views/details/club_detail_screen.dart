@@ -1,11 +1,8 @@
 // Modern aesthetic Hackathon & Club detail screens
 // Drop this file into your Flutter project and use Navigator.push
 
-import 'package:codingera2/components/bullet_text.dart';
-import 'package:codingera2/components/stat_card.dart';
-import 'package:codingera2/components/user_card.dart' show UserCard;
 import 'package:codingera2/models/club.dart';
-import 'package:codingera2/models/hackathon.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -22,10 +19,11 @@ class ClubDetailScreen extends StatelessWidget {
           SliverAppBar(
             expandedHeight: 280,
             pinned: true,
+            leading: IconButton(onPressed: ()=>Navigator.pop(context), icon: Icon(Icons.arrow_back_ios_new_rounded,color: Colors.white,)),
             backgroundColor: Colors.black,
             flexibleSpace: FlexibleSpaceBar(
               title: Text(club.clubname,
-                  style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
+                  style: GoogleFonts.poppins(fontWeight: FontWeight.w600,color: Colors.white54)),
               background: Stack(
                 fit: StackFit.expand,
                 children: [
@@ -201,7 +199,6 @@ class _Section extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Icon bullet (much better than •)
                     Container(
                       margin: const EdgeInsets.only(top: 6),
                       height: 8,

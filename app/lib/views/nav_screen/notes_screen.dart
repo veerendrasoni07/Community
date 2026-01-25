@@ -58,51 +58,49 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
         ),),
         backgroundColor: Colors.transparent,
       ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            _dropDownMembers(sem, (value){
-              setState(() {
-                selectedSemester = value;
-              });
-            }, "Semester", "Select Semester"),
-            (selectedSemester!=null && subjects[selectedSemester] != null) ? _dropDownMembers(subjects[selectedSemester]!, (value){
-              setState(() {
-                selectedSubject = value;
-              });
-            }, "Subject", "Select Subject") : SizedBox(),
-        
-             _dropDownMembers([
-               "Detailed Notes",
-               "Short Notes",
-               "Important Questions"
-             ], (value){
-              setState(() {
-                noteType = value;
-              });
-            }, "Subject", "Select Subject"),
-            ElevatedButton(
-                onPressed: isFetching ? null : ()async{
-                  setState(() {
-                    isFetching = true;
-                  });
-                  await ref.read(pdfProvider.notifier).getPdf(subject: selectedSubject!, semester: selectedSemester!, noteType: noteType!, context: context);
-                  setState(() {
-                    isFetching = false;
-                  });
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>NotesPdfScreen()));
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  padding: EdgeInsets.all(12),
-                ),
-                child: isFetching ? Center(child: CircularProgressIndicator()) : Text("Get",style: GoogleFonts.montserrat(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),))
-          ],
-        ),
+      body: Column(
+        children: [
+          _dropDownMembers(sem, (value){
+            setState(() {
+              selectedSemester = value;
+            });
+          }, "Semester", "Select Semester"),
+          (selectedSemester!=null && subjects[selectedSemester] != null) ? _dropDownMembers(subjects[selectedSemester]!, (value){
+            setState(() {
+              selectedSubject = value;
+            });
+          }, "Subject", "Select Subject") : SizedBox(),
+
+           _dropDownMembers([
+             "Detailed Notes",
+             "Short Notes",
+             "Important Questions"
+           ], (value){
+            setState(() {
+              noteType = value;
+            });
+          }, "Subject", "Select Subject"),
+          ElevatedButton(
+              onPressed: isFetching ? null : ()async{
+                setState(() {
+                  isFetching = true;
+                });
+                await ref.read(pdfProvider.notifier).getPdf(subject: selectedSubject!, semester: selectedSemester!, noteType: noteType!, context: context);
+                setState(() {
+                  isFetching = false;
+                });
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>NotesPdfScreen()));
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                padding: EdgeInsets.all(12),
+              ),
+              child: isFetching ? Center(child: CircularProgressIndicator()) : Text("Get",style: GoogleFonts.montserrat(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),))
+        ],
       )
     );
   }

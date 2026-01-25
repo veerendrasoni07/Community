@@ -19,10 +19,11 @@ class HackathonDetailScreen extends StatelessWidget {
             expandedHeight: 300,
             pinned: true,
             backgroundColor: Colors.black,
+            leading: IconButton(onPressed: ()=>Navigator.pop(context), icon: Icon(Icons.arrow_back_ios_new_rounded,color: Colors.white,)),
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
                 hackathon.name,
-                style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                style: GoogleFonts.poppins(fontWeight: FontWeight.w600,color: Colors.white54),
               ),
               background: Stack(
                 fit: StackFit.expand,

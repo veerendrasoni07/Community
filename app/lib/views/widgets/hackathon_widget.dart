@@ -132,7 +132,7 @@ class _HackathonWidgetState extends State<HackathonWidget> {
                                       SizedBox(width: 20),
                                       Expanded(
                                         child: ContainerTile(
-                                          title: "Registration Dealine",
+                                          title: "Registration Deadline",
                                           subtitle: formatDate(
                                             hackathon.deadline,
                                           ),

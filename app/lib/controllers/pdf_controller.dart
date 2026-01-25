@@ -1,16 +1,12 @@
 import 'dart:convert';
-import 'dart:io';
+
 
 import 'package:codingera2/global_variable.dart';
 import 'package:codingera2/models/pdf.dart';
 import 'package:codingera2/services/manage_http_request.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 class PdfController {
-
-
 
   Future<void> uploadPdfNotes({
     required String subject,
@@ -21,8 +17,7 @@ class PdfController {
     required BuildContext context,
 })async {
     try {
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-      final token = preferences.getString('token');
+
       print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
       final request = http.MultipartRequest(

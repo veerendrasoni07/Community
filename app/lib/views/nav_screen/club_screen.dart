@@ -1,4 +1,4 @@
-import 'package:codingera2/models/user.dart';
+
 import 'package:codingera2/provider/clubProvider.dart';
 import 'package:codingera2/views/widgets/modern_club_tile.dart';
 import 'package:flutter/material.dart';

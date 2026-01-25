@@ -1,5 +1,4 @@
 import 'package:codingera2/provider/hackathon_provider.dart';
-import 'package:codingera2/views/widgets/hackathon_widget.dart';
 import 'package:codingera2/views/widgets/modern_hackathon_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

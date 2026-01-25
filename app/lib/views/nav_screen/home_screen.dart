@@ -1,5 +1,4 @@
 import 'package:codingera2/components/alert_dialog_warning.dart';
-import 'package:codingera2/components/container_for_homescreen.dart';
 import 'package:codingera2/components/home_content.dart';
 import 'package:codingera2/controllers/auth_controller.dart';
 import 'package:codingera2/views/admin/screens/admin_home_screen.dart';
@@ -17,7 +16,6 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../provider/user_provider.dart';
 
@@ -59,8 +57,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
     final user = ref.read(userProvider);
     final role = user?.role == null ? "user": user!.role;
     return Scaffold(
+      extendBody: true,
       appBar:  AppBar(
       toolbarHeight: 64,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(35),
+        ),
+      ),
       title:  Text(
         "Coding Era",
         style: GoogleFonts.montserrat(
@@ -69,8 +73,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
           color: Colors.white,
         ),
       ),
+      clipBehavior: Clip.hardEdge,
       iconTheme: const IconThemeData(color: Colors.white),
-      backgroundColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.85),
 
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(56),
@@ -112,23 +117,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
 
       extendBodyBehindAppBar: true,
       backgroundColor: Theme.of(context).colorScheme.primary,
-      body: SafeArea(
-        child: Column(
-          children: [
+      body: Column(
+        children: [
 
-            // TabBarView takes the remaining space in the Column
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: <Widget>[
-                  role == "admin" ? AdminHomeScreen() : _homeScreen(),
-                  const HackathonScreen(),
-                  const ClubScreen()
-                ],
-              ),
-            )
-          ],
-        ),
+          // TabBarView takes the remaining space in the Column
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: <Widget>[
+                role == "admin" ? AdminHomeScreen() : _homeScreen(),
+                const HackathonScreen(),
+                const ClubScreen()
+              ],
+            ),
+          )
+        ],
       ),
       floatingActionButton: role == "admin" ?
           Padding(
@@ -186,14 +189,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
 
   Widget _homeScreen(){
     return SingleChildScrollView(
-      child: Column(
-        children: [
-          _todayQuiz(),
-          // _yourStats(),
-          _ongoingEvents(),
-          // leaderBoardPreview()
-          HomeContent()
-        ],
+      child: SafeArea(
+        child: Column(
+          children: [
+            _todayQuiz(),
+            // _yourStats(),
+            _ongoingEvents(),
+            // leaderBoardPreview()
+            HomeContent()
+          ],
+        ),
       ),
     );
   }
