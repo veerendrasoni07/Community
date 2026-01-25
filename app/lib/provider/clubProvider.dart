@@ -4,9 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ClubProvider extends StateNotifier<List<Club>>{
   ClubProvider():super([]);
-
+  bool _fetched = false;
   void loadClub()async {
+    if(_fetched) return;
     state = await ClubController().loadClub();
+    _fetched = true;
   }
 
 }

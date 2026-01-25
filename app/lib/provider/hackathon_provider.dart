@@ -4,9 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HackathonProvider extends StateNotifier<List<Hackathon>>{
   HackathonProvider():super([]);
-
+  bool _fetched = false;
   void loadHackathon()async {
+    if(_fetched) return;
     state = await HackathonController().loadHackathon();
+    _fetched = true;
   }
 
 }

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class BannerProvider extends StateNotifier<List<BannerModel>> {
   BannerProvider():super([]);
+  bool _hasFetched = false;
 
 
   void addBanner(BannerModel banner){
@@ -12,8 +13,10 @@ class BannerProvider extends StateNotifier<List<BannerModel>> {
   }
 
   Future<void> setBanner({required BuildContext context,required WidgetRef ref})async{
+    if (_hasFetched) return;
     List<BannerModel> banners = await BannerController().loadBanner(context: context,ref: ref);
     state = banners;
+    _hasFetched = true;
   }
 
 

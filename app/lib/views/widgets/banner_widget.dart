@@ -22,34 +22,23 @@ class _BannerWidgetState extends ConsumerState<BannerWidget> {
   @override
   void initState() {
     super.initState();
-    loadBanners();
+    ref.read(bannerProvider.notifier).setBanner(context: context, ref: ref);
   }
 
-  void loadBanners() async {
-    try {
-      await ref.read(bannerProvider.notifier).setBanner(context: context,ref: ref);
-      final loadedBanners = ref.read(bannerProvider);
-      if (mounted) {
-        setState(() {
-          banners = loadedBanners;
-        });
 
-        if (banners.length > 1) {
-          _autoScrollTimer = Timer.periodic(Duration(seconds: 3), (timer) {
-            if (_pageController.hasClients) {
-              _currentPage = (_currentPage + 1) % banners.length;
-              _pageController.animateToPage(
-                _currentPage,
-                duration: Duration(milliseconds: 500),
-                curve: Curves.easeInOut,
-              );
-            }
-          });
-        }
+  void _startAutoScroll(int length) {
+    if (_autoScrollTimer != null || length <= 1) return;
+
+    _autoScrollTimer = Timer.periodic(const Duration(seconds: 3), (_) {
+      if (_pageController.hasClients) {
+        _currentPage = (_currentPage + 1) % length;
+        _pageController.animateToPage(
+          _currentPage,
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.easeInOut,
+        );
       }
-    } catch (e) {
-      // Handle load error if needed
-    }
+    });
   }
 
   @override
@@ -61,6 +50,8 @@ class _BannerWidgetState extends ConsumerState<BannerWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final banners = ref.watch(bannerProvider);
+    _startAutoScroll(banners.length);
     return SizedBox(
       height: 250,
       width: MediaQuery.of(context).size.width,
