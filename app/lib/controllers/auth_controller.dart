@@ -125,6 +125,7 @@ import '../views/screens/main_screen.dart' show MainScreen;
         final data = jsonDecode(response.body)['msg'];
         return data;
       }else{
+        print(response.body);
         throw Exception('Failed to check username');
       }
     }

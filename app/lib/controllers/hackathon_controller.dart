@@ -24,6 +24,7 @@ class HackathonController {
             data.map((hackathon) => Hackathon.fromJson(hackathon)).toList();
         return hackathon;
       } else {
+        print(response.body);
         throw Exception("Failed to fetch details!");
       }
     } catch (e) {

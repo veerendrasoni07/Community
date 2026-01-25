@@ -69,9 +69,13 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
 
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/coding era logo.jpg"
 # The following section is specific to Flutter packages.
 flutter:
 
@@ -79,7 +83,7 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-  
+
 
   # To add assets to your application, add an assets section, like this:
   assets:
@@ -119,12 +123,12 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-#  fonts:
-#
-#    - family: Poppins
-#      fonts:
-#         - asset: Fonts/Poppins-Bold.ttf
-#           weight: 700
+  #  fonts:
+  #
+  #    - family: Poppins
+  #      fonts:
+  #         - asset: Fonts/Poppins-Bold.ttf
+  #           weight: 700
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

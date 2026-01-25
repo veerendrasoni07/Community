@@ -81,7 +81,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 5.0),
               child: Row(
                 children: [
-                  Image.asset("assets/icons/email-icon.jpg",height: 25,width: 25,fit: BoxFit.fill,),
+                  Icon(Icons.email,size: 20),
                   SizedBox(width: 10,),
 
                   Text("email",
@@ -122,7 +122,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 5.0),
               child: Row(
                 children: [
-                  Icon(FontAwesomeIcons.lock,size: 20,),
+                  Icon(Icons.lock,size: 20,),
                   SizedBox(width: 10,),
                   Text("Password",
                     style: TextStyle(

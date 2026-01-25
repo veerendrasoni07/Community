@@ -31,7 +31,7 @@ class _SignUpFlowState extends ConsumerState<SignUpFlow> {
   Timer? debounce;
   String? gender;
   bool isPassShown = false;
-  //bool isUserNameExist = false;
+  bool isUserNameExist = false;
   final List<GlobalKey<FormState>> _formKeys = [
     GlobalKey<FormState>(), // Name
     GlobalKey<FormState>(), // Username
@@ -41,23 +41,21 @@ class _SignUpFlowState extends ConsumerState<SignUpFlow> {
   ];
 
 
-  // void checkUserName(String username)async{
-  //   final bool userName = await _authController.usernameCheck(username);
-  //   setState(() {
-  //     isUserNameExist = userName;
-  //   });
-  // }
+  void checkUserName(String username)async{
+    final bool userName = await AuthController().usernameCheck(username);
+    setState(() {
+      isUserNameExist = userName;
+    });
+  }
 
-  // void userNameOnChanged(String value){
-  //   if(debounce?.isActive ?? false ){
-  //     print("cancel kr dia is ki maa ki ");
-  //     debounce?.cancel();
-  //   }
-  //   debounce = Timer(Duration(milliseconds: 800), (){
-  //     print("check kr dia");
-  //     checkUserName(value.trim());
-  //   });
-  // }
+  void userNameOnChanged(String value){
+    if(debounce?.isActive ?? false ){
+      debounce?.cancel();
+    }
+    debounce = Timer(Duration(milliseconds: 800), (){
+      checkUserName(value.trim());
+    });
+  }
 
   @override
   void dispose() {
@@ -101,13 +99,13 @@ class _SignUpFlowState extends ConsumerState<SignUpFlow> {
         backgroundColor: Colors.transparent,
         leading: _currentPage > 0
             ? IconButton(
-                icon: const Icon(FontAwesomeIcons.leftLong,
+                icon: const Icon(Icons.arrow_back_ios_new_rounded,
                 size: 15,
                     color: Colors.black),
                 onPressed: previousPage,
               )
             : IconButton(
-          icon:  Icon(FontAwesomeIcons.leftLong,
+          icon:  Icon(Icons.arrow_back_ios_new_rounded,
               size: 15,
               color: Colors.black),
           onPressed:()=> Navigator.pop(context),
@@ -200,7 +198,7 @@ class _SignUpFlowState extends ConsumerState<SignUpFlow> {
                             ? "Please enter your username"
                             : null,
                         cursorColor: Colors.green,
-                       // onChanged: (value)=>userNameOnChanged(value),
+                        onChanged: (value)=>userNameOnChanged(value),
                         style: GoogleFonts.poppins(
                             fontWeight: FontWeight.w600,
                             fontSize: 16.sp
@@ -216,7 +214,7 @@ class _SignUpFlowState extends ConsumerState<SignUpFlow> {
                           ),
                         ),
                       ),
-                      if (  _userNameController.text.isNotEmpty)
+                      if ( isUserNameExist && _userNameController.text.isNotEmpty)
                         const Text(
                           "Username already exists",
                           style: TextStyle(color: Colors.red),
@@ -229,7 +227,7 @@ class _SignUpFlowState extends ConsumerState<SignUpFlow> {
                       SizedBox(height: size.height * 0.05),
                       GestureDetector(
                         onTap: (){
-                          if( _formKeys[1].currentState!.validate()){
+                          if( !isUserNameExist && _formKeys[1].currentState!.validate()){
                             nextPage();
                           }
                         },
