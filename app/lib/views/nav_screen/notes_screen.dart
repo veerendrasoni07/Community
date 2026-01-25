@@ -1,4 +1,5 @@
 import 'package:codingera2/provider/pdf_provider.dart';
+import 'package:codingera2/services/manage_http_request.dart';
 import 'package:codingera2/views/details/notes_pdf_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -82,14 +83,21 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
           }, "Subject", "Select Subject"),
           ElevatedButton(
               onPressed: isFetching ? null : ()async{
-                setState(() {
-                  isFetching = true;
-                });
-                await ref.read(pdfProvider.notifier).getPdf(subject: selectedSubject!, semester: selectedSemester!, noteType: noteType!, context: context);
-                setState(() {
-                  isFetching = false;
-                });
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>NotesPdfScreen()));
+
+                if( selectedSubject != null ){
+                  setState(() {
+                    isFetching = true;
+                  });
+                  await ref.read(pdfProvider.notifier).getPdf(subject: selectedSubject!, semester: selectedSemester!, noteType: noteType!, context: context);
+                  setState(() {
+                    isFetching = false;
+                  });
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>NotesPdfScreen()));
+                }else{
+                  showSnackBar(context, "Sorry! Notes For This Semester Is Not Available");
+                }
+
+
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
