@@ -1,7 +1,7 @@
 import Subject from '../models/subject.js';
 import Pdf from '../models/pdf.js'
 
-export const uploadPdf = async (req,res)=>{
+export const uploadNotePdf = async (req,res)=>{
     console.log("fileeeeee");
     try {
 
@@ -61,6 +61,21 @@ export const getPdf = async (req,res)=>{
         );
         console.log(`${subject},${noteType} pdf fetched`);
         res.status(200).json(notes);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Internal Server Error"});
+    }
+}
+
+
+export const uploadPdf= async(req,res)=>{
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: "PDF required" });
+        }
+
+        const pdf = req.file.path || req.file.secure_url || req.file.url;
+        res.status(200).json({pdf});
     } catch (error) {
         console.log(error);
         res.status(500).json({error:"Internal Server Error"});

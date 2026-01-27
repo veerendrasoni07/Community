@@ -274,35 +274,6 @@ app.use(quizRouter);
 //     }
 // });
 
-// ** Reset Password **
-app.post('/reset-password', async (req, res) => {
-    const { email, otp, newPassword } = req.body;
-
-    if (!email || !otp || !newPassword) {
-        return res.status(400).json({ error: 'Email, OTP, and new password are required' });
-    }
-
-    try {
-        if (!otpStore[email] || otpStore[email] !== Number(otp)) {
-            return res.status(400).json({ error: 'Invalid or expired OTP' });
-        }
-
-        const user = await UserModel.findOne({ email });
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
-        await UserModel.updateOne({ email }, { password: hashedPassword });
-
-        delete otpStore[email];
-        res.json({ message: 'Password reset successful' });
-
-    } catch (error) {
-        console.error('Password Reset Error:', error);
-        res.status(500).json({ error: 'Failed to reset password' });
-    }
-});
 
 // ** Server **
 app.listen(PORT,"0.0.0.0", () => {
