@@ -1,13 +1,19 @@
 
+import 'dart:math';
+
 import 'package:codingera2/services/manage_http_request.dart';
 import 'package:codingera2/views/screens/authentication/sign_up_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:otp_timer_button/otp_timer_button.dart';
+import 'package:pinput/pinput.dart';
 import '../../../components/container_button.dart';
 import '../../../controllers/auth_controller.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -262,7 +268,22 @@ class _ChangePasswordFlowState extends State<ChangePasswordFlow> {
   TextEditingController passController2 = TextEditingController();
   TextEditingController controller = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  late final TextEditingController pinController;
+  late final FocusNode focusNode;
+  late final GlobalKey<FormState> formKey;
   bool isEnable = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    formKey = GlobalKey<FormState>();
+    pinController = TextEditingController();
+    focusNode = FocusNode();
+
+
+  }
+
 
   void nextPage(){
     if(_currentPage < 2){
@@ -279,11 +300,40 @@ class _ChangePasswordFlowState extends State<ChangePasswordFlow> {
       );
     }
   }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _pageController.dispose();
+    pinController.dispose();
+    focusNode.dispose();
+    formKey.currentState!.dispose();
+    emailController.dispose();
+    passController1.dispose();
+    passController2.dispose();
+    controller.dispose();
+  }
 
 
 
   @override
   Widget build(BuildContext context) {
+    const focusedBorderColor = Color.fromRGBO(23, 171, 144, 1);
+    const fillColor = Color.fromRGBO(243, 246, 249, 0);
+    const borderColor = Color.fromRGBO(23, 171, 144, 0.4);
+
+    final defaultPinTheme = PinTheme(
+      width: 56,
+      height: 56,
+      textStyle: const TextStyle(
+        fontSize: 22,
+        color: Color.fromRGBO(30, 60, 87, 1),
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(19),
+        border: Border.all(color: borderColor),
+      ),
+    );
     return Scaffold(
       appBar: AppBar(
         leading:IconButton(
@@ -304,8 +354,15 @@ class _ChangePasswordFlowState extends State<ChangePasswordFlow> {
               Form(
                 key: _formKeys[0],
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Text("Please Enter Your Registered Email!",style: GoogleFonts.poppins(
+                        color: Colors.grey,
+                        fontSize: 35,
+                        fontWeight: FontWeight.bold,
+                      ),),
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: TextFormField(
@@ -356,52 +413,133 @@ class _ChangePasswordFlowState extends State<ChangePasswordFlow> {
               Form(
                 key: _formKeys[1],
                 child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(12.0),
-                        child: TextFormField(
-                          controller: controller,
-                          cursorColor: Colors.white,
-                          validator: (value)=> value == null || value.isEmpty
-                              ? "Please confirm your password"
-                              : null,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                          decoration: InputDecoration(
-                              hintText: "Enter OTP here",
-                              hintStyle: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
+                        child: Text("OTP Is Sent To Your Registered Email!",style: GoogleFonts.poppins(
+                          color: Colors.grey,
+                          fontSize: 35,
+                          fontWeight: FontWeight.bold,
+                        ),),
+                      ),
+                      Directionality(
+                        // Specify direction if desired
+                        textDirection: TextDirection.ltr,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Pinput(
+                            controller: pinController,
+                            focusNode: focusNode,
+                            length: 6,
+                            defaultPinTheme: defaultPinTheme,
+                            separatorBuilder: (index) => const SizedBox(width: 8),
+                            hapticFeedbackType: HapticFeedbackType.lightImpact,
+                            onCompleted: (pin) async{
+                              showDialog(context: context, builder: (context){
+                                return Center(child: CircularProgressIndicator(color: Colors.white,),);
+                              });
+                              await AuthController().verifyOTP(emailController.text, int.parse(pin) );
+                              Navigator.pop(context);
+                              nextPage();
+                            },
+                            onChanged: (value) {
+                              debugPrint('onChanged: $value');
+                            },
+                            cursor: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.only(bottom: 9),
+                                  width: 22,
+                                  height: 1,
+                                  color: focusedBorderColor,
+                                ),
+                              ],
+                            ),
+                            focusedPinTheme: defaultPinTheme.copyWith(
+                              decoration: defaultPinTheme.decoration!.copyWith(
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: focusedBorderColor),
                               ),
-                              prefixIcon: Icon(Icons.email),
-                              prefixIconColor: Colors.blue,
-                              filled: true,
-                              fillColor: Colors.grey.shade900,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                gapPadding: 10,
-                              )
+                            ),
+                            submittedPinTheme: defaultPinTheme.copyWith(
+                              decoration: defaultPinTheme.decoration!.copyWith(
+                                color: fillColor,
+                                borderRadius: BorderRadius.circular(19),
+                                border: Border.all(color: focusedBorderColor),
+                              ),
+                            ),
+                            errorPinTheme: defaultPinTheme.copyBorderWith(
+                              border: Border.all(color: Colors.redAccent),
+                            ),
                           ),
                         ),
                       ),
-                      ElevatedButton(
-                        onPressed: ()async{
-                          if(_formKeys[1].currentState!.validate()){
-                            showDialog(context: context, builder: (context){
-                              return Center(child: CircularProgressIndicator(color: Colors.white,),);
-                            });
-                            await AuthController().verifyOTP(emailController.text, int.parse(controller.text));
-                            Navigator.pop(context);
-                            nextPage();
-                          }
-                        },
-                        child: Text("Submit"),
-                      )
+                      const SizedBox(height: 24),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Didn't receive OTP?",style: TextStyle(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16
+                          ),),
+                          SizedBox(width: 5,),
+                          OtpTimerButton(
+                              onPressed: ()async{
+                                showDialog(context: context, builder: (context){
+                                  return Center(child: CircularProgressIndicator(color: Colors.white,),);
+                                });
+                                await AuthController().getOTP(emailController.text, context);
+                                Navigator.pop(context);
+                              },
+                              backgroundColor: Colors.green,
+                              text: Text("Resend OTP",style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16
+                              )),
+                              loadingIndicator: CircularProgressIndicator(color: Colors.grey,),
+                              duration: 60
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+
+
+
+                      // Padding(
+                      //   padding: const EdgeInsets.all(12.0),
+                      //   child: TextFormField(
+                      //     controller: controller,
+                      //     cursorColor: Colors.white,
+                      //     validator: (value)=> value == null || value.isEmpty
+                      //         ? "Please confirm your password"
+                      //         : null,
+                      //     style: TextStyle(
+                      //       color: Colors.white,
+                      //       fontWeight: FontWeight.bold,
+                      //       fontSize: 16,
+                      //     ),
+                      //     decoration: InputDecoration(
+                      //         hintText: "Enter OTP here",
+                      //         hintStyle: TextStyle(
+                      //           color: Colors.white,
+                      //           fontWeight: FontWeight.bold,
+                      //           fontSize: 16,
+                      //         ),
+                      //         prefixIcon: Icon(Icons.email),
+                      //         prefixIconColor: Colors.blue,
+                      //         filled: true,
+                      //         fillColor: Colors.grey.shade900,
+                      //         border: OutlineInputBorder(
+                      //           borderRadius: BorderRadius.circular(10),
+                      //           gapPadding: 10,
+                      //         )
+                      //     ),
+                      //   ),
+                      // ),
+
                     ]
                 ),
               ),
@@ -409,8 +547,15 @@ class _ChangePasswordFlowState extends State<ChangePasswordFlow> {
                 child: Form(
                   key: _formKeys[2],
                   child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Text("Please Enter Your New Password!",style: GoogleFonts.poppins(
+                            color: Colors.grey,
+                            fontSize: 35,
+                            fontWeight: FontWeight.bold,
+                          ),),
+                        ),
                         Padding(
                           padding: const EdgeInsets.all(12.0),
                           child: TextFormField(
@@ -452,6 +597,7 @@ class _ChangePasswordFlowState extends State<ChangePasswordFlow> {
                                 ? "Please enter new password"
                                 : null,
                             cursorColor: Colors.white,
+                            obscureText: isEnable ? true : false ,
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -472,8 +618,9 @@ class _ChangePasswordFlowState extends State<ChangePasswordFlow> {
                                   setState(() {
                                     isEnable = !isEnable;
                                   });
-                                }, icon: Icon(isEnable==true ? Icons.remove_red_eye_outlined : Icons.remove_red_eye)),
+                                }, icon: Icon(isEnable==true ? Icons.visibility_off : Icons.remove_red_eye)),
                                 suffixIconColor: Colors.blue,
+
                                 suffixStyle: TextStyle(
                                     color: Colors.blue,
                                     fontWeight: FontWeight.bold,
@@ -516,7 +663,7 @@ class _ChangePasswordFlowState extends State<ChangePasswordFlow> {
 
                             if (isValid) {
                               if (passController1.text != passController2.text) {
-                                showSnackBar(context, "Passwords do not match");
+                                showSnackBar(context, "Password does not match", "Please confirm your password", ContentType.failure);
                               } else {
                                 showDialog(context: context, builder: (context){
                                   return Center(child: CircularProgressIndicator(color: Colors.white,),);

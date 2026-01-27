@@ -5,6 +5,7 @@ import 'package:codingera2/services/manage_http_request.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
 
 class AdminNotes extends StatefulWidget {
@@ -32,7 +33,7 @@ class _AdminQuizState extends State<AdminNotes> {
         });
       }
       if (pickedPdf == null || pickedPdf!.path == null) {
-        showSnackBar(context, "Select a valid PDF");
+        showSnackBar(context, "PDF Warning", "Please select a valid PDF", ContentType.failure);
         return;
       }
     }catch(e){

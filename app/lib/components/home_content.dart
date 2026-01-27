@@ -8,14 +8,17 @@ class HomeContent extends StatelessWidget {
 
 
   final List<List<Color>> gradient = [
-    [Colors.blue.shade900, Colors.cyanAccent],
-    [Colors.teal.shade900, Colors.tealAccent],
-    [Colors.blue.shade900, Colors.blueAccent.shade100],
-    [Colors.white10,Colors.white],
-    [Colors.deepPurple.shade900, Colors.deepPurpleAccent.shade100],
-    [Colors.green.shade900, Colors.greenAccent],
-    [Colors.brown.shade900, Colors.brown.shade100],
-    [Colors.deepOrange, Colors.orangeAccent],
+    [Color(0xFF78B9B5),Color(0xFF0F828C),Color(0xff065084),Color(0xff320A6B)],
+    [Color(0xFF0C2C55),Color(0xFF296374),Color(0xff629FAD),Color(0xffEDEDCE)],
+    [Color(0xFF4E56C0),Color(0xFF9B5DE0),Color(0xffD78FEE),Color(0xffFDCFFA)],
+    [Color(0xFF3C467B),Color(0xFF50589C),Color(0xff636CCB),Color(0xff6E8CFB)],
+    [Color(0xFF511D43),Color(0xFF901E3E),Color(0xffDC2525),Color(0xff9BC09C)],
+    [Color(0xFF123524),Color(0xFF3E7B27),Color(0xff85A947),Color(0xffEFE3C2)],
+    [Color(0xFF6439FF),Color(0xFF4F75FF),Color(0xff00CCDD),Color(0xff7CF5FF)],
+    [Color(0xFF37353E),Color(0xFF44444E),Color(0xff715A5A),Color(0xffD3DAD9)],
+    [Color(0xFF021526),Color(0xFF03346E),Color(0xff6EACDA),Color(0xffE2E2B6)],
+    [Color(0xFF321F28),Color(0xFF734046),Color(0xffA05344),Color(0xffE79E4F)],
+    [Color(0xFF33313B),Color(0xFF007880),Color(0xffA05344),Color(0xff62374E)],
   ];
 
   @override
@@ -30,7 +33,7 @@ class HomeContent extends StatelessWidget {
             style: GoogleFonts.montserrat(
               fontSize: 25,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color:Colors.white.withValues(alpha: 0.8,)
             ),
           ),
         ),
@@ -80,11 +83,12 @@ class HomeContent extends StatelessWidget {
           child: Text(
             "Our Achievement",
             style: GoogleFonts.montserrat(
-            fontSize: 30,
+            fontSize: 25,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+                color:Colors.white.withValues(alpha: 0.8,)
           ),),
         ),
+        Divider(color: Colors.cyanAccent, endIndent: 50, indent: 50),
         ContainerForAchievements(
           logo: "assets/images/members.png",
           title: "500+",

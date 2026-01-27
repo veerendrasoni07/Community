@@ -71,6 +71,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
           fontWeight: FontWeight.bold,
           fontSize: 25,
           color: Colors.white,
+          letterSpacing: 2,
         ),
       ),
       clipBehavior: Clip.hardEdge,

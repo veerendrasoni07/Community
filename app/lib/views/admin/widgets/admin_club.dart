@@ -3,11 +3,15 @@ import 'dart:io';
 import 'package:codingera2/controllers/admin_controller.dart';
 import 'package:codingera2/models/user.dart';
 import 'package:codingera2/provider/Admin_Provider/community_provider.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:image_picker/image_picker.dart';
+
+import '../../../services/manage_http_request.dart';
 
 class AdminClub extends ConsumerStatefulWidget {
   const AdminClub({super.key});
@@ -27,11 +31,12 @@ class _AdminClubState extends ConsumerState<AdminClub> {
   final detailDescCtrl = TextEditingController();
   final leaderIdCtrl = TextEditingController();
   final managerIdCtrl = TextEditingController();
-  final joinLinkCtrl = TextEditingController();
+
 
   List<TextEditingController> ruleCtrls = [];
   List<TextEditingController> activityCtrls = [];
   XFile? pickedImage;
+  PlatformFile? pickedPdf;
   bool loading = false;
 
   @override
@@ -49,19 +54,8 @@ class _AdminClubState extends ConsumerState<AdminClub> {
 
     setState(() => loading = true);
 
-    final body = {
-      "clubname": clubNameCtrl.text.trim(),
-      "techname": techNameCtrl.text.trim(),
-      "desc": descCtrl.text.trim(),
-      "detailDesc": detailDescCtrl.text.trim(),
-      "clubLeader": leaderIdCtrl.text.trim(),
-      "clubManager": managerIdCtrl.text.trim(),
-      "clubRule": ruleCtrls.map((e) => e.text.trim()).toList(),
-      "clubActivities": activityCtrls.map((e) => e.text.trim()).toList(),
-      "joinLink": joinLinkCtrl.text.trim(),
-    };
     
-    await AdminController().uploadClub(clubname: clubNameCtrl.text,ref: ref ,techname: techNameCtrl.text, desc: descCtrl.text, clubLeader: selectedLeader!.id, clubManager: selectedManager!.id, clubRule: ruleCtrls.map((e) => e.text.trim()).toList(),clubActivities: activityCtrls.map((e) => e.text.trim()).toList(), image: pickedImage!, detailDesc: detailDescCtrl.text, joinLink: joinLinkCtrl.text, context: context);
+    await AdminController().uploadClub(clubname: clubNameCtrl.text,ref: ref ,techname: techNameCtrl.text, desc: descCtrl.text, clubLeader: selectedLeader!.id, clubManager: selectedManager!.id, clubRule: ruleCtrls.map((e) => e.text.trim()).toList(),clubActivities: activityCtrls.map((e) => e.text.trim()).toList(), image: pickedImage!, detailDesc: detailDescCtrl.text, formFilePath: pickedPdf!.path!, context: context);
     Navigator.pop(context);
     setState(() => loading = false);
   }
@@ -70,6 +64,24 @@ class _AdminClubState extends ConsumerState<AdminClub> {
     final image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       setState(() => pickedImage = image);
+    }
+  }
+
+  Future<void> pickPdf()async{
+    try{
+      FilePickerResult? filePickerResult = await FilePicker.platform.pickFiles();
+      if(filePickerResult != null){
+        setState(() {
+          pickedPdf = filePickerResult.files.first;
+        });
+      }
+      if (pickedPdf == null || pickedPdf!.path == null) {
+        showSnackBar(context, "PDF Warning", "Please select a valid PDF", ContentType.failure);
+        return;
+      }
+    }catch(e){
+      print(e);
+      throw Exception("Something went wrong");
     }
   }
 
@@ -105,6 +117,24 @@ class _AdminClubState extends ConsumerState<AdminClub> {
                 ),
               ),
               const SizedBox(height: 20),
+              GestureDetector(
+                onTap: pickPdf,
+                child: Container(
+                  height: 180,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: pickedPdf == null
+                      ? const Center(child: Text("Tap to select Club Form Doc"))
+                      : ClipRRect(
+                    borderRadius: BorderRadius.circular(14),
+                    child:Text(pickedPdf!.name)
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
               _field("Club Name", clubNameCtrl),
               _field("Tech Name", techNameCtrl),
               _field("Short Description", descCtrl),
@@ -124,7 +154,6 @@ class _AdminClubState extends ConsumerState<AdminClub> {
               _dynamicSection("Club Rules", ruleCtrls, addRule),
               const SizedBox(height: 20),
               _dynamicSection("Club Activities", activityCtrls, addActivity),
-              _field("Join Link", joinLinkCtrl),
               const SizedBox(height: 30),
 
               ElevatedButton(

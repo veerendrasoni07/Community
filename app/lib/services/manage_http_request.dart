@@ -1,13 +1,26 @@
 
-
 import 'package:flutter/material.dart';
-
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:http/http.dart' as http;
 
-void showSnackBar(BuildContext context, String text) {
+
+void showSnackBar(BuildContext context,String title ,String text,ContentType contentType) {
   ScaffoldMessenger.of(
     context,
-  ).showSnackBar(SnackBar(content: Text(text), duration: const Duration(seconds: 5)));
+  )..hideCurrentSnackBar()..showSnackBar(SnackBar(
+    /// need to set following properties for best effect of awesome_snackbar_content
+    elevation: 0,
+    behavior: SnackBarBehavior.floating,
+    backgroundColor: Colors.transparent,
+    content: AwesomeSnackbarContent(
+      title: title,
+      message:
+      text,
+
+      /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+      contentType: contentType,
+    ),)
+  );
 }
 
 void manageHttpResponse(
@@ -20,22 +33,22 @@ void manageHttpResponse(
       onSuccess();
       break;
     case 400:
-      showSnackBar(context, 'Bad Request: ${response.body}');
+      showSnackBar(context,"Bad Request" ,'Bad Request: ${response.body}',ContentType.failure);
       break;
     case 401:
-      showSnackBar(context, 'Unauthorized: ${response.body}');
+      showSnackBar(context,"Unauthorized" ,'Unauthorized: ${response.body}',ContentType.warning);
       break;
     case 403:
-      showSnackBar(context, 'Forbidden: ${response.body}');
+      showSnackBar(context, "Forbidden",'Forbidden: ${response.body}',ContentType.warning);
       break;
     case 404:
-      showSnackBar(context, 'Not Found: ${response.body}');
+      showSnackBar(context,"Not Found" ,'Not Found: ${response.body}',ContentType.failure);
       break;
     case 500:
-      showSnackBar(context, 'Internal Server Error: ${response.body}');
+      showSnackBar(context,"Internal Server Error" ,'Internal Server Error: ${response.body}',ContentType.failure);
       break;
     default:
-      showSnackBar(context, 'Error ${response.statusCode}: ${response.body}');
+      showSnackBar(context, "Error",'Error ${response.statusCode}: ${response.body}',ContentType.failure);
   }
 }
 

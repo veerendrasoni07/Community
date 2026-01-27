@@ -57,6 +57,15 @@ dependencies:
   flutter_pdfview: ^1.4.3
   syncfusion_flutter_pdfviewer: ^32.1.24
   flutter_launcher_icons: ^0.14.4
+  dio: ^5.9.0
+  path_provider: ^2.1.5
+  permission_handler: ^12.0.1
+  open_filex: ^4.7.0
+  awesome_snackbar_content: 0.1.1
+  otp_timer_button: ^1.1.1
+  pinput: ^6.0.1
+
+
 
 dev_dependencies:
   flutter_test:

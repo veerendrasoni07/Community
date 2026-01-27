@@ -1,6 +1,8 @@
 import 'package:codingera2/models/hackathon.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../components/info_tile.dart';
 
@@ -9,8 +11,18 @@ class HackathonDetailScreen extends StatelessWidget {
   final Hackathon hackathon;
   const HackathonDetailScreen({super.key, required this.hackathon});
 
+
+
+
+
   @override
   Widget build(BuildContext context) {
+    final _url = Uri.parse(hackathon.link);
+    Future<void> _launchUrl() async {
+      if (!await launchUrl(_url)) {
+        throw Exception('Could not launch $_url');
+      }
+    }
     return Scaffold(
       backgroundColor: Colors.black,
       body: CustomScrollView(
@@ -85,7 +97,7 @@ class HackathonDetailScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(18),
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed:_launchUrl,
                       child: Text('Register Now',
                           style: GoogleFonts.poppins(
                               fontSize: 16, fontWeight: FontWeight.w600)),

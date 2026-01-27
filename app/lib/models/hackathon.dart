@@ -17,6 +17,7 @@ class Hackathon {
   final String venue;
   final int teamsize;
   final String level;
+  final String link;
   Hackathon({
     required this.id,
     required this.name,
@@ -33,6 +34,7 @@ class Hackathon {
     required this.venue,
     required this.teamsize,
     required this.level,
+    required this.link,
   });
 
   Map<String, dynamic> toMap() {
@@ -52,6 +54,7 @@ class Hackathon {
       'venue': venue,
       'teamsize': teamsize,
       'level': level,
+      'link':link,
     };
   }
 
@@ -72,6 +75,7 @@ class Hackathon {
       totalTeam: map['totalTeam'] != null ? map['totalTeam'] as int : 0,
       venue: map['venue']?.toString() ?? '',
       teamsize: map['teamsize'] != null ? map['teamsize'] as int : 0,
+      link: map['link']?.toString() ?? '',
     );
   }
 

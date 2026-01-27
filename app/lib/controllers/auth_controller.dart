@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:codingera2/global_variable.dart';
 import 'package:codingera2/provider/auth_manager_provider.dart';
 import 'package:codingera2/provider/token_provider.dart';
@@ -45,7 +46,7 @@ import '../views/screens/main_screen.dart' show MainScreen;
         ref.read(userProvider.notifier).setUser(userJson);
         ref.read(tokenProvider.notifier).setToken(token);
         if(context.mounted){
-          showSnackBar(context, 'Account created successfully');
+          showSnackBar(context,"Success" ,'Account created successfully',ContentType.success);
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => const MainScreen()),
@@ -93,7 +94,7 @@ import '../views/screens/main_screen.dart' show MainScreen;
         ref.read(tokenProvider.notifier).setToken(token);
         if(context.mounted){
           Navigator.pop(context);
-          showSnackBar(context, 'Logged in successfully');
+          showSnackBar(context, "Success",'Logged in successfully',ContentType.success);
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => const MainScreen()),
@@ -102,7 +103,11 @@ import '../views/screens/main_screen.dart' show MainScreen;
         }
       }
       else{
-        throw Exception('Failed to create account');
+        showSnackBar(context,"Failure", 'Invalid credentials',ContentType.failure);
+        Navigator.pop(context);
+        return;
+        //throw Exception('Failed to create account');
+
       }
 
     }catch(e){
@@ -163,7 +168,7 @@ import '../views/screens/main_screen.dart' show MainScreen;
         await preferences.setString('user', userJson);
         ref.read(userProvider.notifier).setUser(userJson);
         if(context.mounted){
-          showSnackBar(context, 'Profile updated successfully');
+          showSnackBar(context,"Success" ,'Profile updated successfully', ContentType.success);
         }
       }else{
         print(response.body);
@@ -253,12 +258,13 @@ import '../views/screens/main_screen.dart' show MainScreen;
       );
       if(response.statusCode == 200){
         final data = jsonDecode(response.body);
-        showSnackBar(context, "OTP is sent to your email");
+        showSnackBar(context, "OTP SENT" ,"OTP is sent to your email",ContentType.warning);
         return data['success'];
       }
       else{
-        print(response.body);
-        throw Exception('Failed to get OTP');
+        showSnackBar(context, "OTP NOT SENT" ,jsonDecode(response.body)['msg'],ContentType.failure);
+        Navigator.pop(context);
+        throw Exception(response.body);
       }
     }catch(e){
       print(e);
@@ -306,7 +312,7 @@ import '../views/screens/main_screen.dart' show MainScreen;
       );
       if(response.statusCode == 200){
         final data = jsonDecode(response.body);
-        showSnackBar(context, data['msg']);
+        showSnackBar(context, 'Success', data['msg'],ContentType.success);
       }
       else{
         print(response.body);

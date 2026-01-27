@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
-class ContainerForAchievements extends StatelessWidget {
+class ContainerForAchievements extends StatefulWidget {
   final String logo;
   final String title;
   final List<Color> gradient;
@@ -19,6 +19,14 @@ class ContainerForAchievements extends StatelessWidget {
   });
 
   @override
+  State<ContainerForAchievements> createState() => _ContainerForAchievementsState();
+}
+
+class _ContainerForAchievementsState extends State<ContainerForAchievements> with SingleTickerProviderStateMixin{
+  
+  
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(8),
@@ -26,16 +34,16 @@ class ContainerForAchievements extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors:gradient,
+          colors:widget.gradient,
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            blurRadius: 15,
-            offset: Offset(0, 8),
+            color: widget.gradient.last.withOpacity(0.35),
+            blurRadius: 4,
+            spreadRadius: 2,
           ),
         ],
       ),
@@ -45,7 +53,7 @@ class ContainerForAchievements extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: Image.asset(
-              logo,
+              widget.logo,
               height: 100,
               width: 100,
               fit: BoxFit.fill,
@@ -53,21 +61,21 @@ class ContainerForAchievements extends StatelessWidget {
           ),
 
           AutoSizeText(
-            title,
+            widget.title,
             style: TextStyle(
               fontWeight: FontWeight.w800,
               fontSize: 30,
-              color: titlecolor,
+              color: widget.titlecolor,
               letterSpacing: 1.2,
             ),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 12),
           Text(
-            desc,
+            widget.desc,
             style: TextStyle(
               fontSize: 18,
-              color: desccolor,
+              color: widget.desccolor,
               fontWeight: FontWeight.w500,
             ),
             textAlign: TextAlign.center,

@@ -1,3 +1,6 @@
+import 'package:codingera2/controllers/pdf_controller.dart';
+import 'package:codingera2/provider/download_progress_provider.dart';
+import 'package:codingera2/provider/isdownload_provider.dart';
 import 'package:codingera2/provider/pdf_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -37,34 +40,56 @@ class _NotesPdfScreenState extends ConsumerState<NotesPdfScreen> {
   }
 
   Widget pdfTile(Pdf pdf){
-    return GestureDetector(
-      onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>PdfViewPage(pdf: pdf,))),
-      child: Container(
-        margin: const EdgeInsets.all(12),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.grey.shade200,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.shade300,
-              blurRadius: 5,
-              spreadRadius: 2
-            )
-          ],
-        ),
-        child: Column(
-          children: [
-            Text(pdf.subject,style: GoogleFonts.poppins(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-            ),),
-            Text(pdf.semester,style: GoogleFonts.poppins(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            )),
-          ],
-        ),
+    final isDownloading = ref.watch(isDownloadingProvider);
+    final downloadProgress = ref.watch(downloadProgressProvider);
+    return Container(
+      margin: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade200,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade300,
+            blurRadius: 5,
+            spreadRadius: 2
+          )
+        ],
+      ),
+      child: Column(
+        children: [
+          Text(pdf.subject,style: GoogleFonts.poppins(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+          ),),
+          Text(pdf.semester,style: GoogleFonts.poppins(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          )),
+          isDownloading ? Center(child: LinearProgressIndicator(
+            color: Colors.deepPurpleAccent,
+            semanticsLabel: "Downloading",
+            value: downloadProgress,
+          )) :
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>PdfViewPage(pdf: pdf,))), child: Text("View",style: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.deepPurpleAccent
+              ),)),
+              ElevatedButton(onPressed: ()async{
+                isDownloading==true ? null :
+                await PdfController().downloadPdf(ref: ref, context: context, pdfUrl: pdf.pdf, fileName: pdf.subject.replaceAll(" ", "_"));
+              }, child: Text("Download",style: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.deepPurpleAccent
+              ),)),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -73,6 +98,7 @@ class _NotesPdfScreenState extends ConsumerState<NotesPdfScreen> {
 Widget PdfViewPage({required Pdf pdf}){
   final PdfViewerController controller = PdfViewerController();
   return Scaffold(
+    backgroundColor: Colors.black,
     appBar: AppBar(
       title: Text(pdf.chapter,style: GoogleFonts.poppins(
         fontSize: 20,

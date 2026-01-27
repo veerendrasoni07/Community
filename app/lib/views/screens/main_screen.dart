@@ -17,7 +17,21 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   late final PageController _controller;
   int _selectedIndex = 0;
 
+  double _rotateX = 0.0;
+  double _rotateY = 0.0;
+  double _scale = 1.0;
 
+  double _nx = 0;
+  double _ny = 0;
+
+
+  void _reset() {
+    setState(() {
+      _rotateX = 0;
+      _rotateY = 0;
+      _scale = 1;
+    });
+  }
   @override
   void initState() {
     // TODO: implement initState
@@ -62,48 +76,79 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     );
   }
   Widget _buildGlassNavBar() {
-    return Container(
-      height: 70,
-      margin: const EdgeInsets.all(16),
-      width: MediaQuery.of(context).size.width * 0.92,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: Colors.white.withOpacity(0.2)),
-        gradient: LinearGradient(
-          colors: [
-            Colors.white.withOpacity(0.10),
-            Colors.white.withOpacity(0.04)
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(30),
-        child: Stack(
-          children: [
-            //Frosted Blur
-            Positioned.fill(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
-                child: const SizedBox(),
+    return GestureDetector(
+      onPanEnd: (_) => _reset(),
+      onPanCancel: _reset,
+      onPanUpdate: (details){
+        final box = context.findRenderObject() as RenderBox;
+        final local = box.globalToLocal(details.globalPosition);
+
+        final dx = local.dx - box.size.width / 2;
+        final dy = local.dy - box.size.height / 2;
+
+        final nx = (dx / (box.size.width / 2)).clamp(-1.0, 1.0);
+        final ny = (dy / (box.size.height / 2)).clamp(-1.0, 1.0);
+        setState(() {
+          _rotateY = nx * 0.18;     // controlled rotation
+          _rotateX = -ny * 0.18;
+          _scale = 1.05;
+        });
+      },
+      child: TweenAnimationBuilder(
+        tween: Tween(begin: 0.0, end: 1.0),
+        duration: const Duration(milliseconds: 350),
+        curve: Curves.easeInOut,
+        builder: (context,s,child){
+          return Transform(
+            alignment: Alignment.center,
+            transform:  Matrix4.identity()..setEntry(3, 2, 0.0006)..rotateX(_rotateX)..rotateY(_rotateY)..scale(_scale),
+            child: child,
+          );
+        },
+          child: Container(
+            height: 70,
+            margin: const EdgeInsets.all(16),
+            width: MediaQuery.of(context).size.width * 0.92,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              border: Border.all(color: Colors.white.withOpacity(0.2)),
+              gradient: LinearGradient(
+                colors: [
+                  Colors.white.withOpacity(0.10),
+                  Colors.white.withOpacity(0.04)
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
             ),
-
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(30),
+              child: Stack(
                 children: [
-                  _navItem(Icon(Icons.home_outlined, size: 20,color: Colors.white,), Icon(FontAwesomeIcons.house, size: 20,color: Colors.white,), 0),
-                  _navItem(Icon(FontAwesomeIcons.noteSticky, size: 20,color: Colors.white,), Icon(FontAwesomeIcons.solidNoteSticky,size: 20,color: Colors.white,), 1),
-                  _navItem(Icon(Icons.person_2_outlined, size: 20,color: Colors.white,), Icon(Icons.person_4_rounded,color: Colors.white,size: 20), 2),
+                  //Frosted Blur
+                  Positioned.fill(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
+                      child: const SizedBox(),
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _navItem(Icon(Icons.home_outlined, size: 20,color: Colors.white,), Icon(FontAwesomeIcons.house, size: 20,color: Colors.white,), 0),
+                        _navItem(Icon(FontAwesomeIcons.noteSticky, size: 20,color: Colors.white,), Icon(FontAwesomeIcons.solidNoteSticky,size: 20,color: Colors.white,), 1),
+                        _navItem(Icon(Icons.person_2_outlined, size: 20,color: Colors.white,), Icon(Icons.person_4_rounded,color: Colors.white,size: 20), 2),
+                      ],
+                    ),
+                  )
+
                 ],
               ),
-            )
-
-          ],
-        ),
+            ),
+          ),
       ),
     );
   }

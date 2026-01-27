@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:codingera2/controllers/auth_controller.dart';
 import 'package:codingera2/services/manage_http_request.dart';
 import 'package:flutter/foundation.dart';
@@ -151,7 +152,7 @@ class AdminController {
     required List<String> clubActivities,
     required XFile image,
     required String detailDesc,
-    required String joinLink,
+    required String formFilePath,
     required WidgetRef ref,
     required BuildContext context,
 
@@ -160,32 +161,44 @@ class AdminController {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       final token = preferences.getString('token');
       final signedData = await sign('image', token!, context, ref);
+
       final uploadImage = await uploadImageToCloudinary(signedData, image);
       final imageUrl = uploadImage["secure_url"];
 
-      final response = await http.post(
-        Uri.parse('$uri/api/upload-club'),
-          body: jsonEncode({
-            "clubname": clubname,
-            "techname": techname,
-            "desc": desc,
-            "clubLeader": clubLeader,
-            "clubManager": clubManager,
-            "clubRule": clubRule,
-            "clubActivities": clubActivities,
-            "image": imageUrl,
-            "detailDesc": detailDesc,
-            "joinLink": joinLink,
-          }),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          });
 
-      if(response.statusCode == 200){
-        showSnackBar(context, "Club uploaded successfully");
-      }else{
-        showSnackBar(context, "Something went wrong");
-        print(response.body);
+      // multipart request because i also have to upload club form to the cloudinary which is a pdf file
+      final url = Uri.parse('$uri/api/upload-pdf');
+      final request = http.MultipartRequest("POST", url);
+      request.files.add(await http.MultipartFile.fromPath("pdf", formFilePath));
+      final response = await request.send();
+      if (response.statusCode == 200) {
+        print("Club form uploaded successfully");
+        final uploadBody = await response.stream.bytesToString();
+        final pdfLink = jsonDecode(uploadBody)["pdf"];
+        final res = await http.post(
+          Uri.parse('$uri/api/upload-club'),
+            body: jsonEncode({
+              "clubname": clubname,
+              "techname": techname,
+              "desc": desc,
+              "clubLeader": clubLeader,
+              "clubManager": clubManager,
+              "clubRule": clubRule,
+              "clubActivities": clubActivities,
+              "image": imageUrl,
+              "detailDesc": detailDesc,
+              "joinLink": pdfLink,
+            }),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            });
+
+        if(res.statusCode == 200){
+          showSnackBar(context,"Success","Club uploaded successfully",ContentType.success);
+        }else{
+          showSnackBar(context,"Failure" ,"Something went wrong",ContentType.failure);
+          print(res.body);
+        }
       }
 
     }catch(e){
@@ -215,13 +228,13 @@ class AdminController {
       );
       if(response.statusCode == 200){
         if(context.mounted){
-          showSnackBar(context, "Banner uploaded successfully");
+          showSnackBar(context, "Success","Banner uploaded successfully",ContentType.success);
           Navigator.pop(context);
         }
       }else{
         print(response.body);
         if(context.mounted){
-          showSnackBar(context, "Something went wrong");
+          showSnackBar(context, "Failure","Something went wrong",ContentType.failure);
         }
       }
     }catch(e){

@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:codingera2/provider/pdf_provider.dart';
 import 'package:codingera2/services/manage_http_request.dart';
 import 'package:codingera2/views/details/notes_pdf_screen.dart';
@@ -88,13 +89,21 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
                   setState(() {
                     isFetching = true;
                   });
-                  await ref.read(pdfProvider.notifier).getPdf(subject: selectedSubject!, semester: selectedSemester!, noteType: noteType!, context: context);
-                  setState(() {
-                    isFetching = false;
-                  });
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>NotesPdfScreen()));
+                  final pdfs = await ref.read(pdfProvider.notifier).getPdf(subject: selectedSubject!, semester: selectedSemester!, noteType: noteType!, context: context);
+                  if(pdfs.isNotEmpty){
+                    setState(() {
+                      isFetching = false;
+                    });
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>NotesPdfScreen()));
+                  }
+                  else{
+                    setState(() {
+                      isFetching = false;
+                    });
+                    showSnackBar(context, "Unfortunately!" ,"Sorry Notes For This Subject Is Not Available!",ContentType.help);
+                  }
                 }else{
-                  showSnackBar(context, "Sorry! Notes For This Semester Is Not Available");
+                  showSnackBar(context, "Unfortunately!" ,"Sorry! Notes For This Semester Is Not Available",ContentType.help);
                 }
 
 
