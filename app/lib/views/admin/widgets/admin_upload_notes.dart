@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 
 class AdminNotes extends StatefulWidget {
@@ -21,7 +22,7 @@ class _AdminQuizState extends State<AdminNotes> {
   TextEditingController subjectController = TextEditingController();
   TextEditingController semesterController = TextEditingController();
   TextEditingController chapterController = TextEditingController();
-  TextEditingController noteTypeController = TextEditingController();
+  String noteType = "";
   PlatformFile? pickedPdf;
 
   Future<void> pickPdf()async{
@@ -44,7 +45,7 @@ class _AdminQuizState extends State<AdminNotes> {
 
   Future<void> savePdf()async{
     try{
-      await controller.uploadPdfNotes(subject: subjectController.text.trim(),noteType:noteTypeController.text.trim() ,semester: semesterController.text.trim(), chapter: chapterController.text.trim(), pdf: pickedPdf!.path!, context: context);
+      await controller.uploadPdfNotes(subject: subjectController.text.trim(),noteType:noteType.trim() ,semester: semesterController.text.trim(), chapter: chapterController.text.trim(), pdf: pickedPdf!.path!, context: context);
     }catch(e){
       print(e);
       throw Exception("Something went wrong");
@@ -99,7 +100,12 @@ class _AdminQuizState extends State<AdminNotes> {
                 input("Semester", semesterController, "ex: 1st Semester"),
                 input("Subject", subjectController,"ex: Chemistry"),
                 input("Chapter", chapterController, "ex: Water"),
-                input("Note Type", noteTypeController, 'Detailed Notes, Short Notes, Important Questions'),
+                _dropDownOptions(['Detailed Notes', 'Short Notes', 'Important Questions'], (value) {
+                  setState(() {
+                    noteType=value!;
+                  });
+                }, 'Select Note Type', 'Note Type'),
+
                 ElevatedButton(
                     onPressed: ()async{
                       await savePdf();
@@ -112,6 +118,32 @@ class _AdminQuizState extends State<AdminNotes> {
           ),
         ),
       )
+    );
+  }
+
+
+  Widget _dropDownOptions(List<String> options,Function(String?) onChanged,String text,String heading) {
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(heading, style: GoogleFonts.poppins(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),),
+          DropdownButtonFormField(
+            hint: Text(text),
+            items: options.map((m) =>
+                DropdownMenuItem(
+                    value: m,
+                    child: Text(m)
+                )).toList(),
+            onChanged: onChanged,
+            validator: (v) => v == null ? "Required" : null,
+          ),
+        ],
+      ),
     );
   }
   Widget input(String label, TextEditingController c,
