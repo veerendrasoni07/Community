@@ -165,13 +165,13 @@ class _ClubDetailScreenState extends ConsumerState<ClubDetailScreen> {
                                            ),
                                            Text("${(downloadProgress * 100).toStringAsFixed(0)}%"),
                                          ],
-                                        Text('Join Web Development Club',style: GoogleFonts.montserrat(
+                                        Text('Join ${widget.club.clubname}',style: GoogleFonts.montserrat(
                                           fontSize: 25,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white,
                                         ),textAlign: TextAlign.center,),
                                         SizedBox(height: 16,),
-                                        Text('To join the Web Development Club, please follow these steps:',style: GoogleFonts.montserrat(
+                                        Text('To join the ${widget.club.clubname}, please follow these steps:',style: GoogleFonts.montserrat(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w400,
                                           color: Colors.white,
