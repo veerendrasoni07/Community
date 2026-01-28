@@ -75,7 +75,8 @@ export const uploadPdf= async(req,res)=>{
         }
 
         const pdf = req.file.path || req.file.secure_url || req.file.url;
-        res.status(200).json({pdf});
+        const public_id = req.file.filename;
+        res.status(200).json({pdf,public_id});
     } catch (error) {
         console.log(error);
         res.status(500).json({error:"Internal Server Error"});

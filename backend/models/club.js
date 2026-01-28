@@ -2,8 +2,8 @@ import mongoose from 'mongoose';
 
 const clubSchema = new mongoose.Schema({
     image:{
-        type:String,
-        required:false
+        imageUrl:String,
+        image_public_id:String
     },
     clubname:{
         type:String,
@@ -39,9 +39,9 @@ const clubSchema = new mongoose.Schema({
         type:[String],
         required:true
     },
-    joinLink:{
-        type:String,
-        required:false
+    form:{
+        formUrl:String,
+        form_public_id:String
     }
 
 });

@@ -10,8 +10,8 @@ const hackathonSchema = new mongoose.Schema({
         required:true
     },
     image:{
-        type:String,
-        required: true
+        url:String,
+        public_id:String
     },
     description:{
         type:String,
@@ -51,7 +51,7 @@ const hackathonSchema = new mongoose.Schema({
     },
     status:{
         type:String,
-        enum:["upcoming",'ongoing','closed']
+        enum:["Upcoming",'Ongoing','Closed']
     },
     level:{
         type:String,

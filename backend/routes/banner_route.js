@@ -22,6 +22,7 @@ bannerRouter.get('/api/banner',async(req,res)=>{
         res.status(200).json(response);   
     } 
     catch (error) {
+        console.log(error);
         res.status(500).json({error:"Internal server error!"});
     }
 })

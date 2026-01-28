@@ -31,7 +31,7 @@ hackathonRoute.get('/api/hackathon',async(req,res)=>{
 });
 
 
-hackathonRoute.delete('/api/hackathon-delete',async(req,res)=>{
+hackathonRoute.delete('/api/delete-hackathon',async(req,res)=>{
     try {
         const {hackathonId} = req.body;
         await Hackathon.findByIdAndDelete(hackathonId);
@@ -46,9 +46,11 @@ hackathonRoute.delete('/api/hackathon-delete',async(req,res)=>{
 hackathonRoute.put('/api/hackathon-update',async(req,res)=>{
     try {
         const {hackathonId,data} = req.body;
+        console.log(hackathonId,data);
+        console.log("Update route hitted");
         const update = await Hackathon.findByIdAndUpdate(
             hackathonId,
-            {$addToSet:data},
+            {$set:data},
             {new:true}
         );
         return res.status(200).json(update);
