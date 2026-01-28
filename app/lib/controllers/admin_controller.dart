@@ -87,34 +87,34 @@ class AdminController {
       final uploadImage = await uploadImageToCloudinary(signedData, image);
       final imageUrl = uploadImage["secure_url"];
       final publicId = uploadImage['public_id'];
-      
-      final response = await http.post(
-        Uri.parse('$uri/api/upload-hackathon'),
-        body: jsonEncode({
-          "name": name,
-          "image": {
-            "url": imageUrl,
-            "public_id": publicId,
+      final response = await AuthController().sendRequest(request: (token)async{
+        return await http.post(
+          Uri.parse('$uri/api/upload-hackathon'),
+          body: jsonEncode({
+            "name": name,
+            "image": {
+              "url": imageUrl,
+              "public_id": publicId,
+            },
+            "description": description,
+            "eventdate": eventDate.toIso8601String(),
+            "eventTime": eventTime,
+            "deadline": deadline.toIso8601String(),
+            "prize": prize,
+            "venue": venue,
+            "duration": duration,
+            "teamsize": teamSize,
+            "totalTeam": totalTeam,
+            "level": level,
+            "link": link,
+            "status": status
+          }),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': token,
           },
-          "description": description,
-          "eventdate": eventDate.toIso8601String(),
-          "eventTime": eventTime,
-          "deadline": deadline.toIso8601String(),
-          "prize": prize,
-          "venue": venue,
-          "duration": duration,
-          "teamsize": teamSize,
-          "totalTeam": totalTeam,
-          "level": level,
-          "link": link,
-          "status": status
-        }),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'x-auth-token': token,
-        },
-      );
-
+        );
+      }, context: context, ref: ref);
       if (response.statusCode == 200) {
         debugPrint("Hackathon uploaded successfully");
       } else {
@@ -307,7 +307,10 @@ class AdminController {
         final signedData = await sign('image', token!, context, ref);
         final uploadImage = await uploadImageToCloudinary(signedData, image);
         final imageUrl = uploadImage["secure_url"];
-        details.putIfAbsent("image", () => imageUrl);
+        details.putIfAbsent("image", () => details['image'] = {
+          "url": imageUrl,
+          "public_id": uploadImage["public_id"],
+        });
         final response = await http.put(
           Uri.parse('$uri/api/hackathon-update'),
           body: jsonEncode({
@@ -331,7 +334,6 @@ class AdminController {
       }else{
 
         print("-------------------------------------hackathon update without change in image-------------------------------");
-        details.putIfAbsent("image", () => currentImage);
         final response = await http.put(
             Uri.parse('$uri/api/hackathon-update'),
             body: jsonEncode({

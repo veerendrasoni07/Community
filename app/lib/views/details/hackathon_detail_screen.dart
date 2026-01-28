@@ -88,7 +88,7 @@ class _HackathonDetailScreenState extends ConsumerState<HackathonDetailScreen> {
 
 
   Future<void> updateHackathon()async{
-    showDialog(context: context, builder: (context){
+    showDialog(context: context,barrierDismissible: false, builder: (context){
       return Center(child: CircularProgressIndicator(color: Colors.white,),);
     });
 
@@ -178,7 +178,7 @@ class _HackathonDetailScreenState extends ConsumerState<HackathonDetailScreen> {
                     ),
                     ),
                     onSave: ()async{
-                      showDialog(context: context, builder: (context){
+                      showDialog(context: context,barrierDismissible: false, builder: (context){
                         return Center(child: CircularProgressIndicator(color: Colors.white,),);
                       });
                       await AdminController().deleteHackathon(hackathonId: widget.hackathon.id, context: context, ref: ref);

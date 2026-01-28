@@ -15,14 +15,16 @@ class _ClubScreenState extends ConsumerState<ClubScreen> {
   @override
   void initState() {
     super.initState();
-    ref.read(clubProvider.notifier).loadClub();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(clubProvider.notifier).loadClub();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final clubs = ref.watch(clubProvider);
-
     return Scaffold(
+      extendBodyBehindAppBar: true,
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: SafeArea(
         child: clubs.when(

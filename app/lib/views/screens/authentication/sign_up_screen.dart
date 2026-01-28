@@ -219,7 +219,7 @@ class _SignUpFlowState extends ConsumerState<SignUpFlow> {
                           "Username already exists",
                           style: TextStyle(color: Colors.red),
                         )
-                      else
+                      else if(!isUserNameExist && _userNameController.text.isNotEmpty)
                         const Text(
                           "Username is available",
                           style: TextStyle(color: Colors.green),
