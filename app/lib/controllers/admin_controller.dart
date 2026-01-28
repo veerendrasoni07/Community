@@ -1,26 +1,20 @@
 import 'dart:convert';
-
-
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:codingera2/controllers/auth_controller.dart';
 import 'package:codingera2/models/hackathon.dart';
 import 'package:codingera2/provider/hackathon_provider.dart';
 import 'package:codingera2/services/manage_http_request.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../global_variable.dart';
 import '../models/user.dart';
 
+
+
 class AdminController {
-
-
-
-
   Future<Map<String, dynamic>> uploadImageToCloudinary(
       Map<String, dynamic> signedData, XFile filePath) async {
 
@@ -125,14 +119,17 @@ class AdminController {
     }
   }
 
-  Future<List<User>> getAllMembersOfCommunity() async {
-    try {
-      http.Response response = await http.get(
-        Uri.parse('$uri/api/community-member'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-      );
+  Future<List<User>> getAllMembersOfCommunity({required BuildContext context,required WidgetRef ref}) async {
+      try{
+      http.Response response = await AuthController().sendRequest(request: (token)async{
+        return await http.get(
+          Uri.parse('$uri/api/community-member'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+        );
+      }, context: context, ref: ref);
+
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
         final List<User> members = data.map((e) => User.fromMap(e)).toList();
@@ -145,7 +142,6 @@ class AdminController {
     } catch (e) {
       print(e);
       throw Exception("Something went wrong");
-
     }
   }
 

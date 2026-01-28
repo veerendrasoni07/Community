@@ -19,7 +19,7 @@ class _AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    ref.read(communityProvider.notifier).addCommunityMember();
+    ref.read(communityProvider.notifier).addCommunityMember(context: context,ref: ref);
   }
   @override
   Widget build(BuildContext context) {
