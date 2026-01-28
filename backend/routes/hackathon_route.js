@@ -1,5 +1,6 @@
 import express from 'express';
 import Hackathon from '../models/hackathon.js';
+import cloudinary from 'cloudinary';
 import {authorizeRole} from '../middleware/authorize.js';
 import {auth} from '../middleware/auth.js'
 const hackathonRoute = express.Router();
@@ -34,7 +35,8 @@ hackathonRoute.get('/api/hackathon',async(req,res)=>{
 hackathonRoute.delete('/api/delete-hackathon',async(req,res)=>{
     try {
         const {hackathonId} = req.body;
-        await Hackathon.findByIdAndDelete(hackathonId);
+        const hackathon = await Hackathon.findByIdAndDelete(hackathonId);
+        await cloudinary.v2.uploader.destroy(hackathon.image.public_id);
         res.status(200).json({msg:"Deleted Successfully"});
     } catch (error) {
         console.log(error);
