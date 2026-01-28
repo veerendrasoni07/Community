@@ -442,7 +442,11 @@ class _SignUpFlowState extends ConsumerState<SignUpFlow> {
                       GestureDetector(
                         onTap: (){
                           if (_formKeys[4].currentState!.validate()) {
+                            showDialog(context: context, builder: (context){
+                              return Center(child: CircularProgressIndicator(color: Colors.white,),);
+                            });
                             AuthController().signUp(fullname: _nameController.text.trim(),username: _userNameController.text.trim(), email: _emailController.text.trim(), password: _passwordController.text.trim(), gender: gender!, context: context, ref: ref);
+                            Navigator.pop(context);
                           }
                         },
                         child: ContainerButton(

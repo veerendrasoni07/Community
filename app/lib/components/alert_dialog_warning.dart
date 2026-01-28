@@ -10,29 +10,29 @@ class AlertDialogWarning extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title:title ,
+      title:title,
       content: content,
       actions: [
         TextButton(
           onPressed:onSave,
-          child: Text("Confirm"),
           style: TextButton.styleFrom(
             foregroundColor: Colors.blue,
             textStyle: TextStyle(
               fontSize: 18,
             )
-          )
+          ),
+          child: const Text("Confirm")
         ),
         TextButton(
           onPressed: ()=>Navigator.of(context).pop(),
-          child: Text("Cancel"),
           style: TextButton.styleFrom(
 
             foregroundColor: Colors.grey,
             textStyle: TextStyle(
               fontSize: 18,
             )
-          )
+          ),
+          child: const Text("Cancel")
         ),
       ]
     );

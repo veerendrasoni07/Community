@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../controllers/admin_controller.dart';
@@ -26,7 +27,7 @@ class _AdminHackathonState extends ConsumerState<AdminHackathon> {
   final _level = TextEditingController();
   final _link = TextEditingController();
   final _duration = TextEditingController();
-
+  String? status;
   DateTime? eventDate;
   DateTime? deadline;
   XFile? pickedImage;
@@ -64,7 +65,9 @@ class _AdminHackathonState extends ConsumerState<AdminHackathon> {
       );
       return;
     }
-
+    showDialog(context: context, builder: (context){
+      return Center(child: CircularProgressIndicator(color: Colors.white,),);
+    });
     await AdminController().uploadHackathon(
       name: _name.text.trim(),
       description: _description.text.trim(),
@@ -82,6 +85,7 @@ class _AdminHackathonState extends ConsumerState<AdminHackathon> {
       prize: int.parse(_prize.text),
       duration: _duration.text.trim(),
     );
+    Navigator.pop(context);
     Navigator.pop(context);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("Hackathon Published")),
@@ -168,6 +172,11 @@ class _AdminHackathonState extends ConsumerState<AdminHackathon> {
               input("Level", _level),
               input("Duration", _duration),
               input("Registration Link", _link),
+              _dropDownOptions(["Upcoming","Ongoing","Closed"], (value){
+                setState(() {
+                  status = value;
+                });
+              }, "Select Level", "Status of Hackathon"),
               const SizedBox(height: 30),
               SizedBox(
                 height: 50,
@@ -180,6 +189,30 @@ class _AdminHackathonState extends ConsumerState<AdminHackathon> {
             ],
           ),
         ),
+      ),
+    );
+  }
+  Widget _dropDownOptions(List<String> options,Function(String?) onChanged,String text,String heading) {
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(heading, style: GoogleFonts.poppins(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),),
+          DropdownButtonFormField(
+            hint: Text(text),
+            items: options.map((m) =>
+                DropdownMenuItem(
+                    value: m,
+                    child: Text(m)
+                )).toList(),
+            onChanged: onChanged,
+            validator: (v) => v == null ? "Required" : null,
+          ),
+        ],
       ),
     );
   }

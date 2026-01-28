@@ -1,6 +1,7 @@
 // Modern aesthetic Hackathon & Club detail screens
 // Drop this file into your Flutter project and use Navigator.push
 
+import 'package:codingera2/components/inside_app_button.dart';
 import 'package:codingera2/controllers/pdf_controller.dart';
 import 'package:codingera2/models/club.dart';
 
@@ -49,7 +50,7 @@ class _ClubDetailScreenState extends ConsumerState<ClubDetailScreen> {
               background: Stack(
                 fit: StackFit.expand,
                 children: [
-                  Image.network(widget.club.image, fit: BoxFit.cover),
+                  Image.network(widget.club.imageUrl, fit: BoxFit.cover),
                   Container(
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
@@ -117,15 +118,7 @@ class _ClubDetailScreenState extends ConsumerState<ClubDetailScreen> {
                     maintainBottomViewPadding: true,
                     child: SizedBox(
                       width: double.infinity,
-                      child: ElevatedButton.icon(
-                        icon: const Icon(Icons.group_add),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF22C55E),
-                          padding: const EdgeInsets.symmetric(vertical: 18),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18)),
-                        ),
-                        onPressed: () async{
+                      child: appButton(onPressed: () async{
                           await showModalBottomSheet(
                               context: context,
                               backgroundColor: Colors.black.withValues(alpha: 0.84),
@@ -139,7 +132,7 @@ class _ClubDetailScreenState extends ConsumerState<ClubDetailScreen> {
                                 return Container(
                                   padding: const EdgeInsets.all(16),
                                   decoration: BoxDecoration(
-                                      color: Colors.black.withOpacity(0.35),
+                                      color: Colors.black,
                                       borderRadius: BorderRadius.only(topLeft: Radius.circular(18),topRight: Radius.circular(18)),
                                       border: Border.all(color: Colors.white24),
                                       boxShadow: [
@@ -194,24 +187,16 @@ class _ClubDetailScreenState extends ConsumerState<ClubDetailScreen> {
                                         SizedBox(height: 16,),
                                         SafeArea(
                                           bottom: true,
-                                          child: ElevatedButton(
-                                            onPressed: ()async{
-                                            isDownloading ? null : await PdfController().downloadPdf(ref: ref, context: context, pdfUrl: widget.club.joinLink, fileName: widget.club.clubname.replaceAll(" ", "_"));
-                                            },
-                                            child:  Text("Download",style: GoogleFonts.montserrat(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.deepPurpleAccent,
-                                            )),
-                                          ),
+                                          child: appButton(onPressed: ()async{
+                                            isDownloading ? null : await PdfController().downloadPdf(ref: ref, context: context, pdfUrl: widget.club.formUrl, fileName: widget.club.clubname.replaceAll(" ", "_"));
+                                          }, text: "Download", context: context)
                                         )
                                       ]
                                   ),
                                 );
                           });
                         },
-                        label: Text('Join Club',
-                            style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
+                        text: 'Join Club',context: context
                       ),
                     ),
                   ),
@@ -224,10 +209,7 @@ class _ClubDetailScreenState extends ConsumerState<ClubDetailScreen> {
     );
   }
 
-  // Widget clubRulesForm({required BuildContext context,required List<String> clubRules,required Club club,required WidgetRef ref}){
-  //
-  //   return
-  // }
+
 }
 class _LeaderCard extends StatelessWidget {
   final String title;

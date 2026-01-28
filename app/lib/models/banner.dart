@@ -1,25 +1,28 @@
 import 'dart:convert';
 
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 class BannerModel {
   final String id;
-  final String image;
+  final String url;
+  final String publicId;
   BannerModel({
     required this.id,
-    required this.image,
+    required this.url,
+    required this.publicId,
   });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
-      'image': image,
+      'url': url,
+      'publicId': publicId,
     };
   }
 
   factory BannerModel.fromJson(Map<String, dynamic> map) {
     return BannerModel(
       id: map['_id'] as String,
-      image: map['image'] as String,
+      url: map['image']['url'] as String,
+      publicId: map['image']['public_id'] as String,
     );
   }
 

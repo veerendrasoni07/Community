@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:codingera2/components/inside_app_button.dart';
 import 'package:codingera2/controllers/admin_controller.dart';
 import 'package:codingera2/provider/banner_provider.dart';
 import 'package:flutter/material.dart';
@@ -29,13 +30,12 @@ class _AdminUploadBannerState extends ConsumerState<AdminUploadBanner> {
   }
 
   Future<void> uploadBanner()async{
-    setState(() {
-      isUploading = true;
+    showDialog(context: context, builder: (context){
+      return Center(child: CircularProgressIndicator(color: Colors.white,),);
     });
     await AdminController().uploadBanner(bannerFile: pickedImage!, context: context,ref: ref);
-    setState(() {
-      isUploading = false;
-    });
+    Navigator.pop(context);
+    Navigator.pop(context);
   }
 
   @override
@@ -96,7 +96,7 @@ class _AdminUploadBannerState extends ConsumerState<AdminUploadBanner> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(20),
                       child: Image.network(
-                        banner.image,
+                        banner.url,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -111,6 +111,7 @@ class _AdminUploadBannerState extends ConsumerState<AdminUploadBanner> {
               uploadBanner();
             }, child: Text("Upload Banner")),
           )
+
 
         ],
       ),

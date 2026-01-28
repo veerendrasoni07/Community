@@ -3,6 +3,8 @@ import 'dart:convert';
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:codingera2/controllers/auth_controller.dart';
+import 'package:codingera2/models/hackathon.dart';
+import 'package:codingera2/provider/hackathon_provider.dart';
 import 'package:codingera2/services/manage_http_request.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -83,13 +85,16 @@ class AdminController {
       final signedData = await sign('image', token!, context, ref);
       final uploadImage = await uploadImageToCloudinary(signedData, image);
       final imageUrl = uploadImage["secure_url"];
-      
+      final publicId = uploadImage['public_id'];
       
       final response = await http.post(
         Uri.parse('$uri/api/upload-hackathon'),
         body: jsonEncode({
           "name": name,
-          "image": imageUrl,
+          "image": {
+            "url": imageUrl,
+            "public_id": publicId,
+          },
           "description": description,
           "eventdate": eventDate.toIso8601String(),
           "eventTime": eventTime,
@@ -164,7 +169,7 @@ class AdminController {
 
       final uploadImage = await uploadImageToCloudinary(signedData, image);
       final imageUrl = uploadImage["secure_url"];
-
+      final publicId = uploadImage['public_id'];
 
       // multipart request because i also have to upload club form to the cloudinary which is a pdf file
       final url = Uri.parse('$uri/api/upload-pdf');
@@ -175,6 +180,8 @@ class AdminController {
         print("Club form uploaded successfully");
         final uploadBody = await response.stream.bytesToString();
         final pdfLink = jsonDecode(uploadBody)["pdf"];
+        final pdfPublicId = jsonDecode(uploadBody)['public_id'];
+
         final res = await http.post(
           Uri.parse('$uri/api/upload-club'),
             body: jsonEncode({
@@ -185,9 +192,15 @@ class AdminController {
               "clubManager": clubManager,
               "clubRule": clubRule,
               "clubActivities": clubActivities,
-              "image": imageUrl,
+              "image": {
+                "imageUrl": imageUrl,
+                "image_public_id": publicId
+              },
               "detailDesc": detailDesc,
-              "joinLink": pdfLink,
+              "form": {
+                "formUrl":pdfLink,
+                "form_public_id":pdfPublicId
+              },
             }),
             headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
@@ -216,11 +229,15 @@ class AdminController {
       print(bannerFile.path);
       final uploadImage = await uploadImageToCloudinary(signData,bannerFile);
       final imageUrl = uploadImage['secure_url'];
+      final publicId = uploadImage['public_id'];
       print("letsss gooooo");
       http.Response response = await http.post(
           Uri.parse('$uri/api/upload-banner'),
           body: jsonEncode({
-            "image": imageUrl,
+            "image": {
+              "url": imageUrl,
+              "public_id": publicId
+            },
           }),
         headers: <String,String>{
             "Content-Type":"application/json; charset=UTF-8"
@@ -239,6 +256,104 @@ class AdminController {
       }
     }catch(e){
       print(e.toString());
+      throw Exception("Something went wrong");
+    }
+  }
+
+
+
+  Future<void> deleteHackathon({required String hackathonId,required BuildContext context,required WidgetRef ref})async{
+    try{
+      http.Response response = await http.delete(
+          Uri.parse('$uri/api/delete-hackathon'),
+        body: jsonEncode({
+          'hackathonId':hackathonId,
+        }),
+        headers: <String,String>{
+            'Content-Type':'application/json; charset=UTF-8'
+        }
+      );
+
+      if(response.statusCode == 200){
+        ref.read(hackathonProvider.notifier).deleteHackathon(hackathonId);
+        if(context.mounted){
+          showSnackBar(context, "Success","Hackathon deleted successfully",ContentType.success);
+        }
+      }
+
+
+    }catch(e){
+      print(e);
+      throw Exception("Something went wrong");
+    }
+  }
+
+
+  Future<void> hackathonUpdate({
+    required Map<String,dynamic> details,
+    required String currentImage,
+    required String hackathonId,
+    required WidgetRef ref,
+    required BuildContext context,
+    required XFile? image,
+})async{
+    try{
+      if(image!=null){
+        print("-------------------------------------hackathon update change in image-------------------------------");
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        final token = preferences.getString('token');
+        final signedData = await sign('image', token!, context, ref);
+        final uploadImage = await uploadImageToCloudinary(signedData, image);
+        final imageUrl = uploadImage["secure_url"];
+        details.putIfAbsent("image", () => imageUrl);
+        final response = await http.put(
+          Uri.parse('$uri/api/hackathon-update'),
+          body: jsonEncode({
+            "data":details,
+            "hackathonId": hackathonId
+          }),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          }
+        );
+        if (response.statusCode == 200) {
+          showSnackBar(context, "Success", "Hackathon Updated Successfully", ContentType.success);
+          final data = jsonDecode(response.body);
+          final hackathon = Hackathon.fromJson(data);
+          ref.read(hackathonProvider.notifier).updateHackathon(hackathon);
+          debugPrint("Hackathon updated successfully");
+        } else {
+          debugPrint("Upload failed: ${response.body}");
+          throw Exception("Something went wrong");
+        }
+      }else{
+
+        print("-------------------------------------hackathon update without change in image-------------------------------");
+        details.putIfAbsent("image", () => currentImage);
+        final response = await http.put(
+            Uri.parse('$uri/api/hackathon-update'),
+            body: jsonEncode({
+              "data":details,
+              "hackathonId": hackathonId,
+            }),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            }
+        );
+        if (response.statusCode == 200) {
+          showSnackBar(context, "Success", "Hackathon Updated Successfully", ContentType.success);
+          final data = jsonDecode(response.body);
+          final hackathon = Hackathon.fromJson(data);
+          ref.read(hackathonProvider.notifier).updateHackathon(hackathon);
+          debugPrint("Hackathon updated successfully");
+        } else {
+          debugPrint("Upload failed: ${response.body}");
+          throw Exception("Something went wrong");
+        }
+      }
+
+    }catch(e){
+      print(e);
       throw Exception("Something went wrong");
     }
   }

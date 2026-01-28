@@ -216,7 +216,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               }
             }
           },
-          child: ContainerButton(height: 60, width: 350, text: "Log-in"),
+          child: ContainerButton(height: 50, width: MediaQuery.of(context).size.width*0.75, text: "Login"),
         ),
         SizedBox(height: 10,),
         Row(

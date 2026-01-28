@@ -37,7 +37,7 @@ class _AdminClubState extends ConsumerState<AdminClub> {
   List<TextEditingController> activityCtrls = [];
   XFile? pickedImage;
   PlatformFile? pickedPdf;
-  bool loading = false;
+
 
   @override
   void initState() {
@@ -52,12 +52,13 @@ class _AdminClubState extends ConsumerState<AdminClub> {
   Future<void> uploadClub() async {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() => loading = true);
 
-    
+    showDialog(context: context,barrierDismissible: false ,builder: (context){
+      return Center(child: CircularProgressIndicator(color: Colors.white,),);
+    });
     await AdminController().uploadClub(clubname: clubNameCtrl.text,ref: ref ,techname: techNameCtrl.text, desc: descCtrl.text, clubLeader: selectedLeader!.id, clubManager: selectedManager!.id, clubRule: ruleCtrls.map((e) => e.text.trim()).toList(),clubActivities: activityCtrls.map((e) => e.text.trim()).toList(), image: pickedImage!, detailDesc: detailDescCtrl.text, formFilePath: pickedPdf!.path!, context: context);
     Navigator.pop(context);
-    setState(() => loading = false);
+    Navigator.pop(context);
   }
   Future<void> pickImage() async {
     final picker = ImagePicker();
@@ -90,82 +91,81 @@ class _AdminClubState extends ConsumerState<AdminClub> {
     final members = ref.watch(communityProvider);
     return Scaffold(
       appBar: AppBar(title: const Text("Upload Club")),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              GestureDetector(
-                onTap: pickImage,
-                child: Container(
-                  height: 180,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: pickedImage == null
-                      ? const Center(child: Text("Tap to select banner image"))
-                      : ClipRRect(
-                    borderRadius: BorderRadius.circular(14),
-                    child: Image.file(
-                      File(pickedImage!.path),
-                      fit: BoxFit.cover,
+      body: members.when(
+          data: (members){
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    GestureDetector(
+                      onTap: pickImage,
+                      child: Container(
+                        height: 180,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: pickedImage == null
+                            ? const Center(child: Text("Tap to select banner image"))
+                            : ClipRRect(
+                          borderRadius: BorderRadius.circular(14),
+                          child: Image.file(
+                            File(pickedImage!.path),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 20),
+                    GestureDetector(
+                      onTap: pickPdf,
+                      child: Container(
+                        height: 180,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: pickedPdf == null
+                            ? const Center(child: Text("Tap to select Club Form Doc"))
+                            : ClipRRect(
+                            borderRadius: BorderRadius.circular(14),
+                            child:Text(pickedPdf!.name)
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    _field("Club Name", clubNameCtrl),
+                    _field("Tech Name", techNameCtrl),
+                    _field("Short Description", descCtrl),
+                    _field("Detailed Description", detailDescCtrl, max: 5),
+                    _dropDownMembers(members, (User? value) {
+                      setState(() => selectedLeader = value);
+                    }, "Select Club Leader", "Club Leader"),
+                    _dropDownMembers(members, (User? value) {
+                      setState(() => selectedManager = value);
+                    }, "Select Club Manager", "Club Manager"),
+                    const SizedBox(height: 20),
+                    _dynamicSection("Club Rules", ruleCtrls, addRule),
+                    const SizedBox(height: 20),
+                    _dynamicSection("Club Activities", activityCtrls, addActivity),
+                    const SizedBox(height: 30),
+
+                    ElevatedButton(
+                      onPressed: uploadClub,
+                      child:const Text("UPLOAD CLUB"),
+                    )
+                  ],
                 ),
               ),
-              const SizedBox(height: 20),
-              GestureDetector(
-                onTap: pickPdf,
-                child: Container(
-                  height: 180,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: pickedPdf == null
-                      ? const Center(child: Text("Tap to select Club Form Doc"))
-                      : ClipRRect(
-                    borderRadius: BorderRadius.circular(14),
-                    child:Text(pickedPdf!.name)
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              _field("Club Name", clubNameCtrl),
-              _field("Tech Name", techNameCtrl),
-              _field("Short Description", descCtrl),
-              _field("Detailed Description", detailDescCtrl, max: 5),
-              _dropDownMembers(members, (value){
-                setState(() {
-                  selectedLeader = value;
-                });
-              }, "Select Club Leader", "Club Leader"),
-              _dropDownMembers(members, (value){
-                setState(() {
-                  selectedManager = value;
-                });
-              }, "Select Club Manager", "Club Manager"),
-
-              const SizedBox(height: 20),
-              _dynamicSection("Club Rules", ruleCtrls, addRule),
-              const SizedBox(height: 20),
-              _dynamicSection("Club Activities", activityCtrls, addActivity),
-              const SizedBox(height: 30),
-
-              ElevatedButton(
-                onPressed: loading ? null : uploadClub,
-                child: loading
-                    ? const CircularProgressIndicator()
-                    : const Text("UPLOAD CLUB"),
-              )
-            ],
-          ),
-        ),
-      ),
+            );
+          },
+          error: (error,stackTrace) => Center(child: Text(error.toString()),),
+          loading: ()=> Center(child: CircularProgressIndicator(),)
+      )
     );
   }
 

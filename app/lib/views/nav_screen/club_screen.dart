@@ -12,29 +12,47 @@ class ClubScreen extends ConsumerStatefulWidget {
 }
 
 class _ClubScreenState extends ConsumerState<ClubScreen> {
-
-
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     ref.read(clubProvider.notifier).loadClub();
   }
 
-
   @override
   Widget build(BuildContext context) {
     final clubs = ref.watch(clubProvider);
-    return  Scaffold(
+
+    return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: SafeArea(
-        child: ListView.builder(
-            itemCount: clubs.length,
-            itemBuilder: (context,index){
-              final club = clubs[index];
-              print(club.clubname);
-              return  ModernClubTile(index: index,club: club,);
-            }
+        child: clubs.when(
+          loading: () =>
+          const Center(child: CircularProgressIndicator()),
+
+          error: (error, _) => Center(
+            child: Text(
+              error.toString(),
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+
+          data: (clubs) {
+            return RefreshIndicator(
+              onRefresh: () async {
+                 await ref.read(clubProvider.notifier).loadClub();
+              },
+              child: ListView.builder(
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemCount: clubs.length,
+                itemBuilder: (context, index) {
+                  return ModernClubTile(
+                    index: index,
+                    club: clubs[index],
+                  );
+                },
+              ),
+            );
+          },
         ),
       ),
     );

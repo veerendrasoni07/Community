@@ -80,7 +80,7 @@ class _HackathonWidgetState extends State<HackathonWidget> {
                             bottom: Radius.circular(20)
                           ),
                           child: Image.network(
-                            hackathon.image,
+                            hackathon.url,
                             height: 200,
                             width: double.infinity,
                             fit: BoxFit.cover,

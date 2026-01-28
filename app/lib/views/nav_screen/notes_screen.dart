@@ -1,4 +1,5 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:codingera2/components/inside_app_button.dart';
 import 'package:codingera2/provider/pdf_provider.dart';
 import 'package:codingera2/services/manage_http_request.dart';
 import 'package:codingera2/views/details/notes_pdf_screen.dart';
@@ -82,41 +83,32 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
               noteType = value;
             });
           }, "Subject", "Select Subject"),
-          ElevatedButton(
-              onPressed: isFetching ? null : ()async{
+          appButton(onPressed: isFetching ? null : ()async{
 
-                if( selectedSubject != null ){
-                  setState(() {
-                    isFetching = true;
-                  });
-                  final pdfs = await ref.read(pdfProvider.notifier).getPdf(subject: selectedSubject!, semester: selectedSemester!, noteType: noteType!, context: context);
-                  if(pdfs.isNotEmpty){
-                    setState(() {
-                      isFetching = false;
-                    });
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>NotesPdfScreen()));
-                  }
-                  else{
-                    setState(() {
-                      isFetching = false;
-                    });
-                    showSnackBar(context, "Unfortunately!" ,"Sorry Notes For This Subject Is Not Available!",ContentType.help);
-                  }
-                }else{
-                  showSnackBar(context, "Unfortunately!" ,"Sorry! Notes For This Semester Is Not Available",ContentType.help);
-                }
+            if( selectedSubject != null ){
+              setState(() {
+                isFetching = true;
+              });
+              final pdfs = await ref.read(pdfProvider.notifier).getPdf(subject: selectedSubject!, semester: selectedSemester!, noteType: noteType!, context: context);
+              if(pdfs.isNotEmpty){
+                setState(() {
+                  isFetching = false;
+                });
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>NotesPdfScreen()));
+              }
+              else{
+                setState(() {
+                  isFetching = false;
+                });
+                showSnackBar(context, "Unfortunately!" ,"Sorry Notes For This Subject Is Not Available!",ContentType.help);
+              }
+            }else{
+              showSnackBar(context, "Unfortunately!" ,"Sorry! Notes For This Semester Is Not Available",ContentType.help);
+            }
 
 
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                padding: EdgeInsets.all(12),
-              ),
-              child: isFetching ? Center(child: CircularProgressIndicator()) : Text("Get",style: GoogleFonts.montserrat(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),))
+          }, text: "Get", context: context),
+
         ],
       )
     );

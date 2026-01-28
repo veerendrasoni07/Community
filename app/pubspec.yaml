@@ -64,7 +64,7 @@ dependencies:
   awesome_snackbar_content: 0.1.1
   otp_timer_button: ^1.1.1
   pinput: ^6.0.1
-
+  flutter_slidable: ^4.0.3
 
 
 dev_dependencies:

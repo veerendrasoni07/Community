@@ -4,7 +4,8 @@ import 'dart:convert';
 class Hackathon {
   final String id;
   final String name;
-  final String image;
+  final String url;
+  final String publicId;
   final String description;
   final String eventdate;
   final String eventTime;
@@ -21,7 +22,8 @@ class Hackathon {
   Hackathon({
     required this.id,
     required this.name,
-    required this.image,
+    required this.url,
+    required this.publicId,
     required this.description,
     required this.eventdate,
     required this.eventTime,
@@ -41,7 +43,8 @@ class Hackathon {
     return <String, dynamic>{
       'id': id,
       'name': name,
-      'image': image,
+      'url':url,
+      'publicId':publicId,
       'description': description,
       'eventdate': eventdate,
       'status': status,
@@ -62,7 +65,8 @@ class Hackathon {
     return Hackathon(
       id: map['_id']?.toString() ?? '',
       name: map['name']?.toString() ?? '',
-      image: map['image']?.toString() ?? '',
+      url: map['image']['url']?.toString() ?? '',
+      publicId: map['image']['public_id']?.toString() ?? '',
       level: map['level']?.toString() ?? '',
       duration: map['duration']?.toString() ?? '',
       description: map['description']?.toString() ?? '',

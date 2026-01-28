@@ -1,5 +1,6 @@
 import 'package:codingera2/components/alert_dialog_warning.dart';
 import 'package:codingera2/components/home_content.dart';
+import 'package:codingera2/components/inside_app_button.dart';
 import 'package:codingera2/controllers/auth_controller.dart';
 import 'package:codingera2/views/admin/screens/admin_home_screen.dart';
 import 'package:codingera2/views/admin/widgets/admin_club.dart';
@@ -275,6 +276,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
             blurRadius: 4,
           )
         ]
+
       ),
       child: Column(
         children: [

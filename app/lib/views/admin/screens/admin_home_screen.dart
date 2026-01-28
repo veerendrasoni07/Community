@@ -24,26 +24,34 @@ class _AdminHomeScreenState extends ConsumerState<AdminHomeScreen> {
   @override
   Widget build(BuildContext context) {
     final members = ref.watch(communityProvider);
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Members",style: GoogleFonts.montserrat(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.white
-            )),
-            ListView.builder(
-              shrinkWrap: true,
-                itemCount: members.length,
-                itemBuilder: (context,index){
-                  final member = members[index];
-                  return _memberTile(member);
-                }
-            )
-          ],
-        ),
+    return members.when(
+        data: (members){
+          return SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Members",style: GoogleFonts.montserrat(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white
+                  )),
+                  ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: members.length,
+                      itemBuilder: (context,index){
+                        final member = members[index];
+                        return _memberTile(member);
+                      }
+                  )
+                ],
+              ),
+            ),
+          );
+        },
+        error: (error,stackTrace) => Center(child: Text(error.toString()),),
+        loading: () => Center(child: CircularProgressIndicator(),)
     );
   }
   Widget _memberTile(User user){

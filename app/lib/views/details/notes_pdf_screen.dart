@@ -20,8 +20,17 @@ class _NotesPdfScreenState extends ConsumerState<NotesPdfScreen> {
   Widget build(BuildContext context) {
     final pdfs = ref.watch(pdfProvider);
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.primary,
       appBar: AppBar(
-        title: const Text("Notes"),
+        title:  Text("Notes",style: GoogleFonts.montserrat(
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+          letterSpacing: 1.2,
+        ),),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(onPressed: ()=> Navigator.pop(context), icon: Icon(Icons.arrow_back_ios_new_rounded,color: Colors.white,)),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,7 +55,7 @@ class _NotesPdfScreenState extends ConsumerState<NotesPdfScreen> {
       margin: const EdgeInsets.all(12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.grey.shade200,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(

@@ -2,14 +2,15 @@ import 'package:codingera2/controllers/club_controller.dart';
 import 'package:codingera2/models/club.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ClubProvider extends StateNotifier<List<Club>>{
-  ClubProvider():super([]);
-  bool _fetched = false;
-  void loadClub()async {
-    if(_fetched) return;
-    state = await ClubController().loadClub();
-    _fetched = true;
+class ClubProvider extends StateNotifier<AsyncValue<List<Club>>>{
+  ClubProvider():super(const AsyncValue.loading());
+  // bool _fetched = false;
+  Future<void> loadClub()async {
+    // if(_fetched) return;
+    final data = await ClubController().loadClub();
+    state = AsyncValue.data(data);
+    // _fetched = true;
   }
 
 }
-final clubProvider = StateNotifierProvider<ClubProvider,List<Club>>((ref)=>ClubProvider());
+final clubProvider = StateNotifierProvider<ClubProvider,AsyncValue<List<Club>>>((ref)=>ClubProvider());

@@ -45,7 +45,12 @@ class _AdminQuizState extends State<AdminNotes> {
 
   Future<void> savePdf()async{
     try{
+      showDialog(context: context, builder: (context){
+        return Center(child: CircularProgressIndicator(color: Colors.white,),);
+      });
       await controller.uploadPdfNotes(subject: subjectController.text.trim(),noteType:noteType.trim() ,semester: semesterController.text.trim(), chapter: chapterController.text.trim(), pdf: pickedPdf!.path!, context: context);
+      Navigator.pop(context);
+      Navigator.pop(context);
     }catch(e){
       print(e);
       throw Exception("Something went wrong");
@@ -106,11 +111,13 @@ class _AdminQuizState extends State<AdminNotes> {
                   });
                 }, 'Select Note Type', 'Note Type'),
 
-                ElevatedButton(
-                    onPressed: ()async{
-                      await savePdf();
-                    },
-                    child: Text("Submit")
+                Center(
+                  child: ElevatedButton(
+                      onPressed: ()async{
+                        await savePdf();
+                      },
+                      child: Text("Submit")
+                  ),
                 )
 
               ],

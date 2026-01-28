@@ -136,11 +136,11 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        _navItem(Icon(Icons.home_outlined, size: 20,color: Colors.white,), Icon(FontAwesomeIcons.house, size: 20,color: Colors.white,), 0),
-                        _navItem(Icon(FontAwesomeIcons.noteSticky, size: 20,color: Colors.white,), Icon(FontAwesomeIcons.solidNoteSticky,size: 20,color: Colors.white,), 1),
-                        _navItem(Icon(Icons.person_2_outlined, size: 20,color: Colors.white,), Icon(Icons.person_4_rounded,color: Colors.white,size: 20), 2),
+                        Expanded(child: _navItem(Icon(Icons.home_outlined, size: 20,color: Colors.white,), Icon(Icons.home_rounded, size: 20,color: Colors.white,), 0,"Home")),
+                        Expanded(child: _navItem(Icon(FontAwesomeIcons.noteSticky, size: 20,color: Colors.white,), Icon(FontAwesomeIcons.solidNoteSticky,size: 20,color: Colors.white,), 1,"Notes")),
+                        Expanded(child: _navItem(Icon(Icons.person_2_outlined, size: 20,color: Colors.white,), Icon(Icons.person_4_rounded,color: Colors.white,size: 20), 2,"Profile")),
                       ],
                     ),
                   )
@@ -153,15 +153,14 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     );
   }
 
-  Widget _navItem(Icon inactive, Icon activeIcon, int index) {
+  Widget _navItem(Icon inactive, Icon activeIcon, int index,String title) {
     final isActive = _selectedIndex == index;
 
     return GestureDetector(
       onTap: () => _onItemTapped(index),
       child: AnimatedContainer(
-          width: isActive ? 100 : 50,
           alignment: Alignment.center,
-          margin: EdgeInsets.symmetric(horizontal: isActive ? 10 : 0),
+          margin: const EdgeInsets.symmetric(horizontal: 6),
           height: 50,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
@@ -176,7 +175,30 @@ class _MainScreenState extends ConsumerState<MainScreen> {
 
           ),
           duration: const Duration(milliseconds: 350),
-          child: isActive ? activeIcon : inactive
+          child:Center(
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 350),
+              transitionBuilder: (child, anim) =>
+                  FadeTransition(opacity: anim, child: child),
+              child: isActive
+                  ? Row(
+                key: const ValueKey('active'),
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  activeIcon,
+                  const SizedBox(width: 6),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              )
+                  : inactive,
+            ),)
       ),
     );
   }

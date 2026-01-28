@@ -84,7 +84,7 @@ class _BannerWidgetState extends ConsumerState<BannerWidget> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
                               child: Image.network(
-                                banner.image,
+                                banner.url,
                                 fit: BoxFit.cover,
                               ),
                             ),

@@ -5,7 +5,8 @@ import 'package:codingera2/models/user.dart';
 
 class Club {
   final String id;
-  final String image;
+  final String imageUrl;
+  final String imagePublicId;
   final String clubname;
   final String techname;
   final String desc;
@@ -14,12 +15,15 @@ class Club {
   final String detailDec;
   final List<String> clubRule;
   final List<String> clubActivities;
-  final String joinLink;
+  final String formUrl;
+  final String formPublicId;
+
 
 
   Club({
     required this.id,
-    required this.image,
+    required this.imageUrl,
+    required this.imagePublicId,
     required this.clubname,
     required this.techname,
     required this.desc,
@@ -28,13 +32,15 @@ class Club {
     required this.detailDec,
     required this.clubRule,
     required this.clubActivities,
-    required this.joinLink,
+    required this.formUrl,
+    required this.formPublicId,
   });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
-      'image': image,
+      'image': imageUrl,
+      'imagePublicId': imagePublicId,
       'clubname': clubname,
       'techname': techname,
       'desc': desc,
@@ -42,7 +48,8 @@ class Club {
       'clubManager':clubManager,
       'detailDes': detailDec,
       'clubRule': clubRule,
-      'joinLink': joinLink,
+      'formUrl': formUrl,
+      'form_public_id': formPublicId,
       'clubActivities': clubActivities,
     };
   }
@@ -50,8 +57,10 @@ class Club {
   factory Club.fromJson(Map<String, dynamic> map) {
     return Club(
       id: map['_id']?.toString() ?? '',
-      joinLink: map['joinLink']?.toString() ?? '',
-      image: map['image']?.toString() ?? '',
+      formUrl: map['form']['formUrl']?.toString() ?? '',
+      formPublicId: map['form']['form_public_id']?.toString() ?? '',
+      imageUrl: map['image']['imageUrl']?.toString() ?? '',
+      imagePublicId: map['image']['image_public_id']?.toString() ?? '',
       clubname: map['clubname']?.toString() ?? '',
       techname: map['techname']?.toString() ?? '',
       desc: map['desc']?.toString() ?? '',
