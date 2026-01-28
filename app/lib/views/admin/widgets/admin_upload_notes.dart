@@ -45,7 +45,7 @@ class _AdminQuizState extends State<AdminNotes> {
 
   Future<void> savePdf()async{
     try{
-      showDialog(context: context, builder: (context){
+      showDialog(context: context,barrierDismissible: false, builder: (context){
         return Center(child: CircularProgressIndicator(color: Colors.white,),);
       });
       await controller.uploadPdfNotes(subject: subjectController.text.trim(),noteType:noteType.trim() ,semester: semesterController.text.trim(), chapter: chapterController.text.trim(), pdf: pickedPdf!.path!, context: context);

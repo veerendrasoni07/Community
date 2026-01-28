@@ -30,7 +30,7 @@ class _AdminUploadBannerState extends ConsumerState<AdminUploadBanner> {
   }
 
   Future<void> uploadBanner()async{
-    showDialog(context: context, builder: (context){
+    showDialog(context: context,barrierDismissible: false, builder: (context){
       return Center(child: CircularProgressIndicator(color: Colors.white,),);
     });
     await AdminController().uploadBanner(bannerFile: pickedImage!, context: context,ref: ref);

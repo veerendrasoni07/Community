@@ -89,7 +89,11 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
               setState(() {
                 isFetching = true;
               });
+              showDialog(context: context,barrierDismissible: false, builder: (context){
+                return Center(child: CircularProgressIndicator(color: Colors.white,),);
+              });
               final pdfs = await ref.read(pdfProvider.notifier).getPdf(subject: selectedSubject!, semester: selectedSemester!, noteType: noteType!, context: context);
+              Navigator.pop(context);
               if(pdfs.isNotEmpty){
                 setState(() {
                   isFetching = false;

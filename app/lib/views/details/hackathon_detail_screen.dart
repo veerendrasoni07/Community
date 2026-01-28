@@ -162,35 +162,34 @@ class _HackathonDetailScreenState extends ConsumerState<HackathonDetailScreen> {
             pinned: true,
             backgroundColor: Colors.black,
             leading: IconButton(onPressed: ()=>Navigator.pop(context), icon: Icon(Icons.arrow_back_ios_new_rounded,color: Colors.white,)),
-            actions: [
-              if(user!.role == "admin")
-                IconButton(onPressed: (){
-                  showDialog(context: context, builder: (context){
-                    return AlertDialogWarning(
-                      title: Text("Hackathon Delete",style: GoogleFonts.poppins(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
+            actions: user!.role == "admin" ? [
+              IconButton(onPressed: (){
+                showDialog(context: context, builder: (context){
+                  return AlertDialogWarning(
+                    title: Text("Hackathon Delete",style: GoogleFonts.poppins(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
+                    ),),
+                    content: Text("Are you sure you want to delete this hackathon?",style: GoogleFonts.poppins(
+                        fontSize: 16,
                         color: Colors.black,
-                      ),),
-                      content: Text("Are you sure you want to delete this hackathon?",style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400
-                      ),
-                      ),
-                      onSave: ()async{
-                        showDialog(context: context, builder: (context){
-                          return Center(child: CircularProgressIndicator(color: Colors.white,),);
-                        });
-                        await AdminController().deleteHackathon(hackathonId: widget.hackathon.id, context: context, ref: ref);
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                      },
-                    );
-                  });
-                },
-                    icon: Icon(Icons.delete,color: Colors.red,)),
+                        fontWeight: FontWeight.w400
+                    ),
+                    ),
+                    onSave: ()async{
+                      showDialog(context: context, builder: (context){
+                        return Center(child: CircularProgressIndicator(color: Colors.white,),);
+                      });
+                      await AdminController().deleteHackathon(hackathonId: widget.hackathon.id, context: context, ref: ref);
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                  );
+                });
+              },icon: Icon(Icons.delete,color: Colors.red,)
+              ),
               IconButton(
                 icon: Icon(
                   isEditing ? Icons.check : Icons.edit,
@@ -204,7 +203,7 @@ class _HackathonDetailScreenState extends ConsumerState<HackathonDetailScreen> {
                   }
                 },
               )
-            ],
+            ] : [],
             flexibleSpace: FlexibleSpaceBar(
               title: isEditing ? TextField(
                 controller: nameEditController,
@@ -274,7 +273,8 @@ class _HackathonDetailScreenState extends ConsumerState<HackathonDetailScreen> {
 
                   const SizedBox(height: 36),
 
-                  Center(child: appButton(onPressed: _launchUrl, text: "Register Now",context: context))
+
+                  isEditing ? SizedBox() : Center(child: appButton(onPressed: _launchUrl, text: "Register Now",context: context))
                 ],
               ),
             ),

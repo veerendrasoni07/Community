@@ -202,13 +202,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         GestureDetector(
           onTap: (){
             if(_formkey.currentState!.validate()){
-              showDialog(context: context, builder: (context){
+              showDialog(context: context,barrierDismissible: false, builder: (context){
                 return Center(child: CircularProgressIndicator(color: Colors.white,),);
               });
               _authController.login(
                   context: context,
-                  email: email,
-                  password: password,
+                  email: email.trim(),
+                  password: password.trim(),
                   ref: ref
               );
               if(context.mounted){
@@ -397,7 +397,7 @@ class _ChangePasswordFlowState extends State<ChangePasswordFlow> {
                     ElevatedButton(
                       onPressed: ()async{
                         if(_formKeys[0].currentState!.validate()){
-                          showDialog(context: context, builder: (context){
+                          showDialog(context: context,barrierDismissible: false, builder: (context){
                             return Center(child: CircularProgressIndicator(color: Colors.white,),);
                           });
                           await AuthController().getOTP(emailController.text, context);
@@ -435,7 +435,7 @@ class _ChangePasswordFlowState extends State<ChangePasswordFlow> {
                             separatorBuilder: (index) => const SizedBox(width: 8),
                             hapticFeedbackType: HapticFeedbackType.lightImpact,
                             onCompleted: (pin) async{
-                              showDialog(context: context, builder: (context){
+                              showDialog(context: context,barrierDismissible: false, builder: (context){
                                 return Center(child: CircularProgressIndicator(color: Colors.white,),);
                               });
                               await AuthController().verifyOTP(emailController.text, int.parse(pin) );
@@ -487,7 +487,7 @@ class _ChangePasswordFlowState extends State<ChangePasswordFlow> {
                           SizedBox(width: 5,),
                           OtpTimerButton(
                               onPressed: ()async{
-                                showDialog(context: context, builder: (context){
+                                showDialog(context: context,barrierDismissible: false, builder: (context){
                                   return Center(child: CircularProgressIndicator(color: Colors.white,),);
                                 });
                                 await AuthController().getOTP(emailController.text, context);
@@ -665,7 +665,7 @@ class _ChangePasswordFlowState extends State<ChangePasswordFlow> {
                               if (passController1.text != passController2.text) {
                                 showSnackBar(context, "Password does not match", "Please confirm your password", ContentType.failure);
                               } else {
-                                showDialog(context: context, builder: (context){
+                                showDialog(context: context,barrierDismissible: false, builder: (context){
                                   return Center(child: CircularProgressIndicator(color: Colors.white,),);
                                 });
                                 await AuthController().resetPassword(

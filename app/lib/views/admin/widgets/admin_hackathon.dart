@@ -65,7 +65,7 @@ class _AdminHackathonState extends ConsumerState<AdminHackathon> {
       );
       return;
     }
-    showDialog(context: context, builder: (context){
+    showDialog(context: context,barrierDismissible: false, builder: (context){
       return Center(child: CircularProgressIndicator(color: Colors.white,),);
     });
     await AdminController().uploadHackathon(
@@ -84,6 +84,7 @@ class _AdminHackathonState extends ConsumerState<AdminHackathon> {
       level: _level.text.trim(),
       prize: int.parse(_prize.text),
       duration: _duration.text.trim(),
+      status: status!,
     );
     Navigator.pop(context);
     Navigator.pop(context);

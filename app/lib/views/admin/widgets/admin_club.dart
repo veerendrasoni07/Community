@@ -53,7 +53,7 @@ class _AdminClubState extends ConsumerState<AdminClub> {
     if (!_formKey.currentState!.validate()) return;
 
 
-    showDialog(context: context,barrierDismissible: false ,builder: (context){
+    showDialog(context: context,barrierDismissible: false, builder: (context){
       return Center(child: CircularProgressIndicator(color: Colors.white,),);
     });
     await AdminController().uploadClub(clubname: clubNameCtrl.text,ref: ref ,techname: techNameCtrl.text, desc: descCtrl.text, clubLeader: selectedLeader!.id, clubManager: selectedManager!.id, clubRule: ruleCtrls.map((e) => e.text.trim()).toList(),clubActivities: activityCtrls.map((e) => e.text.trim()).toList(), image: pickedImage!, detailDesc: detailDescCtrl.text, formFilePath: pickedPdf!.path!, context: context);

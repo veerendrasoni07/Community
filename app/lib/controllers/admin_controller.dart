@@ -78,6 +78,7 @@ class AdminController {
     required String link,
     required String level,
     required int prize,
+    required String status
   }) async {
     try {
       SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -106,6 +107,7 @@ class AdminController {
           "totalTeam": totalTeam,
           "level": level,
           "link": link,
+          "status": status
         }),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
