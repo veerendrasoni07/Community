@@ -311,23 +311,27 @@ class _HackathonDetailScreenState extends ConsumerState<HackathonDetailScreen> {
           _GlassStatItem(
             icon: Icons.emoji_events,
             label: 'Prize',
+            type: TextInputType.number,
             controller: prizeEditController,
             value: '₹${hackathon.prize}',
           ),
           _GlassStatItem(
             icon: Icons.groups,
             controller: totalTeamEditController ,
+            type: TextInputType.number,
             label: 'Teams',
             value: '${hackathon.totalTeam}',
           ),
           _GlassStatItem(
             icon: Icons.person,
             label: 'Team Size',
+            type: TextInputType.number,
             controller: teamSizeEditController,
             value: '${hackathon.teamsize}',
           ),
           _GlassStatItem(
             icon: Icons.trending_up,
+            type: TextInputType.text,
             controller: levelEditController,
             label: 'Level',
             value: hackathon.level,
@@ -336,7 +340,7 @@ class _HackathonDetailScreenState extends ConsumerState<HackathonDetailScreen> {
       ),
     );
   }
-  Widget _GlassStatItem({required IconData icon, required String label, required String value,required TextEditingController controller}) {
+  Widget _GlassStatItem({required IconData icon, required String label, required String value,required TextEditingController controller,required TextInputType type}) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -353,6 +357,7 @@ class _HackathonDetailScreenState extends ConsumerState<HackathonDetailScreen> {
           width: 60,
           child: TextField(
             controller: controller,
+            keyboardType: type,
             style: GoogleFonts.poppins(
               fontSize: 15,
               fontWeight: FontWeight.w600,

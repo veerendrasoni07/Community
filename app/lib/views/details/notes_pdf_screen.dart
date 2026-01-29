@@ -67,10 +67,10 @@ class _NotesPdfScreenState extends ConsumerState<NotesPdfScreen> {
       ),
       child: Column(
         children: [
-          Text(pdf.subject,style: GoogleFonts.poppins(
-            fontSize: 30,
+          Text(pdf.chapter,maxLines:2,style: GoogleFonts.poppins(
+            fontSize: 24,
             fontWeight: FontWeight.bold,
-          ),),
+          ),textAlign: TextAlign.center ,overflow: TextOverflow.ellipsis,),
           Text(pdf.semester,style: GoogleFonts.poppins(
             fontSize: 16,
             fontWeight: FontWeight.bold,
