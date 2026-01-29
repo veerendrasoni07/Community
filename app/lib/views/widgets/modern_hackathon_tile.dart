@@ -1,6 +1,7 @@
 import 'package:codingera2/models/hackathon.dart';
 import 'package:codingera2/views/details/hackathon_detail_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ModernHackathonTile extends StatelessWidget {
@@ -127,7 +128,9 @@ class ModernHackathonTile extends StatelessWidget {
               ),
             ),
             GestureDetector(
-              onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (_)=>HackathonDetailScreen(hackathon: hackathon))),
+              onTap: (){
+                Get.to(()=>HackathonDetailScreen(hackathon: hackathon,),transition: Transition.cupertinoDialog,duration: Duration(milliseconds: 450));
+              },
               child: Container(
                 height: 50,
                 width: MediaQuery.of(context).size.width*0.75,

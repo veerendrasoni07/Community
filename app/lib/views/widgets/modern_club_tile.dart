@@ -2,6 +2,7 @@ import 'package:codingera2/models/club.dart';
 import 'package:codingera2/models/user.dart';
 import 'package:codingera2/views/details/club_detail_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ModernClubTile extends StatelessWidget {
@@ -108,7 +109,9 @@ class ModernClubTile extends StatelessWidget {
 
             // CTA Button
             GestureDetector(
-              onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (_)=>ClubDetailScreen(club: club))),
+              onTap: (){
+                Get.to(()=>ClubDetailScreen(club: club,),transition: Transition.cupertinoDialog,duration: Duration(milliseconds: 450));
+              },
               child: Center(
                 child: Container(
                   height: 48,

@@ -65,6 +65,7 @@ dependencies:
   otp_timer_button: ^1.1.1
   pinput: ^6.0.1
   flutter_slidable: ^4.0.3
+  get: ^4.7.3
 
 
 dev_dependencies:

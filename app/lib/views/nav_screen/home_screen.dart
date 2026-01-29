@@ -19,7 +19,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 
 import '../../provider/user_provider.dart';
-
+import 'package:get/get.dart';
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
@@ -148,25 +148,33 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
                 SpeedDialChild(
                   child: const Icon(Icons.image),
                   backgroundColor: Colors.blue,
-                  onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (_)=>AdminUploadBanner())),
+                  onTap:(){
+                    Get.to(()=>AdminUploadBanner(),transition: Transition.rightToLeftWithFade,duration: Duration(milliseconds: 350));
+                  },
                   label: 'Upload Banner',
                 ),
                 SpeedDialChild(
                   child: const Icon(Icons.code),
                   backgroundColor: Colors.blue,
-                  onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (_)=>AdminHackathon())),
+                  onTap: (){
+                    Get.to(()=>AdminHackathon(),transition: Transition.rightToLeftWithFade,duration: Duration(milliseconds: 350));
+                  },
                   label: 'Upload Hackathon',
                 ),
                 SpeedDialChild(
                   child: const Icon(Icons.people),
                   backgroundColor: Colors.blue,
-                  onTap: ()=>Navigator.push(context,MaterialPageRoute(builder: (_)=>AdminClub())),
+                  onTap: (){
+                    Get.to(()=>AdminClub(),transition: Transition.rightToLeftWithFade,duration: Duration(milliseconds: 350));
+                  },
                   label: 'Upload Club',
                 ),
                 SpeedDialChild(
                   child: const Icon(Icons.person),
                   backgroundColor: Colors.blue,
-                  onTap: ()=> Navigator.push(context,MaterialPageRoute(builder: (_)=>AdminNotes())),
+                  onTap: (){
+                    Get.to(()=>AdminNotes(),transition: Transition.rightToLeftWithFade,duration: Duration(milliseconds: 350));
+                  },
                   label: 'Upload Notes',
                 )
               ]
@@ -219,7 +227,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
               style: GoogleFonts.montserrat(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white)),
           SizedBox(height: 12),
           ElevatedButton(
-            onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (_)=>QuizFirstPage())),
+            onPressed: (){
+              Get.to(()=>QuizFirstPage(),transition: Transition.fade,duration: Duration(milliseconds: 450));
+            },
             child: Text("Start Now"),
           )
         ],

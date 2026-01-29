@@ -4,6 +4,7 @@ import 'package:codingera2/provider/isdownload_provider.dart';
 import 'package:codingera2/provider/pdf_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../../models/pdf.dart';
@@ -83,7 +84,9 @@ class _NotesPdfScreenState extends ConsumerState<NotesPdfScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ElevatedButton(onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>PdfViewPage(pdf: pdf,))), child: Text("View",style: GoogleFonts.poppins(
+              ElevatedButton(onPressed: (){
+                Get.to(()=> PdfViewPage(pdf: pdf),transition: Transition.fadeIn,duration: Duration(milliseconds: 400));
+              }, child: Text("View",style: GoogleFonts.poppins(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Colors.deepPurpleAccent

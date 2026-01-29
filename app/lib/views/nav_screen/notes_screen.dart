@@ -5,6 +5,7 @@ import 'package:codingera2/services/manage_http_request.dart';
 import 'package:codingera2/views/details/notes_pdf_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class NotesScreen extends ConsumerStatefulWidget {
@@ -136,7 +137,7 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
           }, "Subject", "Select Note Type"),
           appButton(onPressed: isFetching ? null : ()async{
 
-            if( selectedSubject != null ){
+            if( selectedSubject != null && selectedSemester != null && noteType != null ){
               setState(() {
                 isFetching = true;
               });
@@ -149,7 +150,12 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
                 setState(() {
                   isFetching = false;
                 });
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>NotesPdfScreen()));
+                Get.to(
+                        ()=> NotesPdfScreen(),
+                  transition: Transition.cupertinoDialog,
+                  curve: Curves.easeInOut,
+                  duration: Duration(milliseconds: 500)
+                );
               }
               else{
                 setState(() {
@@ -158,7 +164,7 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
                 showSnackBar(context, "Unfortunately!" ,"Sorry Notes For This Subject Is Not Available!",ContentType.help);
               }
             }else{
-              showSnackBar(context, "Unfortunately!" ,"Sorry! Notes For This Semester Is Not Available",ContentType.help);
+              showSnackBar(context, "Unfortunately!" ,"Please Select All The Fields!",ContentType.warning);
             }
 
 
