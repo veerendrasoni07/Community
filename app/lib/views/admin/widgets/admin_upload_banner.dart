@@ -19,6 +19,7 @@ class _AdminUploadBannerState extends ConsumerState<AdminUploadBanner> {
   PageController pageController = PageController();
 
 
+
   bool isUploading = false;
   XFile? pickedImage;
   Future<void> pickImage() async {
@@ -35,7 +36,13 @@ class _AdminUploadBannerState extends ConsumerState<AdminUploadBanner> {
     });
     await AdminController().uploadBanner(bannerFile: pickedImage!, context: context,ref: ref);
     Navigator.pop(context);
-    Navigator.pop(context);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    ref.read(bannerProvider.notifier).setBanner(context: context, ref: ref);
   }
 
   @override

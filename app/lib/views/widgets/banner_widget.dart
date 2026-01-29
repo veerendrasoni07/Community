@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:codingera2/controllers/banner_controller.dart';
 import 'package:codingera2/models/banner.dart';
 import 'package:codingera2/provider/banner_provider.dart';
@@ -29,14 +30,23 @@ class _BannerWidgetState extends ConsumerState<BannerWidget> {
   void _startAutoScroll(int length) {
     if (_autoScrollTimer != null || length <= 1) return;
 
-    _autoScrollTimer = Timer.periodic(const Duration(seconds: 3), (_) {
+    _autoScrollTimer = Timer.periodic(const Duration(seconds: 4), (_) {
       if (_pageController.hasClients) {
-        _currentPage = (_currentPage + 1) % length;
-        _pageController.animateToPage(
-          _currentPage,
-          duration: const Duration(milliseconds: 400),
-          curve: Curves.easeInOut,
-        );
+        final currentPage = _pageController.page?.round() ?? 0;
+        final nextPage = currentPage + 1;
+       if(nextPage<length){
+         _pageController.animateToPage(
+           nextPage,
+           duration: const Duration(milliseconds: 400),
+           curve: Curves.fastOutSlowIn,
+         );
+       }else{
+         _pageController.animateToPage(
+           0,
+           duration: const Duration(milliseconds: 400),
+           curve: Curves.easeInOut,
+         );
+       }
       }
     });
   }
@@ -85,7 +95,7 @@ class _BannerWidgetState extends ConsumerState<BannerWidget> {
                               borderRadius: BorderRadius.circular(20),
                               child: Image.network(
                                 banner.url,
-                                fit: BoxFit.cover,
+                                fit: BoxFit.fill,
                               ),
                             ),
                           ),
@@ -99,6 +109,7 @@ class _BannerWidgetState extends ConsumerState<BannerWidget> {
                     effect: JumpingDotEffect(
                       offset: 25,
                       verticalOffset: 5,
+                      dotColor: Colors.blue.shade200,
                       jumpScale: 1.4,
                       activeDotColor: Colors.blueAccent
                     ),

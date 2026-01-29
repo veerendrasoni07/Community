@@ -244,7 +244,6 @@ class AdminController {
       if(response.statusCode == 200){
         if(context.mounted){
           showSnackBar(context, "Success","Banner uploaded successfully",ContentType.success);
-          Navigator.pop(context);
         }
       }else{
         print(response.body);
