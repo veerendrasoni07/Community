@@ -28,7 +28,6 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProviderStateMixin{
-  final AuthController _authController = AuthController();
 
   late final TabController _tabController;
 
@@ -45,18 +44,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
     super.dispose();
   }
 
-  void logOut(){
-    showDialog(context: context, builder: (context){
-      return AlertDialogWarning(title: Text("Do You Really Want To LogOut?"), content: Text("Press Confirm To LogOut!"), onSave: (){
-        //_authController.signOutUser(context: context);
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     final user = ref.read(userProvider);
-    final role = user?.role == null ? "user": user!.role;
+    final role = user?.role == null ? "user" : user!.role;
     return Scaffold(
       extendBody: true,
       appBar:  AppBar(
@@ -67,7 +59,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
         ),
       ),
       title:  Text(
-        "Coding Era",
+        "Coding Era!",
         style: GoogleFonts.montserrat(
           fontWeight: FontWeight.bold,
           fontSize: 25,

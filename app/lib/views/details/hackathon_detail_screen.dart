@@ -244,7 +244,7 @@ class _HackathonDetailScreenState extends ConsumerState<HackathonDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _GlassStats(hackathon: widget.hackathon),
+                  Center(child: _GlassStats(hackathon: widget.hackathon)),
 
                   const SizedBox(height: 28),
 
@@ -286,7 +286,9 @@ class _HackathonDetailScreenState extends ConsumerState<HackathonDetailScreen> {
 
   Widget _GlassStats({required Hackathon hackathon}) {
     return Container(
+      width: MediaQuery.of(context).size.width * 0.85,
       padding: const EdgeInsets.all(18),
+      margin: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(22),
         gradient: LinearGradient(
@@ -301,40 +303,34 @@ class _HackathonDetailScreenState extends ConsumerState<HackathonDetailScreen> {
           color: Colors.white.withOpacity(0.15),
         ),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Wrap(
+        spacing: 20,
+        runSpacing: 20,
+        alignment: WrapAlignment.spaceBetween,
         children: [
-          Expanded(
-            child: _GlassStatItem(
-              icon: Icons.emoji_events,
-              label: 'Prize',
-              controller: prizeEditController,
-              value: '₹${hackathon.prize}',
-            ),
+          _GlassStatItem(
+            icon: Icons.emoji_events,
+            label: 'Prize',
+            controller: prizeEditController,
+            value: '₹${hackathon.prize}',
           ),
-          Expanded(
-            child: _GlassStatItem(
-              icon: Icons.groups,
-              controller: totalTeamEditController ,
-              label: 'Teams',
-              value: '${hackathon.totalTeam}',
-            ),
+          _GlassStatItem(
+            icon: Icons.groups,
+            controller: totalTeamEditController ,
+            label: 'Teams',
+            value: '${hackathon.totalTeam}',
           ),
-          Expanded(
-            child: _GlassStatItem(
-              icon: Icons.person,
-              label: 'Team Size',
-              controller: teamSizeEditController,
-              value: '${hackathon.teamsize}',
-            ),
+          _GlassStatItem(
+            icon: Icons.person,
+            label: 'Team Size',
+            controller: teamSizeEditController,
+            value: '${hackathon.teamsize}',
           ),
-          Expanded(
-            child: _GlassStatItem(
-              icon: Icons.trending_up,
-              controller: levelEditController,
-              label: 'Level',
-              value: hackathon.level,
-            ),
+          _GlassStatItem(
+            icon: Icons.trending_up,
+            controller: levelEditController,
+            label: 'Level',
+            value: hackathon.level,
           ),
         ],
       ),

@@ -15,9 +15,11 @@ class _ClubScreenState extends ConsumerState<ClubScreen> {
   @override
   void initState() {
     super.initState();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(clubProvider.notifier).loadClub();
+      ref.read(clubProvider.notifier).loadClub(context: context);
     });
+
   }
 
   @override
@@ -41,7 +43,7 @@ class _ClubScreenState extends ConsumerState<ClubScreen> {
           data: (clubs) {
             return RefreshIndicator(
               onRefresh: () async {
-                 await ref.read(clubProvider.notifier).loadClub();
+                 await ref.read(clubProvider.notifier).loadClub(context: context);
               },
               child: ListView.builder(
                 physics: const AlwaysScrollableScrollPhysics(),

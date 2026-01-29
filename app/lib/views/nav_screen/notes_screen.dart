@@ -21,31 +21,82 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
   String? selectedSubject;
   String? noteType;
 
-  List<String> sem = [
-    "First Semester",
-    "Second Semester",
-    "Third Semester",
-    "Fourth Semester",
-    "Fifth Semester",
-    "Sixth Semester",
-    "Seventh Semester",
-    "Eighth Semester",
-  ];
+
 
   Map<String, List<String>> subjects = {
     "First Semester": [
-      "Mathematics I",
-      "Engineering Chemistry",
+      "Chemistry",
+      "Physics",
+      "Mathematics-I",
       "Engineering Graphics",
-      "BEEE",
+      "BEEE"
     ],
-    "Second Semester": [
-      "Mathematics II",
+    "Second Semester":[
       "Engineering Physics",
-      "BME",
-      "Basic Civil Engineering And Engineering Mechanics",
+      "Mathematics-II",
+      "Basic Mechanical Engineering",
+      "Basic Civil Engineering & Mechanics",
       "Basic Computer Engineering"
     ],
+    "Third Semester":[
+      "Energy & Environmental Engineering",
+      "Discrete Structure",
+      "Data Structure",
+      "Digital Systems",
+      "Object Oriented Programming & Methodology"
+    ],
+    "Fourth Semester":[
+      "Mathematics-III",
+      "Analysis Design of Algorithm",
+      "Software Engineering",
+      "Operating Systems",
+      "Programming Practices "
+    ],
+    "Fifth Semester":[
+      "Theory of Computation",
+      "Database Management Systems",
+      "Data Analytics",
+      "Pattern Recognition",
+      "Cyber Security",
+      "Internet and Web Technology",
+      "Object Oriented Programming",
+      "Introduction to Database Management Systems",
+    ],
+    "Sixth Semester":[
+      "Machine Learning",
+      "Computer Networks",
+      "Advanced Computer Architecture (ACA)",
+      "Computer Graphics & Visualization",
+      "Compiler Design",
+      "Knowledge Management",
+      "Project Management",
+      "Rural Technology & Community Development",
+      "Data Analytics Lab",
+      "Skill Development Lab"
+    ],
+    "Seventh Semester":[
+      "Software Architectures",
+      "Computational Intelligence",
+      "Deep & Reinforcement Learning",
+      "Wireless & Mobile Computing",
+      "Big Data",
+      "Cryptography & Information Security",
+      "Data Mining and Warehousing",
+      "Agile Software Development",
+      " Disaster Management",
+    ],
+    "Eighth Semester":[
+      "Internet of Things",
+      "Block Chain Technologies",
+      "Cloud Computing",
+      "High Performance computing",
+      "Object Oriented Software Engineering",
+      "Image Processing and Computer Vision",
+      "Game Theory with Engineering applications",
+      "Open Elective – CS803 (C) Internet of Things",
+      "Managing Innovation and Entrepreneurship#"
+    ]
+
   };
 
   @override
@@ -63,7 +114,7 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
       ),
       body: Column(
         children: [
-          _dropDownMembers(sem, (value){
+          _dropDownMembers(subjects.keys.toList(), (value){
             setState(() {
               selectedSemester = value;
             });
@@ -82,7 +133,7 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
             setState(() {
               noteType = value;
             });
-          }, "Subject", "Select Subject"),
+          }, "Subject", "Select Note Type"),
           appButton(onPressed: isFetching ? null : ()async{
 
             if( selectedSubject != null ){
@@ -130,6 +181,7 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
           ),),
           DropdownButtonFormField(
             isExpanded: true,
+            initialValue: options[0] ,
             hint: Text(text,style: GoogleFonts.poppins(
               fontSize: 16,
               fontWeight: FontWeight.bold,

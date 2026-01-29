@@ -20,6 +20,9 @@ import '../views/screens/main_screen.dart' show MainScreen;
 
   Future<void> signUp({required String fullname,required String username,required String email, required String password,required String gender,required BuildContext context,required WidgetRef ref})async{
     try{
+      showDialog(context: context,barrierDismissible: false, builder: (context){
+        return Center(child: CircularProgressIndicator(color: Colors.white,),);
+      });
       http.Response response = await http.post(
           Uri.parse('$uri/api/sign-up'),
         body: jsonEncode({
@@ -45,7 +48,9 @@ import '../views/screens/main_screen.dart' show MainScreen;
         preferences.setString('refreshToken', refreshToken);
         ref.read(userProvider.notifier).setUser(userJson);
         ref.read(tokenProvider.notifier).setToken(token);
+
         if(context.mounted){
+          Navigator.pop(context);
           showSnackBar(context,"Success" ,'Account created successfully',ContentType.success);
           Navigator.pushAndRemoveUntil(
             context,
@@ -55,6 +60,8 @@ import '../views/screens/main_screen.dart' show MainScreen;
         }
       }
       else{
+        Navigator.pop(context);
+        showSnackBar(context, "Failed To Signup", jsonDecode(response.body)['msg'], ContentType.failure);
         print(response.body);
         throw Exception('Failed to create account');
       }
