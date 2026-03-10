@@ -34,7 +34,13 @@ app.use(pdfRoutes);
 app.use(quizRouter);
 app.use(adminQuizRouter);
 
-
+app.get('/',(req,res)=>{
+    try {
+        res.send("Hello from backend cutie");
+    } catch (error) {
+        res.json({error:"Internal Server Error"});
+    }
+})
 
 // // Storying the OTP in memory for now
 // const otpStore = {};
