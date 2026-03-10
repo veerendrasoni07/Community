@@ -17,10 +17,10 @@ const quizAttemptSchema = new mongoose.Schema({
         required:true
     },
     answers:{
-        type:[Map],
+        type:[mongoose.Schema.Types.Mixed],
         required:true
     }
-});
+},{timestamps:true});
 
 const QuizAttempt = mongoose.model("QuizAttempt",quizAttemptSchema);
 

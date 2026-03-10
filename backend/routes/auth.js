@@ -2,7 +2,7 @@
 import User from '../models/Users.js';
 import { generateRefreshToken,generateAccessToken,hashToken} from '../tokens/token.js';
 import RefreshToken from '../models/refresh_token.js';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import express from 'express';
 import Otp from '../models/otp.js';
 import jsonwebtoken from 'jsonwebtoken';

@@ -3,10 +3,6 @@ dotenv.config();
 
 import express from 'express';
 import cors from 'cors';
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
-import nodemailer from 'nodemailer';
-import UserModel from './models/Users.js';
 import db from './db.js';
 import adminRoutes from './routes/admin.js';
 import hackathonRoutes from './routes/hackathon_route.js';
@@ -16,6 +12,7 @@ import profileRoutes from './routes/profile_route.js';
 import bannerRoutes from './routes/banner_route.js';
 import {router} from './controller/clodinary.js';
 import quizRouter from './routes/quiz_routes.js';
+import adminQuizRouter from './routes/quiz_admin_routes.js';
 import pdfRoutes from './routes/pdf_routes.js';
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -35,6 +32,7 @@ app.use(authRoutes);
 app.use(router);
 app.use(pdfRoutes);
 app.use(quizRouter);
+app.use(adminQuizRouter);
 
 
 
