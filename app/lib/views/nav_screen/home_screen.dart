@@ -7,6 +7,7 @@ import 'package:codingera2/views/admin/widgets/admin_club.dart';
 import 'package:codingera2/views/admin/widgets/admin_hackathon.dart';
 import 'package:codingera2/views/admin/widgets/admin_upload_banner.dart';
 import 'package:codingera2/views/admin/widgets/admin_upload_notes.dart';
+import 'package:codingera2/views/admin/widgets/admin_quiz.dart';
 import 'package:codingera2/views/nav_screen/club_screen.dart';
 import 'package:codingera2/views/nav_screen/hackathon_screen.dart';
 import 'package:codingera2/views/screens/quiz/quiz_first_page.dart';
@@ -176,6 +177,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with SingleTickerProvid
                     Get.to(()=>AdminNotes(),transition: Transition.rightToLeftWithFade,duration: Duration(milliseconds: 350));
                   },
                   label: 'Upload Notes',
+                ),
+                SpeedDialChild(
+                  child: const Icon(Icons.quiz_outlined),
+                  backgroundColor: Colors.blue,
+                  onTap: (){
+                    Get.to(()=>AdminQuiz(),transition: Transition.rightToLeftWithFade,duration: Duration(milliseconds: 350));
+                  },
+                  label: 'Manage Quiz',
                 )
               ]
             ),

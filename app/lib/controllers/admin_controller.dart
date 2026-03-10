@@ -356,6 +356,155 @@ class AdminController {
       throw Exception("Something went wrong");
     }
   }
+
+  Future<void> uploadQuiz({
+    required String quizName,
+    required String quizDifficulty,
+    required int points,
+    required List<Map<String, dynamic>> questions,
+    required WidgetRef ref,
+    required BuildContext context,
+    XFile? image,
+  }) async {
+    try {
+      String quizBanner = '';
+      if (image != null) {
+        final prefs = await SharedPreferences.getInstance();
+        final token = prefs.getString('token');
+        if (token != null) {
+          final signedData = await sign('image', token, context, ref);
+          final uploaded = await uploadImageToCloudinary(signedData, image);
+          quizBanner = uploaded['secure_url']?.toString() ?? '';
+        }
+      }
+
+      final response = await AuthController().sendRequest(
+        request: (token) async {
+          return await http.post(
+            Uri.parse('$uri/api/admin/quiz'),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+              'x-auth-token': token,
+            },
+            body: jsonEncode({
+              'quizName': quizName,
+              'quizBanner': quizBanner,
+              'quizDifficulty': quizDifficulty,
+              'points': points,
+              'questions': questions,
+              'setActive': true,
+            }),
+          );
+        },
+        context: context,
+        ref: ref,
+      );
+
+      if (response.statusCode == 200) {
+        if (context.mounted) {
+          showSnackBar(
+            context,
+            "Success",
+            "Quiz uploaded and activated",
+            ContentType.success,
+          );
+        }
+      } else {
+        if (context.mounted) {
+          showSnackBar(
+            context,
+            "Failed",
+            jsonDecode(response.body)['msg']?.toString() ?? "Could not upload quiz",
+            ContentType.failure,
+          );
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        showSnackBar(
+          context,
+          "Error",
+          e.toString(),
+          ContentType.failure,
+        );
+      }
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getAllQuizzes({
+    required BuildContext context,
+    required WidgetRef ref,
+  }) async {
+    final response = await AuthController().sendRequest(
+      request: (token) async {
+        return await http.get(
+          Uri.parse('$uri/api/admin/quiz'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': token,
+          },
+        );
+      },
+      context: context,
+      ref: ref,
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to fetch quizzes');
+    }
+
+    final body = jsonDecode(response.body) as Map<String, dynamic>;
+    final list = body['quizzes'] as List<dynamic>? ?? const <dynamic>[];
+    return list.map((e) => Map<String, dynamic>.from(e)).toList();
+  }
+
+  Future<void> activateQuiz({
+    required String quizId,
+    required BuildContext context,
+    required WidgetRef ref,
+  }) async {
+    final response = await AuthController().sendRequest(
+      request: (token) async {
+        return await http.patch(
+          Uri.parse('$uri/api/admin/quiz/$quizId/activate'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': token,
+          },
+        );
+      },
+      context: context,
+      ref: ref,
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to activate quiz');
+    }
+  }
+
+  Future<void> deleteQuiz({
+    required String quizId,
+    required BuildContext context,
+    required WidgetRef ref,
+  }) async {
+    final response = await AuthController().sendRequest(
+      request: (token) async {
+        return await http.delete(
+          Uri.parse('$uri/api/admin/quiz/$quizId'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': token,
+          },
+        );
+      },
+      context: context,
+      ref: ref,
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete quiz');
+    }
+  }
   
 
 
