@@ -1,8 +1,10 @@
 name: Coding Era Backend To EC2
-on: 
+
+on:
   push:
-    branches: 
-      -main
+    branches:
+      - main
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -11,13 +13,14 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Deploy via SSH
+      - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
-          username: root
+          username: ubuntu
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd /home/ubuntu/Community/backend
-            git pull 
+            git pull origin main
+            docker compose down
             docker compose up -d --build
