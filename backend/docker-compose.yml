@@ -1,5 +1,6 @@
 services:
-  app:
+  community-app:
+    container_name: container_name
     build: 
       context: .
       dockerfile: Dockerfile
